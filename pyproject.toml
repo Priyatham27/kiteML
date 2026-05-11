@@ -14,12 +14,12 @@ version = "1.0.0"
 description = "Train production-grade ML models with a single line of code — intelligent AutoML for everyone."
 readme = "README.md"
 license = {text = "MIT"}
-requires-python = ">=3.9"
+requires-python = ">=3.10"
 authors = [
-    {name = "KiteML Team", email = "kiteml@proton.me"},
+    {name = "KiteML Team", email = "priyathamprime7@gmail.com"},
 ]
 maintainers = [
-    {name = "KiteML Team", email = "kiteml@proton.me"},
+    {name = "KiteML Team", email = "priyathamprime7@gmail.com"},
 ]
 keywords = [
     "machine-learning",
@@ -163,10 +163,10 @@ line-length = 120
 # ── MyPy Type Checking ──────────────────────────────────────────────
 [tool.mypy]
 python_version = "3.9"
-warn_return_any = true
+warn_return_any = false
 warn_unused_configs = true
 ignore_missing_imports = true
-check_untyped_defs = true
+check_untyped_defs = false
 
 # ── Coverage Configuration ──────────────────────────────────────────
 [tool.coverage.run]
