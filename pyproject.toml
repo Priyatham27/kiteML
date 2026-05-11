@@ -14,7 +14,7 @@ version = "1.0.0"
 description = "Train production-grade ML models with a single line of code — intelligent AutoML for everyone."
 readme = "README.md"
 license = {text = "MIT"}
-requires-python = ">=3.10"
+requires-python = ">=3.9"
 authors = [
     {name = "KiteML Team", email = "priyathamprime7@gmail.com"},
 ]

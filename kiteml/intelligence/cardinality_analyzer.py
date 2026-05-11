@@ -36,7 +36,7 @@ def analyze_cardinality(
     rare_freq_threshold: float = 0.01,
 ) -> CardinalityReport:
     """Analyze cardinality of categorical/object columns."""
-    cat_cols = df.select_dtypes(include=["object", "category", "string"]).columns.tolist()
+    cat_cols = df.select_dtypes(include=["object", "category", "str"]).columns.tolist()
     details: dict[str, CardinalityInfo] = {}
     high_card: list[str] = []
     recommendations: list[str] = []
