@@ -183,7 +183,7 @@ class Preprocessor:
 
         # ── Detect column types ──────────────────────────────────────────
         self.num_cols = X.select_dtypes(include=["int64", "float64", "int32", "float32"]).columns.tolist()
-        self.cat_cols = X.select_dtypes(include=["object", "str", "category", "bool"]).columns.tolist()
+        self.cat_cols = X.select_dtypes(include=["object", "category", "bool"]).columns.tolist()
 
         # ── Build and fit the sklearn Pipeline ───────────────────────────
         self._pipeline = self._build_pipeline(self.num_cols, self.cat_cols)

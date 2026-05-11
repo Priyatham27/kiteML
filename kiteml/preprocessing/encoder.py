@@ -25,7 +25,7 @@ def encode_categoricals(df: pd.DataFrame, target: str) -> tuple[pd.DataFrame, di
     df = df.copy()
     encoders = {}
 
-    categorical_cols = df.select_dtypes(include=["object", "category", "str"]).columns
+    categorical_cols = df.select_dtypes(include=["object", "category"]).columns
 
     for col in categorical_cols:
         le = LabelEncoder()

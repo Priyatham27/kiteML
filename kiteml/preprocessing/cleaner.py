@@ -33,7 +33,7 @@ def handle_missing_values(df: pd.DataFrame, strategy: str = "auto") -> pd.DataFr
 
     numeric_cols = df.select_dtypes(include=["number"]).columns
     # Pandas 3.x: use ["object", "category", "str"] or just check non-numeric
-    categorical_cols = df.select_dtypes(include=["object", "category", "str"]).columns
+    categorical_cols = df.select_dtypes(include=["object", "category"]).columns
 
     # Fill numeric columns (CoW-safe assignment)
     for col in numeric_cols:

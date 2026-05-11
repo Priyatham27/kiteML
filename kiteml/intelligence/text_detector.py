@@ -55,7 +55,7 @@ def detect_text_columns(
     text_cols: list[str] = []
     details: dict[str, TextColumnInfo] = {}
 
-    string_cols = df.select_dtypes(include=["object", "str"]).columns
+    string_cols = df.select_dtypes(include=["object"]).columns
 
     for col in string_cols:
         series = df[col].dropna().astype(str)
