@@ -11,7 +11,7 @@ Uses entropy, unique value ratio, and distribution analysis.
 """
 
 from dataclasses import dataclass
-from typing import List, Optional
+from typing import Optional
 
 import numpy as np
 import pandas as pd
@@ -24,7 +24,7 @@ class ProblemInferenceResult:
     problem_type: str  # "classification" | "regression"
     subtype: str  # "binary" | "multiclass" | "continuous" | "discrete_regression"
     confidence: float  # 0–1
-    evidence: List[str]  # human-readable justification
+    evidence: list[str]  # human-readable justification
     n_classes: Optional[int] = None
 
 
@@ -47,7 +47,7 @@ def infer_problem_type_advanced(
     n_total = len(non_null)
     n_unique = int(non_null.nunique())
     unique_ratio = n_unique / n_total if n_total > 0 else 0.0
-    evidence: List[str] = []
+    evidence: list[str] = []
 
     # ── String target → always classification ─────────────────────────────
     if pd.api.types.is_object_dtype(target) or pd.api.types.is_string_dtype(target):

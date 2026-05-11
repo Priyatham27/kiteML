@@ -2,6 +2,7 @@
 main.py — Main entry point for the KiteML CLI.
 """
 
+import contextlib
 import sys
 
 from kiteml.cli.parser import build_parser
@@ -11,10 +12,8 @@ from kiteml.cli.ui.colors import print_banner, print_error
 def main():
     """Main CLI entry function."""
     if sys.platform == "win32":
-        try:
+        with contextlib.suppress(AttributeError):
             sys.stdout.reconfigure(encoding="utf-8")
-        except AttributeError:
-            pass
 
     parser = build_parser()
 

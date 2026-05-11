@@ -28,7 +28,7 @@ Regression metric keys
 """
 
 import logging
-from typing import Any, Dict
+from typing import Any
 
 import numpy as np
 from sklearn.metrics import (
@@ -51,7 +51,7 @@ def evaluate_model(
     X_test: Any,
     y_test: Any,
     problem_type: str = "classification",
-) -> Dict[str, Any]:
+) -> dict[str, Any]:
     """
     Evaluate a trained model and return a standardised metrics dictionary.
 
@@ -82,7 +82,7 @@ def evaluate_model(
     y_pred = model.predict(X_test)
 
     if problem_type == "classification":
-        metrics: Dict[str, Any] = {
+        metrics: dict[str, Any] = {
             "accuracy": float(accuracy_score(y_test, y_pred)),
             "precision": float(precision_score(y_test, y_pred, average="weighted", zero_division=0)),
             "recall": float(recall_score(y_test, y_pred, average="weighted", zero_division=0)),

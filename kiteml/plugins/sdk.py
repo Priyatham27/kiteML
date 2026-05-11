@@ -3,7 +3,7 @@ plugins/sdk.py — SDK for authoring KiteML Plugins.
 """
 
 from abc import ABC, abstractmethod
-from typing import Any, Dict
+from typing import Any
 
 
 class KiteMLPlugin(ABC):
@@ -22,7 +22,7 @@ class ModelPlugin(KiteMLPlugin):
     """Plugin to register new custom models to the training engine."""
 
     @abstractmethod
-    def get_models(self) -> Dict[str, Any]:
+    def get_models(self) -> dict[str, Any]:
         """Return a mapping of model names to uninstantiated sklearn-compatible classes."""
         pass
 

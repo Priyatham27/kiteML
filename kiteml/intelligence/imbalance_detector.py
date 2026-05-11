@@ -6,7 +6,7 @@ misleading accuracy metrics and biased models.
 """
 
 from dataclasses import dataclass
-from typing import Any, Dict, List
+from typing import Any
 
 import pandas as pd
 
@@ -18,12 +18,12 @@ class ImbalanceReport:
     is_imbalanced: bool
     severity: str  # "none" | "mild" | "moderate" | "severe" | "extreme"
     imbalance_ratio: float  # max_class / min_class count
-    class_distribution: Dict[Any, float]  # class → fraction
+    class_distribution: dict[Any, float]  # class → fraction
     majority_class: Any
     minority_class: Any
     majority_ratio: float
     minority_ratio: float
-    recommendations: List[str]
+    recommendations: list[str]
 
 
 def detect_imbalance(
@@ -91,7 +91,7 @@ def detect_imbalance(
         severity = "extreme"
         is_imbalanced = True
 
-    recommendations: List[str] = []
+    recommendations: list[str] = []
     if severity in ("severe", "extreme"):
         recommendations += [
             f"⚠️ Severe imbalance: {majority_class}={class_dist[majority_class]:.1%}, "

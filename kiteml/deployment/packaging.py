@@ -17,12 +17,13 @@ Bundle Layout
 └── lineage.json          ← training lineage
 """
 
+import contextlib
 import os
 import shutil
 import time
 import uuid
 from dataclasses import dataclass
-from typing import Any, Dict, Optional
+from typing import Any, Optional
 
 from kiteml.deployment.environment_capture import capture_environment
 from kiteml.deployment.manifest import build_manifest
@@ -35,7 +36,7 @@ class PackageResult:
 
     bundle_path: str
     bundle_id: str
-    artifacts: Dict[str, str]
+    artifacts: dict[str, str]
     total_size_bytes: int
     created_at: str
 
@@ -84,8 +85,8 @@ def package(
 
     os.makedirs(path, exist_ok=True)
     bundle_id = str(uuid.uuid4())[:8]
-    artifacts: Dict[str, str] = {}
-    checksums: Dict[str, str] = {}
+    artifacts: dict[str, str] = {}
+    checksums: dict[str, str] = {}
 
     # ── 1. Model ──────────────────────────────────────────────────────────
     model_path = os.path.join(path, "model.joblib")
@@ -171,7 +172,7 @@ def package(
     return result_obj
 
 
-def load_bundle(path: str) -> Dict[str, Any]:
+def load_bundle(path: str) -> dict[str, Any]:
     """
     Load all artifacts from a .kiteml bundle directory.
 
@@ -189,7 +190,7 @@ def load_bundle(path: str) -> Dict[str, Any]:
     if not os.path.isdir(path):
         raise NotADirectoryError(f"Bundle not found: '{path}'")
 
-    bundle: Dict[str, Any] = {}
+    bundle: dict[str, Any] = {}
 
     model_path = os.path.join(path, "model.joblib")
     if os.path.exists(model_path):
@@ -221,9 +222,9 @@ def load_bundle(path: str) -> Dict[str, Any]:
 # ── Helpers ──────────────────────────────────────────────────────────────────
 
 
-def _build_schema(result: Any) -> Dict:
+def _build_schema(result: Any) -> dict:
     """Extract feature schema from a Result object."""
-    schema: Dict[str, Any] = {
+    schema: dict[str, Any] = {
         "feature_names": list(result.feature_names or []),
         "n_features": len(result.feature_names or []),
         "problem_type": result.problem_type,
@@ -231,16 +232,14 @@ def _build_schema(result: Any) -> Dict:
     }
     # Add data profile schema if available
     if result.data_profile is not None:
-        try:
+        with contextlib.suppress(Exception):
             schema["column_types"] = {
                 col: profile.column_type.value for col, profile in result.data_profile.column_analysis.profiles.items()
             }
-        except Exception:
-            pass
     return schema
 
 
-def _metrics_to_dict(metrics: Any) -> Dict:
+def _metrics_to_dict(metrics: Any) -> dict:
     """Convert typed metrics dataclass or dict to serializable dict."""
     if hasattr(metrics, "__dict__"):
         return {k: _safe_float(v) for k, v in metrics.__dict__.items()}

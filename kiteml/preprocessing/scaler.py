@@ -2,13 +2,13 @@
 scaler.py - Feature scaling utilities.
 """
 
-from typing import Optional, Tuple
+from typing import Optional
 
 import pandas as pd
 from sklearn.preprocessing import StandardScaler
 
 
-def scale_features(X: pd.DataFrame, scaler: Optional[StandardScaler] = None) -> Tuple[pd.DataFrame, StandardScaler]:
+def scale_features(X: pd.DataFrame, scaler: Optional[StandardScaler] = None) -> tuple[pd.DataFrame, StandardScaler]:
     """
     Scale features using StandardScaler.
 

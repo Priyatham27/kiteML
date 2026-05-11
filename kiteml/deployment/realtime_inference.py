@@ -7,7 +7,7 @@ preprocessing reuse for fast production predictions.
 
 import time
 from dataclasses import dataclass
-from typing import Any, Dict, List, Optional, Union
+from typing import Any, Optional, Union
 
 import numpy as np
 import pandas as pd
@@ -20,9 +20,9 @@ class PredictionResult:
     """Result of a single inference call."""
 
     prediction: Any
-    probabilities: Optional[Dict] = None  # class → probability (classification)
+    probabilities: Optional[dict] = None  # class → probability (classification)
     latency_ms: float = 0.0
-    warnings: List[str] = None
+    warnings: list[str] = None
 
     def __post_init__(self):
         if self.warnings is None:
@@ -53,10 +53,10 @@ class RealtimeInferenceEngine:
     def __init__(
         self,
         model: Any,
-        feature_names: List[str],
+        feature_names: list[str],
         problem_type: str,
         preprocessor: Optional[Any] = None,
-        schema: Optional[Dict] = None,
+        schema: Optional[dict] = None,
     ):
         self.model = model
         self.preprocessor = preprocessor
@@ -83,7 +83,7 @@ class RealtimeInferenceEngine:
 
     def predict(
         self,
-        X: Union[Dict, pd.DataFrame, np.ndarray],
+        X: Union[dict, pd.DataFrame, np.ndarray],
         validate: bool = True,
     ) -> PredictionResult:
         """
@@ -100,7 +100,7 @@ class RealtimeInferenceEngine:
         PredictionResult
         """
         t0 = time.perf_counter()
-        warnings: List[str] = []
+        warnings: list[str] = []
 
         # ── Validate ──────────────────────────────────────────────────────
         if validate:
@@ -126,10 +126,7 @@ class RealtimeInferenceEngine:
         df = df[present]
 
         # ── Preprocess ────────────────────────────────────────────────────
-        if self.preprocessor is not None:
-            X_transformed = self.preprocessor.transform(df)
-        else:
-            X_transformed = df.values
+        X_transformed = self.preprocessor.transform(df) if self.preprocessor is not None else df.values
 
         # ── Predict ───────────────────────────────────────────────────────
         raw_pred = self.model.predict(X_transformed)
@@ -158,7 +155,7 @@ class RealtimeInferenceEngine:
         )
 
     @property
-    def stats(self) -> Dict:
+    def stats(self) -> dict:
         """Runtime inference statistics."""
         avg = self._total_latency_ms / self._call_count if self._call_count > 0 else 0.0
         return {

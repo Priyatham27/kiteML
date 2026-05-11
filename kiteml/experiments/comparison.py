@@ -3,7 +3,6 @@ comparison.py — Compare multiple KiteML experiment runs.
 """
 
 from dataclasses import dataclass
-from typing import List
 
 from kiteml.experiments.tracker import ExperimentRun
 
@@ -12,10 +11,10 @@ from kiteml.experiments.tracker import ExperimentRun
 class RunComparison:
     """Side-by-side comparison of multiple runs."""
 
-    runs: List[ExperimentRun]
+    runs: list[ExperimentRun]
     best_run: ExperimentRun
     metric_name: str
-    ranked: List[ExperimentRun]  # runs sorted best→worst by metric
+    ranked: list[ExperimentRun]  # runs sorted best→worst by metric
 
     def print_table(self) -> None:
         W = 70
@@ -36,7 +35,7 @@ class RunComparison:
 
 
 def compare_runs(
-    runs: List[ExperimentRun],
+    runs: list[ExperimentRun],
     metric: str = "score",
     higher_is_better: bool = True,
 ) -> RunComparison:

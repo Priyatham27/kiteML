@@ -25,7 +25,7 @@ sklearn Pipeline benefits
   advanced users who want to plug it directly into sklearn GridSearchCV.
 """
 
-from typing import List, Optional
+from typing import Optional
 
 import numpy as np
 import pandas as pd
@@ -66,9 +66,9 @@ class Preprocessor:
     """
 
     def __init__(self) -> None:
-        self.num_cols: List[str] = []
-        self.cat_cols: List[str] = []
-        self.feature_names: List[str] = []
+        self.num_cols: list[str] = []
+        self.cat_cols: list[str] = []
+        self.feature_names: list[str] = []
         self.is_fitted: bool = False
 
         # Populated in fit_transform() once column types are known
@@ -78,7 +78,7 @@ class Preprocessor:
     # 🔹 Internal builder
     # ------------------------------------------------------------------
 
-    def _build_pipeline(self, num_cols: List[str], cat_cols: List[str]) -> Pipeline:
+    def _build_pipeline(self, num_cols: list[str], cat_cols: list[str]) -> Pipeline:
         """
         Construct the sklearn Pipeline for the detected column sets.
 
@@ -136,7 +136,7 @@ class Preprocessor:
     # 🔹 Feature name extraction
     # ------------------------------------------------------------------
 
-    def _extract_feature_names(self) -> List[str]:
+    def _extract_feature_names(self) -> list[str]:
         """
         Read the ordered output feature names from the fitted ColumnTransformer.
 
@@ -148,7 +148,7 @@ class Preprocessor:
         list of str
         """
         col_transform = self._pipeline.named_steps["col_transform"]
-        names: List[str] = []
+        names: list[str] = []
 
         for name, transformer, cols in col_transform.transformers_:
             if name == "num":

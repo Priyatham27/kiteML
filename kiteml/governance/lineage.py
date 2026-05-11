@@ -6,12 +6,13 @@ model selection → training → evaluation → deployment, with timestamps
 and artifact checksums at each stage.
 """
 
+import contextlib
 import hashlib
 import json
 import os
 import time
 from dataclasses import dataclass
-from typing import Any, Dict, List, Optional
+from typing import Any, Optional
 
 
 @dataclass
@@ -22,8 +23,8 @@ class LineageStep:
     step_type: str  # "data", "preprocessing", "selection", "training", "evaluation", "deployment"
     timestamp: str
     duration_s: Optional[float]
-    artifacts: Dict[str, str]  # artifact_name → checksum or path
-    metadata: Dict[str, Any]
+    artifacts: dict[str, str]  # artifact_name → checksum or path
+    metadata: dict[str, Any]
 
 
 @dataclass
@@ -33,7 +34,7 @@ class PipelineLineage:
     lineage_id: str
     model_name: str
     problem_type: str
-    steps: List[LineageStep]
+    steps: list[LineageStep]
     created_at: str
     total_duration_s: float
 
@@ -84,11 +85,11 @@ def build_lineage(result: Any, dataset: Optional[Any] = None) -> PipelineLineage
 
     lineage_id = str(uuid.uuid4())[:8]
     created_at = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
-    steps: List[LineageStep] = []
+    steps: list[LineageStep] = []
 
     # ── Step 1: Dataset ───────────────────────────────────────────────────
-    dataset_meta: Dict[str, Any] = {}
-    dataset_artifacts: Dict[str, str] = {}
+    dataset_meta: dict[str, Any] = {}
+    dataset_artifacts: dict[str, str] = {}
     if dataset is not None:
         try:
             import pandas as pd
@@ -160,10 +161,8 @@ def build_lineage(result: Any, dataset: Optional[Any] = None) -> PipelineLineage
 
     # ── Step 5: Evaluation ────────────────────────────────────────────────
     score_val = None
-    try:
+    with contextlib.suppress(Exception):
         score_val = round(float(result.score), 4)
-    except Exception:
-        pass
 
     steps.append(
         LineageStep(

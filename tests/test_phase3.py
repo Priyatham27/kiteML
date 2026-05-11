@@ -202,7 +202,7 @@ class TestExportGeneration:
     def test_docker_export(self, trained_result, tmp_path):
         """Test generation of Docker deployment artifacts."""
         out_dir = str(tmp_path / "docker")
-        res = trained_result.export_docker(output_dir=out_dir)
+        trained_result.export_docker(output_dir=out_dir)
 
         assert os.path.isdir(out_dir)
         files = os.listdir(out_dir)

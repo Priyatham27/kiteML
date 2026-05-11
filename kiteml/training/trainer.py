@@ -26,7 +26,7 @@ debug output.
 
 import logging
 import time
-from typing import Any, Tuple
+from typing import Any
 
 import numpy as np
 
@@ -37,7 +37,7 @@ def train_model(
     model: Any,
     X_train: np.ndarray,
     y_train: Any,
-) -> Tuple[Any, float]:
+) -> tuple[Any, float]:
     """
     Fit the model on the provided training data.
 

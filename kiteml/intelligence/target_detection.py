@@ -14,7 +14,6 @@ Signals (weighted)
 """
 
 from dataclasses import dataclass, field
-from typing import List
 
 import numpy as np
 import pandas as pd
@@ -62,9 +61,9 @@ class TargetDetectionResult:
 
     column: str
     confidence: float  # 0–1
-    reason: List[str]  # human-readable explanation of signals
+    reason: list[str]  # human-readable explanation of signals
     is_ambiguous: bool = False  # True when multiple columns score closely
-    alternatives: List[str] = field(default_factory=list)
+    alternatives: list[str] = field(default_factory=list)
 
 
 def _score_column(

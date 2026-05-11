@@ -2,13 +2,12 @@
 encoder.py - Categorical feature encoding.
 """
 
-from typing import Dict, Tuple
 
 import pandas as pd
 from sklearn.preprocessing import LabelEncoder
 
 
-def encode_categoricals(df: pd.DataFrame, target: str) -> Tuple[pd.DataFrame, Dict[str, LabelEncoder]]:
+def encode_categoricals(df: pd.DataFrame, target: str) -> tuple[pd.DataFrame, dict[str, LabelEncoder]]:
     """
     Encode categorical columns using LabelEncoder.
 
@@ -27,7 +26,7 @@ def encode_categoricals(df: pd.DataFrame, target: str) -> Tuple[pd.DataFrame, Di
     df = df.copy()
     encoders = {}
 
-    categorical_cols = df.select_dtypes(include=["object", "category"]).columns
+    categorical_cols = df.select_dtypes(include=["object", "category", "string", "str"]).columns
 
     for col in categorical_cols:
         le = LabelEncoder()

@@ -41,7 +41,7 @@ def run_train(args):
     print_step(f"Problem Type: {result.problem_type}")
 
     # Print metrics
-    metrics = result.metrics.__dict__ if hasattr(result.metrics, "__dict__") else result.metrics
+    result.metrics.__dict__ if hasattr(result.metrics, "__dict__") else result.metrics
     score = getattr(result, "score", None)
     if score is not None:
         print_info(f"Primary Score: {score:.4f}")

@@ -5,12 +5,13 @@ Manages semantic versioning of ML models with bump logic and
 version history tracking in a local store.
 """
 
+import contextlib
 import json
 import os
 import re
 import time
 from dataclasses import dataclass
-from typing import Any, Dict, List, Optional
+from typing import Any, Optional
 
 
 @dataclass
@@ -31,7 +32,7 @@ class VersionRegistry:
     """Registry of all versions for a model."""
 
     model_name: str
-    versions: List[ModelVersion]
+    versions: list[ModelVersion]
     current_version: Optional[str]
 
     def latest(self) -> Optional[ModelVersion]:
@@ -94,7 +95,7 @@ def version_model(
     os.makedirs(model_dir, exist_ok=True)
 
     history_path = os.path.join(model_dir, "history.json")
-    history: List[Dict] = []
+    history: list[dict] = []
     if os.path.exists(history_path):
         with open(history_path, encoding="utf-8") as f:
             history = json.load(f)
@@ -108,10 +109,8 @@ def version_model(
             version = "v1.0.0"
 
     score = None
-    try:
+    with contextlib.suppress(Exception):
         score = round(float(result.score), 4)
-    except Exception:
-        pass
 
     mv = ModelVersion(
         version=version,
@@ -134,7 +133,7 @@ def version_model(
 def get_history(
     model_name: str,
     store_path: Optional[str] = None,
-) -> List[ModelVersion]:
+) -> list[ModelVersion]:
     """Retrieve version history for a model."""
     store = store_path or _DEFAULT_REGISTRY
     history_path = os.path.join(store, model_name.replace(" ", "_"), "history.json")

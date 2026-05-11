@@ -7,7 +7,7 @@ mixed-type columns, and corrupted string patterns.
 
 from dataclasses import dataclass
 from enum import Enum
-from typing import List, Optional
+from typing import Optional
 
 import pandas as pd
 
@@ -37,7 +37,7 @@ class QualityReport:
 
     n_rows: int
     n_cols: int
-    issues: List[QualityIssue]
+    issues: list[QualityIssue]
     score: float  # 0–100 (100 = perfect quality)
     summary: str
 
@@ -49,7 +49,7 @@ class QualityReport:
     def has_warnings(self) -> bool:
         return any(i.severity == Severity.WARNING for i in self.issues)
 
-    def by_severity(self, severity: Severity) -> List[QualityIssue]:
+    def by_severity(self, severity: Severity) -> list[QualityIssue]:
         return [i for i in self.issues if i.severity == severity]
 
 
@@ -65,7 +65,7 @@ def analyze_quality(df: pd.DataFrame) -> QualityReport:
     -------
     QualityReport
     """
-    issues: List[QualityIssue] = []
+    issues: list[QualityIssue] = []
     n_rows = len(df)
     n_cols = len(df.columns)
 

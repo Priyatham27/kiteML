@@ -23,7 +23,7 @@ convention.  The report layer converts R² to RMSE for display purposes.
 """
 
 import logging
-from typing import Any, Dict, Optional, Tuple
+from typing import Any, Optional
 
 import pandas as pd
 from sklearn.model_selection import cross_val_score
@@ -40,7 +40,7 @@ def select_best_model(
     problem_type: str = "classification",
     random_state: int = DEFAULT_RANDOM_STATE,
     cv: int = DEFAULT_CV_FOLDS,
-) -> Tuple[Any, Dict[str, Dict[str, Any]]]:
+) -> tuple[Any, dict[str, dict[str, Any]]]:
     """
     Select the best model using k-fold cross-validation on training data.
 
@@ -86,8 +86,8 @@ def select_best_model(
         raise ValueError(f"Unknown problem_type '{problem_type}'. " "Expected 'classification' or 'regression'.")
 
     # ── Cross-validate every candidate ───────────────────────────────────
-    raw_scores: Dict[str, Optional[float]] = {}
-    errors: Dict[str, Optional[str]] = {}
+    raw_scores: dict[str, Optional[float]] = {}
+    errors: dict[str, Optional[str]] = {}
 
     for name, model in models.items():
         try:
@@ -120,7 +120,7 @@ def select_best_model(
     sorted_names = sorted(scored_models, key=lambda k: scored_models[k], reverse=True)
 
     # ── Build structured all_results ─────────────────────────────────────
-    all_results: Dict[str, Dict[str, Any]] = {}
+    all_results: dict[str, dict[str, Any]] = {}
     for rank, name in enumerate(sorted_names, start=1):
         all_results[name] = {
             "score": scored_models[name],

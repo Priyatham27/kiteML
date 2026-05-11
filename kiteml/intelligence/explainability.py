@@ -10,7 +10,7 @@ Also provides SHAP-ready hooks for future integration.
 """
 
 from dataclasses import dataclass
-from typing import Any, Dict, List, Optional
+from typing import Any, Optional
 
 import numpy as np
 
@@ -30,12 +30,12 @@ class ExplainabilityReport:
 
     model_name: str
     method: str  # "feature_importances_" | "coef_" | "permutation" | "unavailable"
-    feature_importances: List[FeatureImportanceEntry]
-    top_features: List[str]
+    feature_importances: list[FeatureImportanceEntry]
+    top_features: list[str]
     summary: str
     shap_ready: bool  # True if SHAP can be applied to this model type
 
-    def to_dict(self) -> Dict[str, float]:
+    def to_dict(self) -> dict[str, float]:
         return {e.feature: e.importance for e in self.feature_importances}
 
 
@@ -55,7 +55,7 @@ _SHAP_COMPATIBLE = {
 
 def explain_model(
     model: Any,
-    feature_names: List[str],
+    feature_names: list[str],
     X_test: Optional[np.ndarray] = None,
     y_test: Optional[Any] = None,
     top_n: int = 20,
@@ -80,7 +80,7 @@ def explain_model(
     """
     model_name = type(model).__name__
     shap_ready = model_name in _SHAP_COMPATIBLE
-    importances: List[FeatureImportanceEntry] = []
+    importances: list[FeatureImportanceEntry] = []
     method = "unavailable"
 
     raw: Optional[np.ndarray] = None

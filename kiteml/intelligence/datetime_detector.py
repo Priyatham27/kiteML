@@ -8,7 +8,7 @@ Automatically:
 """
 
 from dataclasses import dataclass
-from typing import Dict, List, Optional
+from typing import Optional
 
 import pandas as pd
 
@@ -22,7 +22,7 @@ class DatetimeColumnInfo:
     min_date: Optional[str]
     max_date: Optional[str]
     date_range_days: Optional[int]
-    extracted_features: List[str]  # which features will be extracted
+    extracted_features: list[str]  # which features will be extracted
     has_time_component: bool
     confidence: float
 
@@ -31,8 +31,8 @@ class DatetimeColumnInfo:
 class DatetimeDetectionResult:
     """Result of datetime column detection."""
 
-    datetime_columns: List[str]
-    details: Dict[str, DatetimeColumnInfo]
+    datetime_columns: list[str]
+    details: dict[str, DatetimeColumnInfo]
     has_datetime: bool
 
 
@@ -59,8 +59,8 @@ def detect_datetime_columns(df: pd.DataFrame) -> DatetimeDetectionResult:
     -------
     DatetimeDetectionResult
     """
-    dt_cols: List[str] = []
-    details: Dict[str, DatetimeColumnInfo] = {}
+    dt_cols: list[str] = []
+    details: dict[str, DatetimeColumnInfo] = {}
 
     for col in df.columns:
         series = df[col]
@@ -110,7 +110,7 @@ def detect_datetime_columns(df: pd.DataFrame) -> DatetimeDetectionResult:
     )
 
 
-def extract_datetime_features(df: pd.DataFrame, columns: List[str]) -> pd.DataFrame:
+def extract_datetime_features(df: pd.DataFrame, columns: list[str]) -> pd.DataFrame:
     """
     Extract temporal features from datetime columns and return augmented DataFrame.
 

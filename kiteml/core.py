@@ -50,6 +50,28 @@ from kiteml.utils.type_inference import infer_problem_type
 logger = logging.getLogger(__name__)
 
 
+def _setup_utf8_logging():
+    """Configure logging with a UTF-8 safe handler for Windows compatibility."""
+    import io
+    import sys
+
+    try:
+        # Try to reconfigure stdout to UTF-8
+        if hasattr(sys.stdout, "reconfigure"):
+            sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+    except Exception:
+        pass
+
+    handler = logging.StreamHandler(
+        stream=io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8", errors="replace")
+        if hasattr(sys.stdout, "buffer")
+        else sys.stdout
+    )
+    handler.setFormatter(logging.Formatter("%(message)s"))
+    logger.addHandler(handler)
+    logger.propagate = False
+
+
 def train(
     data: Union[str, pd.DataFrame],
     target: Optional[str] = None,
@@ -104,6 +126,7 @@ def train(
     # ------------------------------------------------------------------ #
     if verbose:
         logging.basicConfig(format="%(message)s", level=logging.INFO)
+        _setup_utf8_logging()
 
     total_start = time.perf_counter()
 

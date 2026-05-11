@@ -15,11 +15,13 @@ Encapsulates:
 
 import warnings
 from dataclasses import asdict, dataclass, field
-from typing import Any, Dict, List, Optional, Union
+from typing import Any, Optional, Union
 
 import joblib
 import numpy as np
 import pandas as pd
+
+from kiteml.utils.encoding import safe_print
 
 # ===========================================================================
 # 🔹 Typed Metrics Dataclasses
@@ -57,10 +59,10 @@ class ClassificationMetrics:
     precision: float = 0.0
     recall: float = 0.0
     f1_score: float = 0.0
-    confusion_matrix: List[List[int]] = field(default_factory=list)
+    confusion_matrix: list[list[int]] = field(default_factory=list)
     classification_report: str = ""
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         """Serialize to a plain dictionary."""
         return asdict(self)
 
@@ -87,7 +89,7 @@ class RegressionMetrics:
     rmse: float = 0.0
     mae: float = 0.0
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         """Serialize to a plain dictionary."""
         return asdict(self)
 
@@ -151,14 +153,14 @@ class Result:
     def __init__(
         self,
         model: Any,
-        metrics: Union[Dict[str, Any], ClassificationMetrics, RegressionMetrics],
+        metrics: Union[dict[str, Any], ClassificationMetrics, RegressionMetrics],
         report: str,
         problem_type: str,
-        all_results: Optional[Dict[str, Any]] = None,
+        all_results: Optional[dict[str, Any]] = None,
         model_name: Optional[str] = None,
         preprocessor: Optional[Any] = None,
-        feature_importances: Optional[Dict[str, float]] = None,
-        feature_names: Optional[List[str]] = None,
+        feature_importances: Optional[dict[str, float]] = None,
+        feature_names: Optional[list[str]] = None,
         elapsed_time: float = 0.0,
         training_time: float = 0.0,
         data_profile: Optional[Any] = None,
@@ -186,7 +188,7 @@ class Result:
 
     @staticmethod
     def _coerce_metrics(
-        metrics: Union[Dict[str, Any], ClassificationMetrics, RegressionMetrics],
+        metrics: Union[dict[str, Any], ClassificationMetrics, RegressionMetrics],
         problem_type: str,
     ) -> Union[ClassificationMetrics, RegressionMetrics]:
         """
@@ -278,26 +280,26 @@ class Result:
     def summary(self) -> None:
         """Print a clean, human-readable training summary."""
         sep = "─" * 46
-        print("\n🪁 KiteML Training Summary")
-        print(sep)
-        print(f"  Problem Type  : {self.problem_type}")
-        print(f"  Best Model    : {self.model_name}")
-        print(f"  Total Time    : {self.times.total:.2f}s")
-        print(f"  Training Time : {self.times.training:.2f}s")
-        print(sep)
+        safe_print("\n🪁 KiteML Training Summary")
+        safe_print(sep)
+        safe_print(f"  Problem Type  : {self.problem_type}")
+        safe_print(f"  Best Model    : {self.model_name}")
+        safe_print(f"  Total Time    : {self.times.total:.2f}s")
+        safe_print(f"  Training Time : {self.times.training:.2f}s")
+        safe_print(sep)
 
         if self.problem_type == "classification":
             if self.accuracy is not None:
-                print(f"  Accuracy      : {self.accuracy:.4f}")
+                safe_print(f"  Accuracy      : {self.accuracy:.4f}")
             if self.f1 is not None:
-                print(f"  F1 Score      : {self.f1:.4f}")
+                safe_print(f"  F1 Score      : {self.f1:.4f}")
         else:
             if self.r2 is not None:
-                print(f"  R² Score      : {self.r2:.4f}")
+                safe_print(f"  R² Score      : {self.r2:.4f}")
             if self.rmse is not None:
-                print(f"  RMSE          : {self.rmse:.4f}")
+                safe_print(f"  RMSE          : {self.rmse:.4f}")
             if self.mae is not None:
-                print(f"  MAE           : {self.mae:.4f}")
+                safe_print(f"  MAE           : {self.mae:.4f}")
 
         # Top-5 feature importances when available
         if self.feature_importances:
@@ -306,11 +308,11 @@ class Result:
                 key=lambda x: abs(x[1]),
                 reverse=True,
             )[:5]
-            print(sep)
-            print("  Top Features:")
+            safe_print(sep)
+            safe_print("  Top Features:")
             for feat, imp in top:
                 bar = "█" * int(abs(imp) * 20)
-                print(f"    {feat:<20s} {imp:+.4f}  {bar}")
+                safe_print(f"    {feat:<20s} {imp:+.4f}  {bar}")
 
         # Model leaderboard
         if self.all_results:
@@ -318,14 +320,14 @@ class Result:
                 k: v["score"] for k, v in self.all_results.items() if isinstance(v, dict) and v.get("score") is not None
             }
             if scored:
-                print(sep)
-                print("  Model Leaderboard:")
+                safe_print(sep)
+                safe_print("  Model Leaderboard:")
                 ranked = sorted(scored.items(), key=lambda x: x[1], reverse=True)
                 for idx, (name, sc) in enumerate(ranked, start=1):
                     marker = " ✓" if name == self.model_name else ""
-                    print(f"    #{idx:<3} {name:<26} {sc:.4f}{marker}")
+                    safe_print(f"    #{idx:<3} {name:<26} {sc:.4f}{marker}")
 
-        print(sep)
+        safe_print(sep)
 
     # ------------------------------------------------------------------
     # 🔹 Model Persistence  (save / load full artifact bundle)
@@ -356,7 +358,7 @@ class Result:
             "times": self.times,
         }
         joblib.dump(bundle, path)
-        print(f"💾 Bundle saved → {path}")
+        safe_print(f"💾 Bundle saved → {path}")
 
     # Keep old name for backward compatibility
     def save_model(self, path: str = "kiteml_model.pkl") -> None:
@@ -364,7 +366,7 @@ class Result:
         self.save(path)
 
     @staticmethod
-    def load(path: str) -> Dict[str, Any]:
+    def load(path: str) -> dict[str, Any]:
         """
         Load a saved artifact bundle from disk.
 
@@ -376,7 +378,7 @@ class Result:
             ``feature_importances``, ``times``.
         """
         bundle = joblib.load(path)
-        print(f"📂 Bundle loaded ← {path}")
+        safe_print(f"📂 Bundle loaded ← {path}")
         return bundle
 
     # Keep old name for backward compatibility
@@ -384,7 +386,7 @@ class Result:
     def load_model(path: str = "kiteml_model.pkl") -> Any:
         """Alias for :meth:`load` — returns the model object only."""
         bundle = joblib.load(path)
-        print(f"📂 Model loaded ← {path}")
+        safe_print(f"📂 Model loaded ← {path}")
         return bundle.get("model", bundle)
 
     # ------------------------------------------------------------------
@@ -492,7 +494,7 @@ class Result:
     # 🔹 Feature Importance
     # ------------------------------------------------------------------
 
-    def feature_importance(self, top_n: Optional[int] = None) -> Optional[Dict[str, float]]:
+    def feature_importance(self, top_n: Optional[int] = None) -> Optional[dict[str, float]]:
         """
         Return feature importance values, sorted by absolute magnitude.
 
@@ -509,7 +511,7 @@ class Result:
         Dict[str, float] or None
         """
         if self.feature_importances is None:
-            print("⚠️  Feature importance not available for this model.")
+            safe_print("⚠️  Feature importance not available for this model.")
             return None
 
         sorted_fi = dict(
@@ -573,25 +575,25 @@ class Result:
         """
         df = self.leaderboard()
         if df is None or df.empty:
-            print("⚠️  No leaderboard data available.")
+            safe_print("⚠️  No leaderboard data available.")
             return
 
         W = 52
-        print("\n" + "═" * W)
-        print("  🪁  KiteML — Model Ranking")
-        print("═" * W)
-        print(f"  {'Rank':<5} {'Model':<26} {'CV Score':>8}")
-        print("─" * W)
+        safe_print("\n" + "═" * W)
+        safe_print("  🪁  KiteML — Model Ranking")
+        safe_print("═" * W)
+        safe_print(f"  {'Rank':<5} {'Model':<26} {'CV Score':>8}")
+        safe_print("─" * W)
 
         for _, row in df.iterrows():
             if pd.isna(row["CV Score"]):
-                print(f"  {'ERR':<5} {row['Model']:<26} {'FAILED':>8}")
+                safe_print(f"  {'ERR':<5} {row['Model']:<26} {'FAILED':>8}")
             else:
                 rank_str = f"#{int(row['Rank'])}"
                 marker = " ✓" if row["Best"] else ""
-                print(f"  {rank_str:<5} {row['Model']:<26} {row['CV Score']:>8.4f}{marker}")
+                safe_print(f"  {rank_str:<5} {row['Model']:<26} {row['CV Score']:>8.4f}{marker}")
 
-        print("═" * W)
+        safe_print("═" * W)
 
     # ------------------------------------------------------------------
     # 🔹 Phase 2 — Intelligence Layer Methods
@@ -622,7 +624,7 @@ class Result:
         else:
             from kiteml.profiling.report_generator import generate_profile_report
 
-            print(generate_profile_report(self.data_profile))
+            safe_print(generate_profile_report(self.data_profile))
 
     def recommendations(self) -> None:
         """Print all prioritized intelligence recommendations."""
@@ -634,42 +636,42 @@ class Result:
         self._require_profile("data_quality_report")
         q = self.data_profile.quality
         W = 54
-        print("\n" + "═" * W)
-        print("  🪁  KiteML — Data Quality Report")
-        print("═" * W)
-        print(f"  Quality Score  : {q.score}/100")
-        print(f"  Summary        : {q.summary}")
-        print("─" * W)
+        safe_print("\n" + "═" * W)
+        safe_print("  🪁  KiteML — Data Quality Report")
+        safe_print("═" * W)
+        safe_print(f"  Quality Score  : {q.score}/100")
+        safe_print(f"  Summary        : {q.summary}")
+        safe_print("─" * W)
         if not q.issues:
-            print("  ✅ No issues detected.")
+            safe_print("  ✅ No issues detected.")
         else:
             for issue in q.issues:
                 icon = "🔴" if issue.severity.value == "error" else "🟡" if issue.severity.value == "warning" else "ℹ️ "
-                print(f"  {icon} [{issue.issue_type}]")
-                print(f"     {issue.description}")
-                print(f"     → {issue.recommendation}")
-        print("═" * W)
+                safe_print(f"  {icon} [{issue.issue_type}]")
+                safe_print(f"     {issue.description}")
+                safe_print(f"     → {issue.recommendation}")
+        safe_print("═" * W)
 
     def leakage_report(self) -> None:
         """Print the leakage detection report."""
         self._require_profile("leakage_report")
         lk = self.data_profile.leakage
         W = 54
-        print("\n" + "═" * W)
-        print("  🪁  KiteML — Leakage Detection Report")
-        print("═" * W)
+        safe_print("\n" + "═" * W)
+        safe_print("  🪁  KiteML — Leakage Detection Report")
+        safe_print("═" * W)
         if not lk.has_leakage_risk:
-            print("  ✅ No leakage risks detected.")
+            safe_print("  ✅ No leakage risks detected.")
         else:
             for risk in lk.risks:
                 icon = "🚨" if risk.risk_level == "critical" else "⚠️ "
-                print(f"  {icon} [{risk.risk_level.upper()}] '{risk.column}'")
-                print(f"     Correlation: {risk.correlation_with_target:.4f}")
-                print(f"     Reason: {risk.reason}")
-        print("─" * W)
+                safe_print(f"  {icon} [{risk.risk_level.upper()}] '{risk.column}'")
+                safe_print(f"     Correlation: {risk.correlation_with_target:.4f}")
+                safe_print(f"     Reason: {risk.reason}")
+        safe_print("─" * W)
         for msg in lk.recommendations:
-            print(f"  {msg}")
-        print("═" * W)
+            safe_print(f"  {msg}")
+        safe_print("═" * W)
 
     def feature_summary(self, top_n: int = 10) -> None:
         """
@@ -679,29 +681,29 @@ class Result:
         """
         self._require_profile("feature_summary")
         W = 56
-        print("\n" + "═" * W)
-        print("  🪁  KiteML — Feature Intelligence Summary")
-        print("═" * W)
+        safe_print("\n" + "═" * W)
+        safe_print("  🪁  KiteML — Feature Intelligence Summary")
+        safe_print("═" * W)
 
         # Column type breakdown
-        print("  Column Types:")
+        safe_print("  Column Types:")
         for col_type, count in self.data_profile.column_analysis.type_summary.items():
-            print(f"    {col_type:<20} {count}")
+            safe_print(f"    {col_type:<20} {count}")
 
         # Feature recommendations
         feat_recs = self.data_profile.feature_recommendations
         if feat_recs.recommendations:
-            print("─" * W)
-            print("  Feature Recommendations:")
+            safe_print("─" * W)
+            safe_print("  Feature Recommendations:")
             for rec in feat_recs.recommendations[:8]:
                 icon = "⚠️ " if rec.priority == "high" else "💡"
-                print(f"    {icon} [{rec.action.upper()}] {rec.column}")
-                print(f"       {rec.reason[:70]}")
+                safe_print(f"    {icon} [{rec.action.upper()}] {rec.column}")
+                safe_print(f"       {rec.reason[:70]}")
 
         # Feature importances
         if self.feature_importances:
-            print("─" * W)
-            print(f"  Top {top_n} Feature Importances:")
+            safe_print("─" * W)
+            safe_print(f"  Top {top_n} Feature Importances:")
             sorted_fi = sorted(
                 self.feature_importances.items(),
                 key=lambda x: abs(x[1]),
@@ -709,9 +711,9 @@ class Result:
             )[:top_n]
             for feat, imp in sorted_fi:
                 bar = "█" * int(abs(imp) * 30)
-                print(f"    {feat:<22} {imp:+.4f}  {bar}")
+                safe_print(f"    {feat:<22} {imp:+.4f}  {bar}")
 
-        print("═" * W)
+        safe_print("═" * W)
 
     def export_html(self, path: str = "kiteml_report.html") -> str:
         """
@@ -828,9 +830,9 @@ class Result:
             current_df=current_data,
             feature_names=feature_names or self.feature_names,
         )
-        print(report.summary())
+        safe_print(report.summary())
         for rec in report.recommendations:
-            print(f"  {rec}")
+            safe_print(f"  {rec}")
         return report
 
     def export_onnx(
@@ -944,7 +946,7 @@ class Result:
         self,
         experiment_name: str = "default",
         dataset=None,
-        tags: Optional[Dict[str, str]] = None,
+        tags: Optional[dict[str, str]] = None,
         notes: str = "",
     ):
         """
@@ -1046,7 +1048,7 @@ class Result:
         from kiteml.governance.signatures import sign_model
 
         sig = sign_model(self)
-        print(f"🔏 Model signature: {sig.fingerprint}")
+        safe_print(f"🔏 Model signature: {sig.fingerprint}")
         return sig
 
     def generate_dashboard(

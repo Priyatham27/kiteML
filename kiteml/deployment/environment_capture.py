@@ -11,7 +11,6 @@ import platform
 import sys
 import time
 from dataclasses import dataclass
-from typing import Dict
 
 
 @dataclass
@@ -23,10 +22,10 @@ class EnvironmentSnapshot:
     platform_info: str
     os_info: str
     architecture: str
-    packages: Dict[str, str]  # package_name → version
+    packages: dict[str, str]  # package_name → version
     kiteml_version: str
-    key_packages: Dict[str, str]  # subset of most important ML packages
-    env_vars: Dict[str, str]  # relevant env variables
+    key_packages: dict[str, str]  # subset of most important ML packages
+    env_vars: dict[str, str]  # relevant env variables
 
     def to_dict(self) -> dict:
         return self.__dict__.copy()
@@ -86,7 +85,7 @@ def capture_environment() -> EnvironmentSnapshot:
     EnvironmentSnapshot
     """
     # All installed packages
-    packages: Dict[str, str] = {}
+    packages: dict[str, str] = {}
     try:
         for dist in importlib.metadata.distributions():
             name = dist.metadata["Name"]
@@ -97,7 +96,7 @@ def capture_environment() -> EnvironmentSnapshot:
         pass
 
     # Key ML packages subset
-    key_packages: Dict[str, str] = {}
+    key_packages: dict[str, str] = {}
     for pkg in _KEY_PACKAGES:
         normalized = pkg.lower().replace("-", "_")
         if normalized in packages:

@@ -8,12 +8,12 @@ stored by experiments/tracker.py.
 import json
 import os
 import shutil
-from typing import List, Optional
+from typing import Optional
 
 from kiteml.experiments.tracker import _DEFAULT_STORE, ExperimentRun
 
 
-def list_experiments(store_path: Optional[str] = None) -> List[str]:
+def list_experiments(store_path: Optional[str] = None) -> list[str]:
     """Return all experiment names in the store."""
     store = store_path or _DEFAULT_STORE
     if not os.path.isdir(store):

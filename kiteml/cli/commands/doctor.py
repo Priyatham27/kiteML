@@ -17,10 +17,7 @@ def run_doctor(args):
 
     # 1. Python version
     py_version = sys.version.split()[0]
-    if sys.version_info >= (3, 8):
-        print_step(f"Python version: {py_version} (Compatible)")
-    else:
-        print_warning(f"Python version: {py_version} (Warning: 3.8+ recommended)")
+    print_step(f"Python version: {py_version} (Compatible)")
 
     # 2. Core Dependencies
     try:

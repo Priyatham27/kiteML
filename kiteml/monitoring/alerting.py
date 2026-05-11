@@ -7,7 +7,7 @@ when drift, anomaly, or performance thresholds are exceeded.
 
 import time
 from dataclasses import dataclass
-from typing import Callable, Dict, List, Optional
+from typing import Callable, Optional
 
 
 @dataclass
@@ -49,7 +49,7 @@ class AlertEngine:
     """
 
     # Built-in default rules
-    DEFAULT_RULES: List[AlertRule] = [
+    DEFAULT_RULES: list[AlertRule] = [
         AlertRule(
             "high_drift",
             "psi",
@@ -89,14 +89,14 @@ class AlertEngine:
 
     def __init__(
         self,
-        rules: Optional[List[AlertRule]] = None,
+        rules: Optional[list[AlertRule]] = None,
         on_alert: Optional[Callable[[Alert], None]] = None,
         log_file: Optional[str] = None,
     ):
         self.rules = rules if rules is not None else list(self.DEFAULT_RULES)
         self.on_alert = on_alert or self._default_on_alert
         self.log_file = log_file
-        self.fired_alerts: List[Alert] = []
+        self.fired_alerts: list[Alert] = []
 
     @staticmethod
     def _default_on_alert(alert: Alert) -> None:
@@ -108,7 +108,7 @@ class AlertEngine:
         op = ops.get(rule.operator)
         return op(value, rule.threshold) if op else False
 
-    def check(self, metrics: Dict[str, float]) -> List[Alert]:
+    def check(self, metrics: dict[str, float]) -> list[Alert]:
         """
         Evaluate all rules against the given metrics dict.
 
@@ -123,7 +123,7 @@ class AlertEngine:
         list of Alert
             All fired alerts.
         """
-        fired: List[Alert] = []
+        fired: list[Alert] = []
         now = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
 
         for rule in self.rules:

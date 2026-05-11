@@ -5,10 +5,11 @@ A manifest is the "passport" of a deployed model — it describes what the model
 is, what it expects, and how to use it safely.
 """
 
+import contextlib
 import json
 import time
 from dataclasses import dataclass
-from typing import Any, Dict, List, Optional
+from typing import Any, Optional
 
 
 @dataclass
@@ -25,16 +26,16 @@ class ModelManifest:
     # Model metadata
     score: Optional[float]
     metric_name: str
-    feature_names: List[str]
+    feature_names: list[str]
     n_features: int
 
     # Schema
-    input_schema: Dict[str, str]  # feature → dtype
+    input_schema: dict[str, str]  # feature → dtype
     target_column: Optional[str]
 
     # Artifacts
-    artifacts: Dict[str, str]  # artifact_name → relative path
-    checksums: Dict[str, str]  # artifact_name → MD5
+    artifacts: dict[str, str]  # artifact_name → relative path
+    checksums: dict[str, str]  # artifact_name → MD5
 
     # Reproduction
     random_seed: Optional[int]
@@ -82,7 +83,7 @@ class ModelManifest:
     def load(cls, path: str) -> "ModelManifest":
         """Load manifest from JSON (YAML saved as JSON-compatible)."""
         with open(path, encoding="utf-8") as f:
-            content = f.read()
+            f.read()
         # Parse the pseudo-YAML (simple key: value)
         raise NotImplementedError("Use manifest.json (load_json) for programmatic loading.")
 
@@ -90,8 +91,8 @@ class ModelManifest:
 def build_manifest(
     result: Any,
     bundle_id: str,
-    artifacts: Dict[str, str],
-    checksums: Dict[str, str],
+    artifacts: dict[str, str],
+    checksums: dict[str, str],
     target_column: Optional[str] = None,
 ) -> ModelManifest:
     """
@@ -123,7 +124,7 @@ def build_manifest(
         kiteml_ver = "dev"
 
     # Build input schema
-    input_schema: Dict[str, str] = {}
+    input_schema: dict[str, str] = {}
     if result.preprocessor is not None:
         try:
             for feat in result.feature_names or []:
@@ -133,10 +134,8 @@ def build_manifest(
 
     # Get score
     score = None
-    try:
+    with contextlib.suppress(Exception):
         score = float(result.score)
-    except Exception:
-        pass
 
     # Metric name
     metric_name = "accuracy" if result.problem_type == "classification" else "r2"

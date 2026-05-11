@@ -10,7 +10,7 @@ import json
 import os
 import time
 from dataclasses import dataclass
-from typing import Any, Dict
+from typing import Any
 
 from kiteml.config import DEFAULT_CV_FOLDS, DEFAULT_RANDOM_STATE
 from kiteml.deployment.environment_capture import capture_environment
@@ -25,8 +25,8 @@ class ReproducibilitySnapshot:
     cv_folds: int
     python_version: str
     platform: str
-    key_packages: Dict[str, str]
-    kiteml_config: Dict[str, Any]
+    key_packages: dict[str, str]
+    kiteml_config: dict[str, Any]
     env_hash: str
     created_at: str
 

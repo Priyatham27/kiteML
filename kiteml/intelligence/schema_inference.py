@@ -7,7 +7,7 @@ decisions and reporting downstream.
 """
 
 from dataclasses import dataclass
-from typing import Any, Dict, List, Optional
+from typing import Any, Optional
 
 import pandas as pd
 
@@ -32,8 +32,8 @@ class ColumnSchema:
     skewness: Optional[float] = None
     distribution: Optional[str] = None  # "normal","right_skewed","left_skewed","uniform","bimodal"
     # Categorical only
-    top_values: Optional[List[Any]] = None
-    top_freqs: Optional[List[float]] = None
+    top_values: Optional[list[Any]] = None
+    top_freqs: Optional[list[float]] = None
 
 
 @dataclass
@@ -42,7 +42,7 @@ class DataSchema:
 
     n_rows: int
     n_cols: int
-    columns: Dict[str, ColumnSchema]
+    columns: dict[str, ColumnSchema]
     memory_bytes: int
 
     def to_dict(self) -> dict:

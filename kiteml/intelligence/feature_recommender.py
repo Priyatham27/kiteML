@@ -6,7 +6,7 @@ preprocessing improvements before or after training.
 """
 
 from dataclasses import dataclass
-from typing import List, Optional
+from typing import Optional
 
 import pandas as pd
 
@@ -28,13 +28,13 @@ class FeatureRecommendation:
 class FeatureRecommendationReport:
     """All feature recommendations for a dataset."""
 
-    recommendations: List[FeatureRecommendation]
-    drop_candidates: List[str]
-    encode_candidates: List[str]
-    transform_candidates: List[str]
+    recommendations: list[FeatureRecommendation]
+    drop_candidates: list[str]
+    encode_candidates: list[str]
+    transform_candidates: list[str]
     summary: str
 
-    def high_priority(self) -> List[FeatureRecommendation]:
+    def high_priority(self) -> list[FeatureRecommendation]:
         return [r for r in self.recommendations if r.priority == "high"]
 
 
@@ -58,10 +58,10 @@ def generate_recommendations(
     -------
     FeatureRecommendationReport
     """
-    recs: List[FeatureRecommendation] = []
-    drop_cands: List[str] = []
-    encode_cands: List[str] = []
-    transform_cands: List[str] = []
+    recs: list[FeatureRecommendation] = []
+    drop_cands: list[str] = []
+    encode_cands: list[str] = []
+    transform_cands: list[str] = []
 
     for col, profile in column_analysis.profiles.items():
         if col == target:

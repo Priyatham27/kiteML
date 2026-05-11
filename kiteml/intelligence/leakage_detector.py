@@ -7,7 +7,6 @@ copies of the label.
 """
 
 from dataclasses import dataclass
-from typing import List
 
 import numpy as np
 import pandas as pd
@@ -24,9 +23,9 @@ class LeakageRisk:
 @dataclass
 class LeakageReport:
     has_leakage_risk: bool
-    risks: List[LeakageRisk]
-    critical_columns: List[str]
-    recommendations: List[str]
+    risks: list[LeakageRisk]
+    critical_columns: list[str]
+    recommendations: list[str]
 
 
 def detect_leakage(
@@ -53,9 +52,9 @@ def detect_leakage(
     -------
     LeakageReport
     """
-    risks: List[LeakageRisk] = []
-    critical: List[str] = []
-    recommendations: List[str] = []
+    risks: list[LeakageRisk] = []
+    critical: list[str] = []
+    recommendations: list[str] = []
 
     if target not in df.columns:
         return LeakageReport(False, [], [], ["Target column not found."])

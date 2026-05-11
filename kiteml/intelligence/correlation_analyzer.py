@@ -8,7 +8,7 @@ Detects:
 """
 
 from dataclasses import dataclass
-from typing import Dict, List, Optional
+from typing import Optional
 
 import numpy as np
 import pandas as pd
@@ -28,11 +28,11 @@ class CorrelationPair:
 class CorrelationReport:
     """Full correlation analysis of a DataFrame."""
 
-    high_correlation_pairs: List[CorrelationPair]
-    target_correlations: Dict[str, float]  # col → |corr| with target
-    top_predictors: List[str]  # sorted by |corr| with target
-    redundant_features: List[str]  # likely safe to drop
-    recommendations: List[str]
+    high_correlation_pairs: list[CorrelationPair]
+    target_correlations: dict[str, float]  # col → |corr| with target
+    top_predictors: list[str]  # sorted by |corr| with target
+    redundant_features: list[str]  # likely safe to drop
+    recommendations: list[str]
 
 
 def analyze_correlations(
@@ -61,9 +61,9 @@ def analyze_correlations(
     numeric_df = df.select_dtypes(include=[np.number])
     feature_cols = [c for c in numeric_df.columns if c != target]
 
-    high_pairs: List[CorrelationPair] = []
-    redundant: List[str] = []
-    recommendations: List[str] = []
+    high_pairs: list[CorrelationPair] = []
+    redundant: list[str] = []
+    recommendations: list[str] = []
 
     # ── Feature-feature correlations ─────────────────────────────────────
     if len(feature_cols) >= 2:
@@ -97,8 +97,8 @@ def analyze_correlations(
         )
 
     # ── Target correlations ───────────────────────────────────────────────
-    target_corrs: Dict[str, float] = {}
-    top_predictors: List[str] = []
+    target_corrs: dict[str, float] = {}
+    top_predictors: list[str] = []
 
     if target and target in numeric_df.columns:
         corrs = numeric_df[feature_cols].corrwith(numeric_df[target]).abs().dropna()

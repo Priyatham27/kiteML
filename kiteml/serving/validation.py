@@ -1,12 +1,12 @@
 """serving/validation.py — Input validation utilities for the serving layer."""
 
-from typing import Any, List, Tuple
+from typing import Any
 
 
 def validate_predict_request(
     data: Any,
-    feature_names: List[str],
-) -> Tuple[bool, List[str]]:
+    feature_names: list[str],
+) -> tuple[bool, list[str]]:
     """
     Lightweight validation of a prediction request payload.
 
@@ -19,7 +19,7 @@ def validate_predict_request(
     -------
     (is_valid, errors)
     """
-    errors: List[str] = []
+    errors: list[str] = []
 
     if isinstance(data, dict):
         data = [data]

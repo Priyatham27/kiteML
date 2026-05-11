@@ -8,7 +8,7 @@ with models, experiments, and runs.
 import json
 import os
 import time
-from typing import Any, Dict, List, Optional
+from typing import Any, Optional
 
 _DEFAULT_STORE = os.path.join(os.path.expanduser("~"), ".kiteml", "metadata")
 
@@ -30,9 +30,9 @@ class MetadataStore:
         self._root = store_path or _DEFAULT_STORE
         self._path = os.path.join(self._root, f"{namespace}.json")
         os.makedirs(self._root, exist_ok=True)
-        self._data: Dict[str, Any] = self._load()
+        self._data: dict[str, Any] = self._load()
 
-    def _load(self) -> Dict[str, Any]:
+    def _load(self) -> dict[str, Any]:
         if os.path.exists(self._path):
             with open(self._path, encoding="utf-8") as f:
                 return json.load(f)
@@ -65,11 +65,11 @@ class MetadataStore:
             return True
         return False
 
-    def keys(self) -> List[str]:
+    def keys(self) -> list[str]:
         """Return all stored keys."""
         return list(self._data.keys())
 
-    def all(self) -> Dict[str, Any]:
+    def all(self) -> dict[str, Any]:
         """Return all stored metadata as plain dict."""
         return {k: v.get("value") for k, v in self._data.items()}
 

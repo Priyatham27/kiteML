@@ -6,8 +6,8 @@ try:
     from pydantic import BaseModel
 
     class PredictResponse(BaseModel):
-        predictions: List[Any]
-        probabilities: Optional[List[Dict[str, float]]] = None
+        predictions: list[Any]
+        probabilities: Optional[list[dict[str, float]]] = None
         n_rows: int
         model: str
         problem_type: str
@@ -18,7 +18,7 @@ try:
         uptime_s: float
 
     class SchemaResponse(BaseModel):
-        required_features: List[str]
+        required_features: list[str]
         problem_type: str
         n_features: int
 

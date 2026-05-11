@@ -8,7 +8,7 @@ including p50/p95/p99 latency, throughput, and degradation alerts.
 import time
 from collections import deque
 from dataclasses import dataclass
-from typing import Deque, List, Optional
+from typing import Optional
 
 import numpy as np
 
@@ -62,8 +62,8 @@ class PerformanceTracker:
         self.window_size = window_size
         self.p99_threshold_ms = p99_threshold_ms
         self.min_throughput_rps = min_throughput_rps
-        self._latencies: Deque[float] = deque(maxlen=window_size)
-        self._timestamps: Deque[float] = deque(maxlen=window_size)
+        self._latencies: deque[float] = deque(maxlen=window_size)
+        self._timestamps: deque[float] = deque(maxlen=window_size)
         self._total_requests: int = 0
 
     def record(self, latency_ms: float) -> None:
@@ -94,13 +94,13 @@ class PerformanceTracker:
             window_duration_s=round(duration_s, 2),
         )
 
-    def check_alerts(self) -> List[PerformanceAlert]:
+    def check_alerts(self) -> list[PerformanceAlert]:
         """Check for performance degradation alerts."""
         snap = self.snapshot()
         if snap is None:
             return []
 
-        alerts: List[PerformanceAlert] = []
+        alerts: list[PerformanceAlert] = []
         now = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
 
         if snap.p99_ms > self.p99_threshold_ms:

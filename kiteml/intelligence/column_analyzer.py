@@ -20,7 +20,7 @@ constant    → single-value useless columns
 
 from dataclasses import dataclass, field
 from enum import Enum
-from typing import Dict, List, Optional
+from typing import Optional
 
 import pandas as pd
 
@@ -47,19 +47,19 @@ class ColumnProfile:
     n_unique: int
     unique_ratio: float
     null_ratio: float
-    sample_values: List
+    sample_values: list
     confidence: float  # 0–1 confidence in the inferred type
-    notes: List[str] = field(default_factory=list)
+    notes: list[str] = field(default_factory=list)
 
 
 @dataclass
 class ColumnAnalysisResult:
     """Full analysis of all columns in a DataFrame."""
 
-    profiles: Dict[str, ColumnProfile]
-    type_summary: Dict[str, int]  # ColumnType → count
+    profiles: dict[str, ColumnProfile]
+    type_summary: dict[str, int]  # ColumnType → count
 
-    def of_type(self, column_type: ColumnType) -> List[str]:
+    def of_type(self, column_type: ColumnType) -> list[str]:
         """Return column names matching the given type."""
         return [name for name, p in self.profiles.items() if p.column_type == column_type]
 
@@ -124,8 +124,7 @@ def _classify_column(series: pd.Series, name: str) -> ColumnProfile:
     unique_ratio = n_unique / len(non_null) if len(non_null) > 0 else 0.0
     sample_vals = non_null.head(5).tolist()
     dtype_str = str(series.dtype)
-    notes: List[str] = []
-    confidence = 0.9
+    notes: list[str] = []
 
     # ── CONSTANT ─────────────────────────────────────────────────────────
     if n_unique <= 1:
@@ -332,7 +331,7 @@ def _classify_column(series: pd.Series, name: str) -> ColumnProfile:
 
 def analyze_columns(
     df: pd.DataFrame,
-    exclude: Optional[List[str]] = None,
+    exclude: Optional[list[str]] = None,
 ) -> ColumnAnalysisResult:
     """
     Analyze every column in a DataFrame and return semantic type profiles.
@@ -350,14 +349,14 @@ def analyze_columns(
         Structured result with per-column profiles and a type summary.
     """
     exclude_set = set(exclude or [])
-    profiles: Dict[str, ColumnProfile] = {}
+    profiles: dict[str, ColumnProfile] = {}
 
     for col in df.columns:
         if col in exclude_set:
             continue
         profiles[col] = _classify_column(df[col], col)
 
-    type_summary: Dict[str, int] = {}
+    type_summary: dict[str, int] = {}
     for p in profiles.values():
         key = p.column_type.value
         type_summary[key] = type_summary.get(key, 0) + 1

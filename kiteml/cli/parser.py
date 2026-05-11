@@ -10,13 +10,15 @@ from kiteml.cli.commands.train import setup_train_parser
 
 def build_parser() -> argparse.ArgumentParser:
     """Build the main argparse parser with all subcommands."""
+    from kiteml import __version__
+
     parser = argparse.ArgumentParser(
         prog="kiteml",
         description="KiteML — Intelligent Machine Learning Framework",
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )
 
-    parser.add_argument("--version", action="version", version="KiteML 0.1.0")
+    parser.add_argument("--version", action="version", version=f"KiteML {__version__}")
 
     subparsers = parser.add_subparsers(title="commands", dest="command", help="Available commands")
 

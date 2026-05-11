@@ -59,7 +59,6 @@ def export_html(profile: DataProfile, path: str = "kiteml_report.html") -> str:
     q = profile.quality
     lk = profile.leakage
     mr = profile.master_recommendations
-    ol = profile.outliers
     mem = profile.memory
     im = profile.imbalance
 

@@ -36,3 +36,20 @@ coverage.xml
 
 # Jupyter
 .ipynb_checkpoints/
+
+# MkDocs site output
+site/
+
+# Build artifacts
+*.whl
+*.tar.gz
+
+# Environment variables
+.env
+.env.local
+
+# MyPy cache
+.mypy_cache/
+
+# Ruff cache
+.ruff_cache/

@@ -3,14 +3,14 @@ benchmarks/benchmark_runner.py — Standardized benchmarking system.
 """
 
 import time
-from typing import Any, Dict
+from typing import Any
 
 import pandas as pd
 
 from kiteml.core import train
 
 
-def run_benchmark(dataset_path: str, target_col: str) -> Dict[str, Any]:
+def run_benchmark(dataset_path: str, target_col: str) -> dict[str, Any]:
     """Run standardized training and inference benchmarking."""
     print(f"Benchmarking KiteML on {dataset_path}...")
 

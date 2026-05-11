@@ -5,13 +5,14 @@ Automatically captures run metadata from a Result object and stores it
 in a local JSON-based experiment store.  No external server needed.
 """
 
+import contextlib
 import hashlib
 import json
 import os
 import time
 import uuid
 from dataclasses import dataclass
-from typing import Any, Dict, List, Optional
+from typing import Any, Optional
 
 _DEFAULT_STORE = os.path.join(os.path.expanduser("~"), ".kiteml", "experiments")
 
@@ -25,13 +26,13 @@ class ExperimentRun:
     model_name: str
     problem_type: str
     score: Optional[float]
-    metrics: Dict[str, float]
+    metrics: dict[str, float]
     training_time_s: float
     n_features: int
-    feature_names: List[str]
-    all_results: Dict[str, float]
+    feature_names: list[str]
+    all_results: dict[str, float]
     dataset_hash: Optional[str]
-    tags: Dict[str, str]
+    tags: dict[str, str]
     notes: str
     created_at: str
 
@@ -62,7 +63,7 @@ def track(
     result: Any,
     experiment_name: str = "default",
     dataset: Optional[Any] = None,
-    tags: Optional[Dict[str, str]] = None,
+    tags: Optional[dict[str, str]] = None,
     notes: str = "",
     store_path: Optional[str] = None,
 ) -> ExperimentRun:
@@ -93,29 +94,23 @@ def track(
     dataset_hash = _hash_dataframe(dataset) if dataset is not None else None
 
     # Extract metrics from typed dataclass
-    metrics: Dict[str, float] = {}
+    metrics: dict[str, float] = {}
     try:
         if hasattr(result.metrics, "__dict__"):
             for k, v in result.metrics.__dict__.items():
-                try:
+                with contextlib.suppress(TypeError, ValueError):
                     metrics[k] = float(v)
-                except (TypeError, ValueError):
-                    pass
     except Exception:
         pass
 
     score = None
-    try:
+    with contextlib.suppress(Exception):
         score = float(result.score)
-    except Exception:
-        pass
 
-    all_results: Dict[str, float] = {}
+    all_results: dict[str, float] = {}
     for k, v in (result.all_results or {}).items():
-        try:
+        with contextlib.suppress(Exception):
             all_results[k] = float(v)
-        except Exception:
-            pass
 
     run = ExperimentRun(
         run_id=run_id,
@@ -150,14 +145,14 @@ def track(
 def list_runs(
     experiment_name: str = "default",
     store_path: Optional[str] = None,
-) -> List[ExperimentRun]:
+) -> list[ExperimentRun]:
     """List all recorded runs for an experiment."""
     store = store_path or _DEFAULT_STORE
     exp_dir = os.path.join(store, experiment_name)
     if not os.path.isdir(exp_dir):
         return []
 
-    runs: List[ExperimentRun] = []
+    runs: list[ExperimentRun] = []
     for fname in sorted(os.listdir(exp_dir)):
         if fname.endswith(".json"):
             with open(os.path.join(exp_dir, fname), encoding="utf-8") as f:

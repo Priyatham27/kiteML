@@ -3,7 +3,7 @@ cardinality_analyzer.py — Cardinality analysis for categorical columns.
 """
 
 from dataclasses import dataclass
-from typing import Any, Dict, List
+from typing import Any
 
 import pandas as pd
 
@@ -13,7 +13,7 @@ class CardinalityInfo:
     column: str
     n_unique: int
     cardinality_level: str  # "low" | "medium" | "high" | "very_high"
-    rare_categories: List[Any]
+    rare_categories: list[Any]
     rare_count: int
     top_value: Any
     top_freq: float
@@ -23,9 +23,9 @@ class CardinalityInfo:
 @dataclass
 class CardinalityReport:
     columns_analyzed: int
-    high_cardinality_columns: List[str]
-    details: Dict[str, CardinalityInfo]
-    recommendations: List[str]
+    high_cardinality_columns: list[str]
+    details: dict[str, CardinalityInfo]
+    recommendations: list[str]
 
 
 def analyze_cardinality(
@@ -37,9 +37,9 @@ def analyze_cardinality(
 ) -> CardinalityReport:
     """Analyze cardinality of categorical/object columns."""
     cat_cols = df.select_dtypes(include=["object", "category", "string"]).columns.tolist()
-    details: Dict[str, CardinalityInfo] = {}
-    high_card: List[str] = []
-    recommendations: List[str] = []
+    details: dict[str, CardinalityInfo] = {}
+    high_card: list[str] = []
+    recommendations: list[str] = []
 
     for col in cat_cols:
         series = df[col].dropna()

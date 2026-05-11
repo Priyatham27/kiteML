@@ -35,7 +35,7 @@ def run_monitor(args):
             return 1
 
         print_info(f"Loading production data from {args.data}...")
-        current_df = pd.read_csv(args.data) if args.data.endswith(".csv") else pd.read_parquet(args.data)
+        pd.read_csv(args.data) if args.data.endswith(".csv") else pd.read_parquet(args.data)
 
         # We need the reference DataFrame, but load_bundle doesn't store the full training DF.
         # Drift monitor supports using feature_distributions if available.

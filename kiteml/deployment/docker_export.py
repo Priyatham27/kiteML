@@ -14,7 +14,7 @@ No Docker installation needed to generate these files.
 import os
 import time
 from dataclasses import dataclass
-from typing import Any, List, Optional
+from typing import Any, Optional
 
 
 @dataclass
@@ -22,7 +22,7 @@ class DockerExportResult:
     """Result of docker export operation."""
 
     output_dir: str
-    files_created: List[str]
+    files_created: list[str]
 
 
 _DOCKERFILE = """\
@@ -216,13 +216,13 @@ def export_docker(
     DockerExportResult
     """
     os.makedirs(output_dir, exist_ok=True)
-    files_created: List[str] = []
+    files_created: list[str] = []
     generated_at = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
 
     # ── requirements.txt ──────────────────────────────────────────────────
     from kiteml.deployment.environment_capture import capture_environment
 
-    env = capture_environment()
+    capture_environment()
 
     # Minimal requirements for the inference server
     base_deps = [

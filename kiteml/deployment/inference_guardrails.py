@@ -6,7 +6,7 @@ from schema mismatches, wrong dtypes, missing columns, or out-of-range values.
 """
 
 from dataclasses import dataclass
-from typing import Any, Dict, List, Optional
+from typing import Any, Optional
 
 import numpy as np
 import pandas as pd
@@ -29,9 +29,9 @@ class GuardrailResult:
     """Result of guardrail validation."""
 
     is_valid: bool
-    violations: List[GuardrailViolation]
-    errors: List[GuardrailViolation]
-    warnings: List[GuardrailViolation]
+    violations: list[GuardrailViolation]
+    errors: list[GuardrailViolation]
+    warnings: list[GuardrailViolation]
     summary: str
 
     def raise_if_invalid(self) -> None:
@@ -57,8 +57,8 @@ class InferenceGuardrails:
 
     def __init__(
         self,
-        feature_names: List[str],
-        schema: Optional[Dict] = None,
+        feature_names: list[str],
+        schema: Optional[dict] = None,
         allow_extra_columns: bool = True,
     ):
         self.feature_names = feature_names
@@ -77,7 +77,7 @@ class InferenceGuardrails:
         -------
         GuardrailResult
         """
-        violations: List[GuardrailViolation] = []
+        violations: list[GuardrailViolation] = []
 
         # Normalize to DataFrame
         try:

@@ -7,7 +7,7 @@ with progress tracking and optional output writing.
 
 import time
 from dataclasses import dataclass
-from typing import Any, List, Optional, Union
+from typing import Any, Optional, Union
 
 import numpy as np
 import pandas as pd
@@ -74,8 +74,8 @@ def batch_predict(
 
     t0 = time.perf_counter()
     guardrails = InferenceGuardrails(result.feature_names or []) if validate else None
-    all_preds: List[np.ndarray] = []
-    all_probas: List[np.ndarray] = []
+    all_preds: list[np.ndarray] = []
+    all_probas: list[np.ndarray] = []
     n_chunks = 0
     n_rows = 0
     has_proba = result.problem_type == "classification" and hasattr(result.model, "predict_proba")
@@ -91,8 +91,7 @@ def batch_predict(
                 df = pd.read_parquet(data)
                 yield from _chunk_dataframe(df)
             else:
-                for chunk in pd.read_csv(data, chunksize=chunk_size):
-                    yield chunk
+                yield from pd.read_csv(data, chunksize=chunk_size)
         elif isinstance(data, pd.DataFrame):
             yield from _chunk_dataframe(data)
         else:
@@ -115,10 +114,7 @@ def batch_predict(
             gr.raise_if_invalid()
 
         # Preprocess
-        if result.preprocessor is not None:
-            X = result.preprocessor.transform(chunk)
-        else:
-            X = chunk.values
+        X = result.preprocessor.transform(chunk) if result.preprocessor is not None else chunk.values
 
         # Predict
         preds = result.model.predict(X)

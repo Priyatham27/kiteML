@@ -6,7 +6,7 @@ prioritized, non-redundant recommendation report.
 """
 
 from dataclasses import dataclass
-from typing import List, Optional
+from typing import Optional
 
 from kiteml.intelligence.cardinality_analyzer import CardinalityReport
 from kiteml.intelligence.correlation_analyzer import CorrelationReport
@@ -32,14 +32,14 @@ class MasterRecommendation:
 class MasterRecommendationReport:
     """All recommendations aggregated from Phase 2 intelligence modules."""
 
-    recommendations: List[MasterRecommendation]
+    recommendations: list[MasterRecommendation]
     critical_count: int
     high_count: int
     medium_count: int
     low_count: int
     overall_health: str  # "excellent" | "good" | "fair" | "poor"
 
-    def by_priority(self, priority: str) -> List[MasterRecommendation]:
+    def by_priority(self, priority: str) -> list[MasterRecommendation]:
         return [r for r in self.recommendations if r.priority == priority]
 
     def print_report(self) -> None:
@@ -79,7 +79,7 @@ def build_recommendation_report(
 
     All parameters are optional — pass only what you've computed.
     """
-    recs: List[MasterRecommendation] = []
+    recs: list[MasterRecommendation] = []
 
     # ── Leakage (critical) ────────────────────────────────────────────────
     if leakage:

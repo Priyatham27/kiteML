@@ -6,11 +6,11 @@ try:
     from pydantic import BaseModel
 
     class SinglePredictRequest(BaseModel):
-        data: Dict[str, Any]
+        data: dict[str, Any]
         return_probabilities: bool = True
 
     class BatchPredictRequest(BaseModel):
-        data: List[Dict[str, Any]]
+        data: list[dict[str, Any]]
         return_probabilities: bool = True
         chunk_size: int = 100
 

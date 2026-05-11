@@ -15,14 +15,14 @@ The report includes:
 All formatting is done with plain ASCII/Unicode — no external dependencies.
 """
 
-from typing import Any, Dict, Optional
+from typing import Any, Optional
 
 
 def generate_report(
-    metrics: Dict[str, Any],
+    metrics: dict[str, Any],
     problem_type: str = "classification",
     model_name: Optional[str] = None,
-    all_results: Optional[Dict[str, Dict[str, Any]]] = None,
+    all_results: Optional[dict[str, dict[str, Any]]] = None,
 ) -> str:
     """
     Generate a formatted KiteML evaluation report string.

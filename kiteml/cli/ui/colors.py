@@ -6,6 +6,8 @@ Provides beautiful ANSI colors, banners, and status messages without heavy depen
 
 import sys
 
+from kiteml.utils.encoding import safe_print
+
 # ANSI color codes
 RESET = "\033[0m"
 BOLD = "\033[1m"
@@ -35,30 +37,37 @@ def colorize(text: str, color: str) -> str:
 def print_banner():
     """Print the KiteML CLI banner."""
     banner = f"""{BOLD}{BLUE}
- 🪁 KiteML{RESET}{BLUE} — Machine Learning Framework
+ \U0001fa81 KiteML{RESET}{BLUE} \u2014 Machine Learning Framework
 {RESET}"""
-    print(banner)
+    safe_print(banner)
 
 
 def print_step(message: str):
-    print(f" {colorize('✓', GREEN)} {message}")
+    icon = "\u2713"
+    safe_print(f" {colorize(icon, GREEN)} {message}")
 
 
 def print_info(message: str):
-    print(f" {colorize('ℹ', BLUE)} {message}")
+    icon = "\u2139"
+    safe_print(f" {colorize(icon, BLUE)} {message}")
 
 
 def print_warning(message: str):
-    print(f" {colorize('⚠', YELLOW)} {message}")
+    icon = "\u26a0"
+    safe_print(f" {colorize(icon, YELLOW)} {message}")
 
 
 def print_error(message: str):
-    print(f" {colorize('✖', RED)} {message}")
+    icon = "\u2716"
+    safe_print(f" {colorize(icon, RED)} {message}")
 
 
 def print_header(message: str):
-    print(f"\n{BOLD}{colorize('── ' + message + ' ──', CYAN)}{RESET}")
+    msg = "\u2500\u2500 " + message + " \u2500\u2500"
+    safe_print(f"\n{BOLD}{colorize(msg, CYAN)}{RESET}")
 
 
 def print_success(message: str):
-    print(f"\n{BOLD}{colorize('🎉 ' + message, GREEN)}{RESET}")
+    icon = "\U0001f389 "
+    safe_print(f"\n{BOLD}{colorize(icon + message, GREEN)}{RESET}")
+

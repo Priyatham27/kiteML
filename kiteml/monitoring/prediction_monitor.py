@@ -11,7 +11,7 @@ Records every prediction made in production and surfaces:
 import time
 from collections import defaultdict
 from dataclasses import dataclass
-from typing import Any, Dict, List, Optional
+from typing import Any, Optional
 
 import numpy as np
 
@@ -33,7 +33,7 @@ class PredictionStats:
 
     total_predictions: int
     unique_predictions: int
-    prediction_distribution: Dict[str, float]
+    prediction_distribution: dict[str, float]
     avg_confidence: Optional[float]
     min_confidence: Optional[float]
     max_confidence: Optional[float]
@@ -54,7 +54,7 @@ class PredictionMonitor:
 
     def __init__(self, max_history: int = 10_000):
         self.max_history = max_history
-        self._records: List[PredictionRecord] = []
+        self._records: list[PredictionRecord] = []
 
     def record(
         self,
@@ -128,9 +128,9 @@ class PredictionMonitor:
         self,
         low_confidence_threshold: float = 0.6,
         high_latency_threshold_ms: float = 500.0,
-    ) -> List[str]:
+    ) -> list[str]:
         """Return list of detected anomaly warnings."""
-        warnings: List[str] = []
+        warnings: list[str] = []
         stats = self.stats()
         if stats.avg_confidence is not None and stats.avg_confidence < low_confidence_threshold:
             warnings.append(

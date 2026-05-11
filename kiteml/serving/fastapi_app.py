@@ -6,7 +6,7 @@ Optional dependency: pip install fastapi uvicorn pydantic
 """
 
 import time
-from typing import Any, Dict, List, Optional
+from typing import Any, Optional
 
 
 def create_app(result: Any):
@@ -39,12 +39,12 @@ def create_app(result: Any):
     )
 
     class PredictRequest(BaseModel):
-        data: List[Dict[str, Any]]
+        data: list[dict[str, Any]]
         return_probabilities: bool = True
 
     class PredictResponse(BaseModel):
-        predictions: List[Any]
-        probabilities: Optional[List[Dict[str, float]]] = None
+        predictions: list[Any]
+        probabilities: Optional[list[dict[str, float]]] = None
         n_rows: int
         model: str
         problem_type: str
@@ -123,7 +123,7 @@ def create_app_from_engine(engine: Any):
     app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_methods=["*"], allow_headers=["*"])
 
     class PredictRequest(BaseModel):
-        data: List[Dict[str, Any]]
+        data: list[dict[str, Any]]
 
     @app.get("/health")
     def health():

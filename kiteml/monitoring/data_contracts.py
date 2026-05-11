@@ -8,7 +8,7 @@ nullability constraints.  Used by guardrails for strict enforcement.
 import json
 import os
 from dataclasses import dataclass
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Optional
 
 
 @dataclass
@@ -20,7 +20,7 @@ class FeatureContract:
     nullable: bool = False
     min_value: Optional[float] = None
     max_value: Optional[float] = None
-    allowed_values: Optional[List[Any]] = None  # for categoricals
+    allowed_values: Optional[list[Any]] = None  # for categoricals
     description: str = ""
 
 
@@ -30,12 +30,12 @@ class DataContract:
 
     model_name: str
     version: str
-    features: Dict[str, FeatureContract]
+    features: dict[str, FeatureContract]
     created_at: str = ""
 
-    def validate(self, data: Dict[str, Any]) -> Tuple[bool, List[str]]:
+    def validate(self, data: dict[str, Any]) -> tuple[bool, list[str]]:
         """Validate a single row dict against the contract. Returns (ok, errors)."""
-        errors: List[str] = []
+        errors: list[str] = []
         for feat_name, contract in self.features.items():
             if feat_name not in data:
                 if not contract.nullable:
@@ -88,7 +88,7 @@ class DataContract:
         """Build a DataContract from a KiteML Result + DataProfile."""
         import time
 
-        features: Dict[str, FeatureContract] = {}
+        features: dict[str, FeatureContract] = {}
 
         for feat in result.feature_names or []:
             dtype = "float"

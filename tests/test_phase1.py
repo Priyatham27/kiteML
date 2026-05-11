@@ -152,7 +152,7 @@ class TestModelSelector:
 
         X_train, _, y_train, _ = clf_arrays
         best_model, all_results = select_best_model(X_train, y_train, problem_type="classification", cv=3)
-        best_name = type(best_model).__name__
+        type(best_model).__name__
         # Map display name to class name (registry may use short names)
         rank_1_models = [name for name, info in all_results.items() if info.get("rank") == 1]
         assert len(rank_1_models) == 1
@@ -359,7 +359,7 @@ class TestFullPipeline:
         import kiteml
 
         result = kiteml.train(clf_data, target="target", problem_type="classification")
-        for name, info in result.all_results.items():
+        for _name, info in result.all_results.items():
             assert isinstance(info, dict)
             assert "score" in info
             assert "rank" in info

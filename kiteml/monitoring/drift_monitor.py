@@ -13,7 +13,7 @@ PSI Guide:
 """
 
 from dataclasses import dataclass
-from typing import Dict, List, Optional, Tuple
+from typing import Optional
 
 import numpy as np
 import pandas as pd
@@ -39,12 +39,12 @@ class DriftReport:
 
     reference_rows: int
     current_rows: int
-    drifted_features: List[str]
-    feature_results: Dict[str, FeatureDriftResult]
+    drifted_features: list[str]
+    feature_results: dict[str, FeatureDriftResult]
     overall_psi: float
     drift_detected: bool
     severity: str
-    recommendations: List[str]
+    recommendations: list[str]
 
     def summary(self) -> str:
         icon = "🚨" if self.drift_detected else "✅"
@@ -76,7 +76,7 @@ def _compute_psi(
     return round(abs(psi), 4)
 
 
-def _compute_ks(a: np.ndarray, b: np.ndarray) -> Tuple[float, float]:
+def _compute_ks(a: np.ndarray, b: np.ndarray) -> tuple[float, float]:
     """Compute KS statistic and p-value."""
     try:
         from scipy.stats import ks_2samp
@@ -97,7 +97,7 @@ def _compute_ks(a: np.ndarray, b: np.ndarray) -> Tuple[float, float]:
 def check_drift(
     reference_df: pd.DataFrame,
     current_df: pd.DataFrame,
-    feature_names: Optional[List[str]] = None,
+    feature_names: Optional[list[str]] = None,
     psi_threshold_moderate: float = 0.1,
     psi_threshold_high: float = 0.2,
     ks_threshold: float = 0.05,
@@ -130,9 +130,9 @@ def check_drift(
     if feature_names:
         common_cols = [f for f in feature_names if f in common_cols]
 
-    feature_results: Dict[str, FeatureDriftResult] = {}
-    all_psis: List[float] = []
-    drifted: List[str] = []
+    feature_results: dict[str, FeatureDriftResult] = {}
+    all_psis: list[float] = []
+    drifted: list[str] = []
 
     for feat in common_cols:
         ref = numeric_ref[feat].dropna().values
@@ -180,7 +180,7 @@ def check_drift(
     else:
         overall_severity = "none"
 
-    recommendations: List[str] = []
+    recommendations: list[str] = []
     if overall_severity == "high":
         recommendations.append(f"🚨 High drift detected (PSI={overall_psi:.3f}). Consider retraining.")
     elif overall_severity == "moderate":

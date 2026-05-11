@@ -6,7 +6,7 @@ production rows with extreme or suspicious feature values.
 """
 
 from dataclasses import dataclass
-from typing import Any, Dict, List
+from typing import Any
 
 import numpy as np
 import pandas as pd
@@ -33,9 +33,9 @@ class AnomalyResult:
     n_rows: int
     n_anomalous: int
     anomaly_ratio: float
-    anomalous_rows: List[int]  # row indices
-    anomalous_features: Dict[int, List[str]]  # row_idx → flagged features
-    feature_violation_counts: Dict[str, int]
+    anomalous_rows: list[int]  # row indices
+    anomalous_features: dict[int, list[str]]  # row_idx → flagged features
+    feature_violation_counts: dict[str, int]
     has_anomalies: bool
 
     def summary(self) -> str:
@@ -70,7 +70,7 @@ class AnomalyMonitor:
         self.method = method
         self.iqr_multiplier = iqr_multiplier
         self.zscore_threshold = zscore_threshold
-        self._stats: Dict[str, FeatureStats] = {}
+        self._stats: dict[str, FeatureStats] = {}
 
     def fit(self, df: pd.DataFrame) -> "AnomalyMonitor":
         """
@@ -115,8 +115,8 @@ class AnomalyMonitor:
             raise RuntimeError("Call fit() with training data before check().")
 
         n_rows = len(df)
-        row_flags: Dict[int, List[str]] = {}
-        feature_violations: Dict[str, int] = {}
+        row_flags: dict[int, list[str]] = {}
+        feature_violations: dict[str, int] = {}
 
         for col, stats in self._stats.items():
             if col not in df.columns:

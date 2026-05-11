@@ -9,7 +9,7 @@ Requires: pip install skl2onnx onnx
 
 import os
 from dataclasses import dataclass
-from typing import Any, List
+from typing import Any
 
 
 @dataclass
@@ -26,7 +26,7 @@ class OnnxExportResult:
 
 def export_onnx(
     model: Any,
-    feature_names: List[str],
+    feature_names: list[str],
     path: str = "model.onnx",
     initial_type_hint: str = "float32",
     opset_version: int = 17,

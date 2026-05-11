@@ -10,7 +10,7 @@ import os
 import pickle
 import time
 from dataclasses import dataclass
-from typing import Any, Dict
+from typing import Any
 
 
 @dataclass
@@ -79,7 +79,7 @@ def load_pickle(path: str) -> Any:
         return pickle.load(f)
 
 
-def save_json(data: Dict, path: str, indent: int = 2) -> SerializationResult:
+def save_json(data: dict, path: str, indent: int = 2) -> SerializationResult:
     """Save a dictionary as JSON."""
     os.makedirs(os.path.dirname(os.path.abspath(path)), exist_ok=True)
     with open(path, "w", encoding="utf-8") as f:
@@ -94,7 +94,7 @@ def save_json(data: Dict, path: str, indent: int = 2) -> SerializationResult:
     )
 
 
-def load_json(path: str) -> Dict:
+def load_json(path: str) -> dict:
     """Load a JSON file."""
     with open(path, encoding="utf-8") as f:
         return json.load(f)

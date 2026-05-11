@@ -8,7 +8,7 @@ Supports three detection methods:
 """
 
 from dataclasses import dataclass
-from typing import Dict, List, Optional
+from typing import Optional
 
 import numpy as np
 import pandas as pd
@@ -24,7 +24,7 @@ class ColumnOutlierInfo:
     outlier_ratio: float
     lower_bound: Optional[float]
     upper_bound: Optional[float]
-    example_values: List[float]
+    example_values: list[float]
 
 
 @dataclass
@@ -32,12 +32,12 @@ class OutlierReport:
     """Complete outlier analysis report."""
 
     columns_analyzed: int
-    columns_with_outliers: List[str]
-    details: Dict[str, ColumnOutlierInfo]
+    columns_with_outliers: list[str]
+    details: dict[str, ColumnOutlierInfo]
     total_outlier_rows: int  # rows flagged by any column
     outlier_row_ratio: float
     has_outliers: bool
-    recommendations: List[str]
+    recommendations: list[str]
 
 
 def _iqr_outliers(series: pd.Series) -> tuple:
@@ -66,7 +66,7 @@ def detect_outliers(
     df: pd.DataFrame,
     method: str = "iqr",
     zscore_threshold: float = 3.0,
-    exclude_columns: Optional[List[str]] = None,
+    exclude_columns: Optional[list[str]] = None,
 ) -> OutlierReport:
     """
     Detect outliers in numeric columns.
@@ -88,7 +88,7 @@ def detect_outliers(
     exclude = set(exclude_columns or [])
     numeric_cols = [c for c in df.select_dtypes(include=[np.number]).columns if c not in exclude]
 
-    details: Dict[str, ColumnOutlierInfo] = {}
+    details: dict[str, ColumnOutlierInfo] = {}
     all_outlier_mask = pd.Series(False, index=df.index)
 
     for col in numeric_cols:
@@ -120,7 +120,7 @@ def detect_outliers(
     total_outlier_rows = int(all_outlier_mask.sum())
     outlier_row_ratio = round(total_outlier_rows / len(df), 4) if len(df) > 0 else 0.0
 
-    recommendations: List[str] = []
+    recommendations: list[str] = []
     if cols_with_outliers:
         recommendations.append(f"Outliers detected in {len(cols_with_outliers)} column(s): {cols_with_outliers[:5]}")
         if outlier_row_ratio > 0.05:

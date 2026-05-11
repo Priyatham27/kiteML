@@ -6,7 +6,6 @@ long strings, high vocabulary diversity, many unique values.
 """
 
 from dataclasses import dataclass
-from typing import Dict, List
 
 import pandas as pd
 
@@ -27,8 +26,8 @@ class TextColumnInfo:
 class TextDetectionResult:
     """Result of text column detection across a DataFrame."""
 
-    text_columns: List[str]
-    details: Dict[str, TextColumnInfo]
+    text_columns: list[str]
+    details: dict[str, TextColumnInfo]
     has_text: bool
 
 
@@ -53,8 +52,8 @@ def detect_text_columns(
     -------
     TextDetectionResult
     """
-    text_cols: List[str] = []
-    details: Dict[str, TextColumnInfo] = {}
+    text_cols: list[str] = []
+    details: dict[str, TextColumnInfo] = {}
 
     string_cols = df.select_dtypes(include=["object", "string"]).columns
 

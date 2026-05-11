@@ -2,7 +2,7 @@
 integrations/mlflow.py — MLflow tracking integration for KiteML.
 """
 
-from typing import Any, Dict
+from typing import Any
 
 
 def setup_mlflow(experiment_name: str, tracking_uri: str = None) -> bool:
@@ -19,7 +19,7 @@ def setup_mlflow(experiment_name: str, tracking_uri: str = None) -> bool:
     return True
 
 
-def log_run(result: Any, tags: Dict[str, str] = None) -> None:
+def log_run(result: Any, tags: dict[str, str] = None) -> None:
     """Log a KiteML Result to the active MLflow run."""
     try:
         import mlflow

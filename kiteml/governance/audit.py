@@ -10,7 +10,7 @@ import os
 import time
 import uuid
 from dataclasses import dataclass
-from typing import Any, Dict, Optional
+from typing import Any, Optional
 
 _DEFAULT_AUDIT_LOG = os.path.join(os.path.expanduser("~"), ".kiteml", "audit.jsonl")
 
@@ -24,7 +24,7 @@ class AuditEntry:
     model_name: str
     timestamp: str
     actor: str  # "system" | "user:<name>"
-    details: Dict[str, Any]
+    details: dict[str, Any]
     severity: str  # "info" | "warning" | "critical"
 
     def to_dict(self) -> dict:
@@ -60,7 +60,7 @@ class AuditLogger:
         with open(self.log_path, "a", encoding="utf-8") as f:
             f.write(json.dumps(entry.to_dict(), default=str) + "\n")
 
-    def _log(self, event_type: str, details: Dict, severity: str = "info") -> AuditEntry:
+    def _log(self, event_type: str, details: dict, severity: str = "info") -> AuditEntry:
         entry = AuditEntry(
             entry_id=str(uuid.uuid4())[:8],
             event_type=event_type,

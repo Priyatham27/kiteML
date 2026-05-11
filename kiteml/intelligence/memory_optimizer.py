@@ -3,7 +3,6 @@ memory_optimizer.py — Memory usage analysis and dtype optimization suggestions
 """
 
 from dataclasses import dataclass
-from typing import Dict, List
 
 import numpy as np
 import pandas as pd
@@ -25,8 +24,8 @@ class MemoryReport:
     total_memory_mb: float
     potential_savings_bytes: int
     potential_savings_mb: float
-    columns: Dict[str, ColumnMemoryInfo]
-    recommendations: List[str]
+    columns: dict[str, ColumnMemoryInfo]
+    recommendations: list[str]
 
 
 def analyze_memory(df: pd.DataFrame) -> MemoryReport:
@@ -42,9 +41,9 @@ def analyze_memory(df: pd.DataFrame) -> MemoryReport:
     MemoryReport
     """
     total_bytes = int(df.memory_usage(deep=True).sum())
-    columns: Dict[str, ColumnMemoryInfo] = {}
+    columns: dict[str, ColumnMemoryInfo] = {}
     total_savings = 0
-    recommendations: List[str] = []
+    recommendations: list[str] = []
 
     for col in df.columns:
         series = df[col]
