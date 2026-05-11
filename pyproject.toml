@@ -1,0 +1,180 @@
+# ──────────────────────────────────────────────────────────────────────
+#  KiteML — pyproject.toml
+#  Production-ready Python packaging configuration
+# ──────────────────────────────────────────────────────────────────────
+
+[build-system]
+requires = ["setuptools>=68.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+# ── Project Metadata ────────────────────────────────────────────────
+[project]
+name = "kiteml"
+version = "1.0.0"
+description = "Train production-grade ML models with a single line of code — intelligent AutoML for everyone."
+readme = "README.md"
+license = {text = "MIT"}
+requires-python = ">=3.9"
+authors = [
+    {name = "KiteML Team", email = "kiteml@proton.me"},
+]
+maintainers = [
+    {name = "KiteML Team", email = "kiteml@proton.me"},
+]
+keywords = [
+    "machine-learning",
+    "automl",
+    "scikit-learn",
+    "automation",
+    "deep-learning",
+    "model-training",
+    "data-science",
+    "mlops",
+    "cli",
+    "pipeline",
+]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+    "Intended Audience :: Education",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Topic :: Software Development :: Libraries :: Application Frameworks",
+    "Typing :: Typed",
+]
+
+# ── Core Dependencies ───────────────────────────────────────────────
+dependencies = [
+    "pandas>=1.5.0",
+    "scikit-learn>=1.2.0",
+    "numpy>=1.23.0",
+    "joblib>=1.2.0",
+    "rich>=13.0.0",
+]
+
+# ── Optional Dependencies ───────────────────────────────────────────
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0",
+    "pytest-cov>=4.0",
+    "pytest-xdist>=3.0",
+    "black>=23.0",
+    "ruff>=0.1.0",
+    "mypy>=1.0",
+    "pre-commit>=3.0",
+    "twine>=4.0",
+    "build>=1.0",
+]
+docs = [
+    "mkdocs>=1.5",
+    "mkdocs-material>=9.0",
+    "mkdocstrings[python]>=0.20",
+    "pymdown-extensions>=10.0",
+]
+onnx = [
+    "skl2onnx>=1.14",
+    "onnxruntime>=1.14",
+]
+wandb = [
+    "wandb>=0.15",
+]
+mlflow = [
+    "mlflow>=2.0",
+]
+serving = [
+    "fastapi>=0.100.0",
+    "uvicorn[standard]>=0.20.0",
+    "pydantic>=2.0",
+]
+all = [
+    "kiteml[onnx,wandb,mlflow,serving,docs]",
+]
+
+# ── CLI Entry Point ─────────────────────────────────────────────────
+[project.scripts]
+kiteml = "kiteml.cli.main:main"
+
+# ── Project URLs ────────────────────────────────────────────────────
+[project.urls]
+Homepage = "https://github.com/kiteml/kiteml"
+Repository = "https://github.com/kiteml/kiteml"
+Documentation = "https://kiteml.github.io/kiteml"
+"Bug Tracker" = "https://github.com/kiteml/kiteml/issues"
+Changelog = "https://github.com/kiteml/kiteml/blob/main/CHANGELOG.md"
+Discussions = "https://github.com/kiteml/kiteml/discussions"
+
+# ── Setuptools Configuration ────────────────────────────────────────
+[tool.setuptools]
+zip-safe = false
+
+[tool.setuptools.packages.find]
+include = ["kiteml*"]
+exclude = ["tests*", "benchmarks*", "examples*", "docs*"]
+
+[tool.setuptools.package-data]
+kiteml = ["py.typed", "templates/**/*"]
+
+# ── Pytest Configuration ────────────────────────────────────────────
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_functions = ["test_*"]
+addopts = [
+    "-v",
+    "--strict-markers",
+    "--tb=short",
+    "-q",
+]
+markers = [
+    "slow: marks tests as slow (deselect with '-m \"not slow\"')",
+    "integration: marks integration tests",
+    "smoke: marks smoke tests for quick validation",
+]
+
+# ── Ruff Linter Configuration ───────────────────────────────────────
+[tool.ruff]
+target-version = "py39"
+line-length = 120
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "N", "UP", "B", "SIM"]
+ignore = ["E501"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["kiteml"]
+
+# ── Black Formatter ─────────────────────────────────────────────────
+[tool.black]
+target-version = ["py39"]
+line-length = 120
+
+# ── MyPy Type Checking ──────────────────────────────────────────────
+[tool.mypy]
+python_version = "3.9"
+warn_return_any = true
+warn_unused_configs = true
+ignore_missing_imports = true
+check_untyped_defs = true
+
+# ── Coverage Configuration ──────────────────────────────────────────
+[tool.coverage.run]
+source = ["kiteml"]
+omit = ["tests/*", "benchmarks/*", "examples/*"]
+
+[tool.coverage.report]
+show_missing = true
+fail_under = 60
+exclude_lines = [
+    "pragma: no cover",
+    "if __name__ == .__main__.",
+    "if TYPE_CHECKING:",
+]

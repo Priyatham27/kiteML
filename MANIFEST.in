@@ -1,0 +1,41 @@
+# ──────────────────────────────────────────────────────────────────────
+#  KiteML — MANIFEST.in
+#  Controls non-Python files included in source distributions (sdist)
+# ──────────────────────────────────────────────────────────────────────
+
+# Root-level documentation & metadata
+include README.md
+include LICENSE
+include CHANGELOG.md
+include CONTRIBUTING.md
+include CODE_OF_CONDUCT.md
+include pyproject.toml
+include setup.cfg
+
+# Package data — templates, configs, type stubs
+recursive-include kiteml/templates *
+recursive-include kiteml *.typed
+recursive-include kiteml py.typed
+
+# Requirements files
+recursive-include requirements *.txt
+
+# Documentation sources (for editable installs / dev builds)
+recursive-include docs *.md *.yml *.yaml
+
+# Examples
+recursive-include examples *.py *.csv *.md
+
+# Exclude development / CI artifacts
+global-exclude __pycache__
+global-exclude *.py[cod]
+global-exclude *.so
+global-exclude .DS_Store
+global-exclude *.egg-info
+prune .github
+prune benchmarks
+prune tests
+prune dist
+prune build
+prune .pytest_cache
+prune htmlcov

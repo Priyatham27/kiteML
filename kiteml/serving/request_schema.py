@@ -1,0 +1,16 @@
+"""serving/request_schema.py — Pydantic request schemas (optional dep)."""
+try:
+    from pydantic import BaseModel
+    from typing import Any, Dict, List, Optional
+
+    class SinglePredictRequest(BaseModel):
+        data: Dict[str, Any]
+        return_probabilities: bool = True
+
+    class BatchPredictRequest(BaseModel):
+        data: List[Dict[str, Any]]
+        return_probabilities: bool = True
+        chunk_size: int = 100
+
+except ImportError:
+    pass  # Pydantic not required at import time

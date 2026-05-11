@@ -1,0 +1,50 @@
+site_name: KiteML
+site_description: Intelligent Machine Learning Ecosystem
+site_author: KiteML Community
+
+theme:
+  name: material
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: indigo
+      accent: blue
+      toggle:
+        icon: material/weather-night
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: indigo
+      accent: blue
+      toggle:
+        icon: material/weather-sunny
+        name: Switch to light mode
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - search.suggest
+    - search.highlight
+    - content.code.copy
+
+nav:
+  - Home: index.md
+  - Getting Started: getting_started.md
+  - Architecture: architecture.md
+  - CLI Reference: cli/index.md
+  - Deployment: deployment.md
+  - Intelligence: intelligence.md
+  - Tutorials: tutorials/index.md
+  - Plugins: plugins/index.md
+  - Community:
+    - Contributing: community/CONTRIBUTING.md
+    - Code of Conduct: community/CODE_OF_CONDUCT.md
+    - Security: community/SECURITY.md
+
+markdown_extensions:
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.superfences
+  - pymdownx.details
+  - pymdownx.tabbed
+  - admonition
+  - tables

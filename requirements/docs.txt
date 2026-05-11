@@ -1,0 +1,12 @@
+# ──────────────────────────────────────────────────────────────────────
+#  KiteML — Documentation Dependencies
+#  Install with: pip install -r requirements/docs.txt
+# ──────────────────────────────────────────────────────────────────────
+-r base.txt
+
+mkdocs>=1.5
+mkdocs-material>=9.0
+mkdocstrings[python]>=0.20
+pymdown-extensions>=10.0
+mkdocs-gen-files>=0.5
+mkdocs-literate-nav>=0.6
