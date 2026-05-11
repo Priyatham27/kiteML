@@ -10,25 +10,23 @@ import json
 import os
 import time
 from dataclasses import dataclass
-from typing import Any, Optional
+from typing import Any
 
 
 @dataclass
 class ModelSignature:
     """Cryptographic fingerprint of a fitted model."""
+
     model_name: str
-    fingerprint: str       # MD5 hex digest of model bytes
-    feature_hash: str      # MD5 of sorted feature names
-    config_hash: str       # MD5 of config dict
+    fingerprint: str  # MD5 hex digest of model bytes
+    feature_hash: str  # MD5 of sorted feature names
+    config_hash: str  # MD5 of config dict
     created_at: str
     n_features: int
 
     def verify(self, other: "ModelSignature") -> bool:
         """Check if two signatures match (identity check)."""
-        return (
-            self.fingerprint == other.fingerprint
-            and self.feature_hash == other.feature_hash
-        )
+        return self.fingerprint == other.fingerprint and self.feature_hash == other.feature_hash
 
     def to_dict(self) -> dict:
         return self.__dict__.copy()
@@ -51,8 +49,9 @@ def sign_model(result: Any) -> ModelSignature:
     -------
     ModelSignature
     """
-    import joblib
     import tempfile
+
+    import joblib
 
     # Fingerprint model bytes
     with tempfile.NamedTemporaryFile(suffix=".joblib", delete=False) as tmp:
@@ -74,9 +73,9 @@ def sign_model(result: Any) -> ModelSignature:
 
     # Config hash
     from kiteml import config as cfg
+
     config_dict = {
-        k: v for k, v in cfg.__dict__.items()
-        if not k.startswith("_") and isinstance(v, (int, float, str, bool))
+        k: v for k, v in cfg.__dict__.items() if not k.startswith("_") and isinstance(v, (int, float, str, bool))
     }
     config_hash = hashlib.md5(json.dumps(config_dict, sort_keys=True).encode()).hexdigest()
 

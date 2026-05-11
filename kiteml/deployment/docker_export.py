@@ -13,13 +13,14 @@ No Docker installation needed to generate these files.
 
 import os
 import time
-from dataclasses import dataclass, field
-from typing import Any, Dict, List, Optional
+from dataclasses import dataclass
+from typing import Any, List, Optional
 
 
 @dataclass
 class DockerExportResult:
     """Result of docker export operation."""
+
     output_dir: str
     files_created: List[str]
 
@@ -220,6 +221,7 @@ def export_docker(
 
     # ── requirements.txt ──────────────────────────────────────────────────
     from kiteml.deployment.environment_capture import capture_environment
+
     env = capture_environment()
 
     # Minimal requirements for the inference server
@@ -247,11 +249,13 @@ def export_docker(
     # ── serve.py ──────────────────────────────────────────────────────────
     serve_path = os.path.join(output_dir, "serve.py")
     with open(serve_path, "w", encoding="utf-8") as f:
-        f.write(_SERVE_PY.format(
-            generated_at=generated_at,
-            model_name=result.model_name,
-            port=port,
-        ))
+        f.write(
+            _SERVE_PY.format(
+                generated_at=generated_at,
+                model_name=result.model_name,
+                port=port,
+            )
+        )
     files_created.append(serve_path)
 
     # ── docker-compose.yml ────────────────────────────────────────────────

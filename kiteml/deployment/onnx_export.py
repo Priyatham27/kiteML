@@ -9,12 +9,13 @@ Requires: pip install skl2onnx onnx
 
 import os
 from dataclasses import dataclass
-from typing import Any, List, Optional
+from typing import Any, List
 
 
 @dataclass
 class OnnxExportResult:
     """Result of an ONNX export operation."""
+
     path: str
     size_bytes: int
     opset_version: int
@@ -55,12 +56,9 @@ def export_onnx(
     """
     try:
         from skl2onnx import convert_sklearn
-        from skl2onnx.common.data_types import FloatTensorType, DoubleTensorType
+        from skl2onnx.common.data_types import DoubleTensorType, FloatTensorType
     except ImportError:
-        raise ImportError(
-            "ONNX export requires skl2onnx and onnx.\n"
-            "Install with: pip install skl2onnx onnx"
-        )
+        raise ImportError("ONNX export requires skl2onnx and onnx.\n" "Install with: pip install skl2onnx onnx")
 
     n_features = len(feature_names)
     dtype = FloatTensorType if initial_type_hint == "float32" else DoubleTensorType
@@ -103,8 +101,9 @@ def validate_onnx(path: str, X_sample: Any) -> bool:
         True if inference runs without error.
     """
     try:
-        import onnxruntime as rt
         import numpy as np
+        import onnxruntime as rt
+
         sess = rt.InferenceSession(path)
         input_name = sess.get_inputs()[0].name
         X = np.array(X_sample, dtype=np.float32)

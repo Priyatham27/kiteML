@@ -103,13 +103,9 @@ def generate_report(
             if score is not None:
                 marker = " ✓" if rank == 1 else ""
                 rank_str = f"#{rank}"
-                lines.append(
-                    f"  {rank_str:<4} {name:<26} {score:.4f}{marker}"
-                )
+                lines.append(f"  {rank_str:<4} {name:<26} {score:.4f}{marker}")
             else:
-                lines.append(
-                    f"  ERR  {name:<26} ⚠ {error[:28] if error else 'unknown error'}"
-                )
+                lines.append(f"  ERR  {name:<26} ⚠ {error[:28] if error else 'unknown error'}")
 
     lines.append(THICK)
     return "\n".join(lines)

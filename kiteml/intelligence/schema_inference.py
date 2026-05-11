@@ -6,17 +6,16 @@ value ranges, and distribution shape.  This schema drives preprocessing
 decisions and reporting downstream.
 """
 
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from typing import Any, Dict, List, Optional
 
-import numpy as np
 import pandas as pd
-from scipy import stats as scipy_stats
 
 
 @dataclass
 class ColumnSchema:
     """Structural metadata for one column."""
+
     name: str
     dtype: str
     nullable: bool
@@ -31,7 +30,7 @@ class ColumnSchema:
     median: Optional[float] = None
     std: Optional[float] = None
     skewness: Optional[float] = None
-    distribution: Optional[str] = None   # "normal","right_skewed","left_skewed","uniform","bimodal"
+    distribution: Optional[str] = None  # "normal","right_skewed","left_skewed","uniform","bimodal"
     # Categorical only
     top_values: Optional[List[Any]] = None
     top_freqs: Optional[List[float]] = None
@@ -40,6 +39,7 @@ class ColumnSchema:
 @dataclass
 class DataSchema:
     """Full schema of a DataFrame."""
+
     n_rows: int
     n_cols: int
     columns: Dict[str, ColumnSchema]

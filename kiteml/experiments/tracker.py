@@ -10,9 +10,8 @@ import json
 import os
 import time
 import uuid
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from typing import Any, Dict, List, Optional
-
 
 _DEFAULT_STORE = os.path.join(os.path.expanduser("~"), ".kiteml", "experiments")
 
@@ -20,6 +19,7 @@ _DEFAULT_STORE = os.path.join(os.path.expanduser("~"), ".kiteml", "experiments")
 @dataclass
 class ExperimentRun:
     """A single recorded training run."""
+
     run_id: str
     experiment_name: str
     model_name: str
@@ -51,7 +51,7 @@ def _hash_dataframe(df: Any) -> str:
     """Compute a short hash of a DataFrame for reproducibility."""
     try:
         import pandas as pd
-        import numpy as np
+
         h = hashlib.md5(pd.util.hash_pandas_object(df).values.tobytes()).hexdigest()
         return h[:12]
     except Exception:

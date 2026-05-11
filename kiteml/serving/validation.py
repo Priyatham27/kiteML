@@ -1,5 +1,6 @@
 """serving/validation.py — Input validation utilities for the serving layer."""
-from typing import Any, Dict, List, Optional, Tuple
+
+from typing import Any, List, Tuple
 
 
 def validate_predict_request(

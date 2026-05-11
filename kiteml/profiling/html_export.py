@@ -6,10 +6,8 @@ dataset intelligence report.  No external CSS or JS dependencies.
 """
 
 import html
-from typing import Any
 
 from kiteml.intelligence.data_profiler import DataProfile
-
 
 _CSS = """
 body{font-family:'Segoe UI',Arial,sans-serif;background:#0f1117;color:#e2e8f0;margin:0;padding:24px;}
@@ -39,11 +37,7 @@ def _badge(text: str, cls: str) -> str:
 
 def _bar(ratio: float) -> str:
     pct = int(min(ratio, 1.0) * 100)
-    return (
-        f'<div class="bar-container">'
-        f'<div class="bar-fill" style="width:{pct}%"></div>'
-        f'</div> {pct}%'
-    )
+    return f'<div class="bar-container">' f'<div class="bar-fill" style="width:{pct}%"></div>' f"</div> {pct}%"
 
 
 def export_html(profile: DataProfile, path: str = "kiteml_report.html") -> str:
@@ -72,8 +66,7 @@ def export_html(profile: DataProfile, path: str = "kiteml_report.html") -> str:
     sections = []
 
     # ── Overview ──────────────────────────────────────────────────────────
-    health_cls = {"excellent": "ok", "good": "ok", "fair": "warn", "poor": "err"}.get(
-        mr.overall_health, "warn")
+    health_cls = {"excellent": "ok", "good": "ok", "fair": "warn", "poor": "err"}.get(mr.overall_health, "warn")
     sections.append(f"""
     <div class="card">
       <h1>🪁 KiteML — Dataset Intelligence Report</h1>
@@ -93,10 +86,7 @@ def export_html(profile: DataProfile, path: str = "kiteml_report.html") -> str:
     </div>""")
 
     # ── Column types ──────────────────────────────────────────────────────
-    type_rows = "".join(
-        f"<tr><td>{t}</td><td>{c}</td></tr>"
-        for t, c in profile.column_analysis.type_summary.items()
-    )
+    type_rows = "".join(f"<tr><td>{t}</td><td>{c}</td></tr>" for t, c in profile.column_analysis.type_summary.items())
     sections.append(f"""
     <div class="card">
       <h2>🗂️ Column Type Summary</h2>
@@ -107,8 +97,8 @@ def export_html(profile: DataProfile, path: str = "kiteml_report.html") -> str:
     if q.issues:
         issue_rows = "".join(
             f'<tr><td>{_badge(i.severity.value, "err" if i.severity.value=="error" else "warn")}</td>'
-            f'<td>{html.escape(i.description)}</td>'
-            f'<td>{html.escape(i.recommendation)}</td></tr>'
+            f"<td>{html.escape(i.description)}</td>"
+            f"<td>{html.escape(i.recommendation)}</td></tr>"
             for i in q.issues
         )
         sections.append(f"""
@@ -135,8 +125,8 @@ def export_html(profile: DataProfile, path: str = "kiteml_report.html") -> str:
     if lk.has_leakage_risk:
         leak_rows = "".join(
             f'<tr><td>{_badge(r.risk_level.upper(), "err" if r.risk_level=="critical" else "warn")}</td>'
-            f'<td>{html.escape(r.column)}</td>'
-            f'<td>{html.escape(r.reason)}</td></tr>'
+            f"<td>{html.escape(r.column)}</td>"
+            f"<td>{html.escape(r.reason)}</td></tr>"
             for r in lk.risks
         )
         sections.append(f"""
@@ -161,7 +151,7 @@ def export_html(profile: DataProfile, path: str = "kiteml_report.html") -> str:
     # ── Master recommendations ────────────────────────────────────────────
     rec_html = "".join(
         f'<div class="rec-{r.priority}"><b>[{r.category.upper()}]</b> {html.escape(r.message)}'
-        + (f'<br><small>→ {html.escape(r.action)}</small>' if r.action else "")
+        + (f"<br><small>→ {html.escape(r.action)}</small>" if r.action else "")
         + "</div>"
         for r in mr.recommendations
     )

@@ -2,9 +2,8 @@
 Tests for kiteml.preprocessing modules.
 """
 
-import pytest
-import pandas as pd
 import numpy as np
+import pandas as pd
 
 from kiteml.preprocessing.cleaner import handle_missing_values
 from kiteml.preprocessing.encoder import encode_categoricals

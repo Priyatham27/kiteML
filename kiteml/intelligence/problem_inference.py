@@ -20,10 +20,11 @@ import pandas as pd
 @dataclass
 class ProblemInferenceResult:
     """Result of advanced problem type inference."""
-    problem_type: str           # "classification" | "regression"
-    subtype: str                # "binary" | "multiclass" | "continuous" | "discrete_regression"
-    confidence: float           # 0–1
-    evidence: List[str]         # human-readable justification
+
+    problem_type: str  # "classification" | "regression"
+    subtype: str  # "binary" | "multiclass" | "continuous" | "discrete_regression"
+    confidence: float  # 0–1
+    evidence: List[str]  # human-readable justification
     n_classes: Optional[int] = None
 
 

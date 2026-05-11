@@ -2,9 +2,7 @@
 Tests for kiteml.core module.
 """
 
-import pytest
-import pandas as pd
-from sklearn.datasets import load_iris, load_diabetes
+from sklearn.datasets import load_diabetes, load_iris
 
 from kiteml.core import train
 

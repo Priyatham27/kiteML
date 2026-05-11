@@ -2,8 +2,6 @@
 report_generator.py — Rich terminal profiling reports for KiteML.
 """
 
-from typing import Any
-
 from kiteml.intelligence.data_profiler import DataProfile
 
 
@@ -19,9 +17,14 @@ def generate_profile_report(profile: DataProfile) -> str:
     W = 60
     lines = []
 
-    def sep(char="─"): lines.append(char * W)
-    def header(text): lines.append(f"  {text}")
-    def row(label, value): lines.append(f"  {label:<30} {value}")
+    def sep(char="─"):
+        lines.append(char * W)
+
+    def header(text):
+        lines.append(f"  {text}")
+
+    def row(label, value):
+        lines.append(f"  {label:<30} {value}")
 
     lines.append("═" * W)
     lines.append("  🪁  KiteML — Dataset Intelligence Report")
@@ -29,7 +32,7 @@ def generate_profile_report(profile: DataProfile) -> str:
 
     # ── Overview ──────────────────────────────────────────────────────────
     s = profile.schema
-    header(f"📊 Dataset Overview")
+    header("📊 Dataset Overview")
     sep()
     row("Rows", f"{s.n_rows:,}")
     row("Columns", f"{s.n_cols:,}")
@@ -51,10 +54,22 @@ def generate_profile_report(profile: DataProfile) -> str:
     sep()
     q = profile.quality
     row("Quality score", f"{q.score}/100")
-    row("Errors", str(len(q.by_severity(q.by_severity.__self__.__class__.ERROR
-                                        if False else type(q.issues[0]).severity.__class__.ERROR
-                                        if q.issues else 'ERROR')))
-        if False else str(sum(1 for i in q.issues if i.severity.value == "error")))
+    row(
+        "Errors",
+        (
+            str(
+                len(
+                    q.by_severity(
+                        q.by_severity.__self__.__class__.ERROR
+                        if False
+                        else type(q.issues[0]).severity.__class__.ERROR if q.issues else "ERROR"
+                    )
+                )
+            )
+            if False
+            else str(sum(1 for i in q.issues if i.severity.value == "error"))
+        ),
+    )
     row("Warnings", str(sum(1 for i in q.issues if i.severity.value == "warning")))
     if q.issues:
         header("  Issues:")
@@ -135,8 +150,7 @@ def generate_profile_report(profile: DataProfile) -> str:
     sep()
     mr = profile.master_recommendations
     row("Overall health", mr.overall_health.upper())
-    row(f"Critical / High / Medium / Low",
-        f"{mr.critical_count} / {mr.high_count} / {mr.medium_count} / {mr.low_count}")
+    row("Critical / High / Medium / Low", f"{mr.critical_count} / {mr.high_count} / {mr.medium_count} / {mr.low_count}")
     for rec in mr.recommendations[:6]:
         icon = {"critical": "🚨", "high": "⚠️ ", "medium": "💡", "low": "ℹ️ "}.get(rec.priority, "  ")
         lines.append(f"    {icon} {rec.message[:70]}")

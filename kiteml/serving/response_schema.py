@@ -1,7 +1,9 @@
 """serving/response_schema.py — Pydantic response schemas (optional dep)."""
+
 try:
-    from pydantic import BaseModel
     from typing import Any, Dict, List, Optional
+
+    from pydantic import BaseModel
 
     class PredictResponse(BaseModel):
         predictions: List[Any]

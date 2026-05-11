@@ -18,8 +18,8 @@ def create_app(result: Any):
     except ImportError:
         raise ImportError("pip install fastapi uvicorn pydantic")
 
-    import numpy as np
     import pandas as pd
+
     from kiteml.deployment.inference_guardrails import InferenceGuardrails
 
     _start = time.time()
@@ -32,7 +32,10 @@ def create_app(result: Any):
         version="1.0.0",
     )
     app.add_middleware(
-        CORSMiddleware, allow_origins=["*"], allow_methods=["*"], allow_headers=["*"],
+        CORSMiddleware,
+        allow_origins=["*"],
+        allow_methods=["*"],
+        allow_headers=["*"],
     )
 
     class PredictRequest(BaseModel):
@@ -93,8 +96,10 @@ def create_app(result: Any):
 
             _counter[0] += len(preds)
             return PredictResponse(
-                predictions=preds, probabilities=probas,
-                n_rows=len(preds), model=result.model_name,
+                predictions=preds,
+                probabilities=probas,
+                n_rows=len(preds),
+                model=result.model_name,
                 problem_type=result.problem_type,
                 latency_ms=round((time.perf_counter() - t0) * 1000, 2),
             )
@@ -112,8 +117,6 @@ def create_app_from_engine(engine: Any):
         from pydantic import BaseModel
     except ImportError:
         raise ImportError("pip install fastapi uvicorn pydantic")
-
-    import pandas as pd
 
     _start = time.time()
     app = FastAPI(title="KiteML Inference Server", version="1.0.0")

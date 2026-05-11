@@ -23,7 +23,9 @@ def main():
     train_parser = subparsers.add_parser("train", help="Train a model on a dataset.")
     train_parser.add_argument("data", type=str, help="Path to dataset (CSV, Excel, JSON, Parquet).")
     train_parser.add_argument("--target", "-t", required=True, help="Target column name.")
-    train_parser.add_argument("--type", "-T", choices=["classification", "regression"], default=None, help="Problem type.")
+    train_parser.add_argument(
+        "--type", "-T", choices=["classification", "regression"], default=None, help="Problem type."
+    )
     train_parser.add_argument("--test-size", type=float, default=0.2, help="Test split ratio (default: 0.2).")
     train_parser.add_argument("--no-scale", action="store_true", help="Disable feature scaling.")
     train_parser.add_argument("--save", "-s", type=str, default=None, help="Path to save the trained model.")

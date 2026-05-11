@@ -12,20 +12,20 @@ import uuid
 from dataclasses import dataclass
 from typing import Any, Dict, Optional
 
-
 _DEFAULT_AUDIT_LOG = os.path.join(os.path.expanduser("~"), ".kiteml", "audit.jsonl")
 
 
 @dataclass
 class AuditEntry:
     """A single audit log entry."""
+
     entry_id: str
-    event_type: str    # "prediction" | "packaging" | "deployment" | "drift_alert" | "retrain"
+    event_type: str  # "prediction" | "packaging" | "deployment" | "drift_alert" | "retrain"
     model_name: str
     timestamp: str
-    actor: str         # "system" | "user:<name>"
+    actor: str  # "system" | "user:<name>"
     details: Dict[str, Any]
-    severity: str      # "info" | "warning" | "critical"
+    severity: str  # "info" | "warning" | "critical"
 
     def to_dict(self) -> dict:
         return self.__dict__.copy()

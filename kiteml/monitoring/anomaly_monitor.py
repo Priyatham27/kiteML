@@ -5,8 +5,8 @@ Uses IQR and Z-score methods on training statistics to flag
 production rows with extreme or suspicious feature values.
 """
 
-from dataclasses import dataclass, field
-from typing import Any, Dict, List, Optional, Tuple
+from dataclasses import dataclass
+from typing import Any, Dict, List
 
 import numpy as np
 import pandas as pd
@@ -15,6 +15,7 @@ import pandas as pd
 @dataclass
 class FeatureStats:
     """Baseline statistics for one feature (from training data)."""
+
     name: str
     mean: float
     std: float
@@ -28,10 +29,11 @@ class FeatureStats:
 @dataclass
 class AnomalyResult:
     """Result of anomaly detection on a batch of inputs."""
+
     n_rows: int
     n_anomalous: int
     anomaly_ratio: float
-    anomalous_rows: List[int]              # row indices
+    anomalous_rows: List[int]  # row indices
     anomalous_features: Dict[int, List[str]]  # row_idx → flagged features
     feature_violation_counts: Dict[str, int]
     has_anomalies: bool

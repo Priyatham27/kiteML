@@ -5,11 +5,9 @@ Produces ready-to-deploy Python source files, no FastAPI installation needed
 to generate the code.
 """
 
-import json
 import os
 import time
-from typing import Any, Dict, List, Optional
-
+from typing import Any
 
 _APP_TEMPLATE = '''\
 """

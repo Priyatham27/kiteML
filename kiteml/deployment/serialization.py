@@ -9,13 +9,14 @@ import json
 import os
 import pickle
 import time
-from dataclasses import asdict, dataclass
-from typing import Any, Dict, Optional
+from dataclasses import dataclass
+from typing import Any, Dict
 
 
 @dataclass
 class SerializationResult:
     """Result of a serialization operation."""
+
     format: str
     path: str
     size_bytes: int
@@ -26,6 +27,7 @@ class SerializationResult:
 def _md5(path: str) -> str:
     """Compute MD5 hex digest of a file."""
     import hashlib
+
     h = hashlib.md5()
     with open(path, "rb") as f:
         for chunk in iter(lambda: f.read(65536), b""):
@@ -36,11 +38,14 @@ def _md5(path: str) -> str:
 def save_joblib(obj: Any, path: str) -> SerializationResult:
     """Save any object with joblib (preferred for sklearn objects)."""
     import joblib
+
     os.makedirs(os.path.dirname(os.path.abspath(path)), exist_ok=True)
     joblib.dump(obj, path, compress=3)
     size = os.path.getsize(path)
     return SerializationResult(
-        format="joblib", path=path, size_bytes=size,
+        format="joblib",
+        path=path,
+        size_bytes=size,
         checksum=_md5(path),
         serialized_at=time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
     )
@@ -49,6 +54,7 @@ def save_joblib(obj: Any, path: str) -> SerializationResult:
 def load_joblib(path: str) -> Any:
     """Load a joblib-serialized object."""
     import joblib
+
     return joblib.load(path)
 
 
@@ -59,7 +65,9 @@ def save_pickle(obj: Any, path: str) -> SerializationResult:
         pickle.dump(obj, f, protocol=pickle.HIGHEST_PROTOCOL)
     size = os.path.getsize(path)
     return SerializationResult(
-        format="pickle", path=path, size_bytes=size,
+        format="pickle",
+        path=path,
+        size_bytes=size,
         checksum=_md5(path),
         serialized_at=time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
     )
@@ -78,7 +86,9 @@ def save_json(data: Dict, path: str, indent: int = 2) -> SerializationResult:
         json.dump(data, f, indent=indent, default=str)
     size = os.path.getsize(path)
     return SerializationResult(
-        format="json", path=path, size_bytes=size,
+        format="json",
+        path=path,
+        size_bytes=size,
         checksum=_md5(path),
         serialized_at=time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
     )

@@ -7,25 +7,27 @@ nullability constraints.  Used by guardrails for strict enforcement.
 
 import json
 import os
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from typing import Any, Dict, List, Optional, Tuple
 
 
 @dataclass
 class FeatureContract:
     """Contract for a single feature."""
+
     name: str
-    dtype: str                      # "float", "int", "str", "bool"
+    dtype: str  # "float", "int", "str", "bool"
     nullable: bool = False
     min_value: Optional[float] = None
     max_value: Optional[float] = None
-    allowed_values: Optional[List[Any]] = None   # for categoricals
+    allowed_values: Optional[List[Any]] = None  # for categoricals
     description: str = ""
 
 
 @dataclass
 class DataContract:
     """Full data contract for a model's inputs."""
+
     model_name: str
     version: str
     features: Dict[str, FeatureContract]
@@ -73,9 +75,7 @@ class DataContract:
             "model_name": self.model_name,
             "version": self.version,
             "created_at": self.created_at,
-            "features": {
-                name: fc.__dict__ for name, fc in self.features.items()
-            },
+            "features": {name: fc.__dict__ for name, fc in self.features.items()},
         }
 
     def save(self, path: str) -> None:
@@ -87,9 +87,10 @@ class DataContract:
     def from_result(cls, result: Any, version: str = "1.0.0") -> "DataContract":
         """Build a DataContract from a KiteML Result + DataProfile."""
         import time
+
         features: Dict[str, FeatureContract] = {}
 
-        for feat in (result.feature_names or []):
+        for feat in result.feature_names or []:
             dtype = "float"
             nullable = False
 

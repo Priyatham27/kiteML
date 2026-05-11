@@ -2,7 +2,7 @@
 cardinality_analyzer.py — Cardinality analysis for categorical columns.
 """
 
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from typing import Any, Dict, List
 
 import pandas as pd
@@ -12,7 +12,7 @@ import pandas as pd
 class CardinalityInfo:
     column: str
     n_unique: int
-    cardinality_level: str   # "low" | "medium" | "high" | "very_high"
+    cardinality_level: str  # "low" | "medium" | "high" | "very_high"
     rare_categories: List[Any]
     rare_count: int
     top_value: Any
@@ -53,7 +53,7 @@ def analyze_cardinality(
             level, enc_rec = "high", "Use Frequency or Target Encoding instead of OHE."
         else:
             level = "very_high"
-            enc_rec = (f"⚠️ {n_unique} unique values. Use Frequency/Hash encoding or drop.")
+            enc_rec = f"⚠️ {n_unique} unique values. Use Frequency/Hash encoding or drop."
             high_card.append(col)
 
         vc = series.value_counts(normalize=True)
@@ -62,9 +62,13 @@ def analyze_cardinality(
         top_freq = round(float(vc.iloc[0]), 4) if len(vc) > 0 else 0.0
 
         details[col] = CardinalityInfo(
-            column=col, n_unique=n_unique, cardinality_level=level,
-            rare_categories=rare[:10], rare_count=len(rare),
-            top_value=top_val, top_freq=top_freq,
+            column=col,
+            n_unique=n_unique,
+            cardinality_level=level,
+            rare_categories=rare[:10],
+            rare_count=len(rare),
+            top_value=top_val,
+            top_freq=top_freq,
             encoding_recommendation=enc_rec,
         )
 

@@ -28,7 +28,6 @@ import logging
 import time
 from typing import Optional, Union
 
-import numpy as np
 import pandas as pd
 from sklearn.model_selection import train_test_split
 
@@ -126,8 +125,7 @@ def train(
 
     if target not in df.columns:
         raise ValueError(
-            f"Target column '{target}' not found in the dataset. "
-            f"Available columns: {list(df.columns)}"
+            f"Target column '{target}' not found in the dataset. " f"Available columns: {list(df.columns)}"
         )
 
     if problem_type is not None and problem_type not in ("classification", "regression"):
@@ -152,9 +150,7 @@ def train(
     X = df.drop(columns=[target])
     y = df[target]
 
-    X_train, X_test, y_train, y_test = train_test_split(
-        X, y, test_size=test_size, random_state=random_state
-    )
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=test_size, random_state=random_state)
 
     # ------------------------------------------------------------------ #
     # Step 5 – Fit Preprocessor on training data, transform both splits    #
@@ -193,18 +189,14 @@ def train(
     # Step 8 – Evaluate on held-out test set                               #
     # ------------------------------------------------------------------ #
     logger.info("📊 Evaluating on test set...")
-    metrics = evaluate_model(
-        best_model, X_test_processed, y_test, problem_type=problem_type
-    )
+    metrics = evaluate_model(best_model, X_test_processed, y_test, problem_type=problem_type)
 
     # ------------------------------------------------------------------ #
     # Step 9 – Extract feature importances mapped to real feature names     #
     # ------------------------------------------------------------------ #
     feature_importances = None
     if hasattr(best_model, "feature_importances_") and feature_names:
-        feature_importances = dict(
-            zip(feature_names, best_model.feature_importances_)
-        )
+        feature_importances = dict(zip(feature_names, best_model.feature_importances_))
     elif hasattr(best_model, "coef_") and feature_names:
         coef = best_model.coef_
         if coef.ndim > 1:

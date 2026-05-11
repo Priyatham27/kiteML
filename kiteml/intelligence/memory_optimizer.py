@@ -2,7 +2,7 @@
 memory_optimizer.py — Memory usage analysis and dtype optimization suggestions.
 """
 
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from typing import Dict, List
 
 import numpy as np
@@ -86,17 +86,18 @@ def analyze_memory(df: pd.DataFrame) -> MemoryReport:
                     reason = f"low cardinality ({n_unique} unique) → category dtype"
 
         columns[col] = ColumnMemoryInfo(
-            column=col, current_dtype=current_dtype,
-            current_bytes=col_bytes, suggested_dtype=suggested_dtype,
-            estimated_savings_bytes=savings, reason=reason,
+            column=col,
+            current_dtype=current_dtype,
+            current_bytes=col_bytes,
+            suggested_dtype=suggested_dtype,
+            estimated_savings_bytes=savings,
+            reason=reason,
         )
         total_savings += savings
 
     if total_savings > 0:
         savings_mb = total_savings / 1e6
-        recommendations.append(
-            f"Potential memory saving: {savings_mb:.1f} MB via dtype optimization."
-        )
+        recommendations.append(f"Potential memory saving: {savings_mb:.1f} MB via dtype optimization.")
         top_cols = sorted(columns.values(), key=lambda c: c.estimated_savings_bytes, reverse=True)[:3]
         for ci in top_cols:
             if ci.estimated_savings_bytes > 0:

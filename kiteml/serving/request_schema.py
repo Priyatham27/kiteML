@@ -1,7 +1,9 @@
 """serving/request_schema.py — Pydantic request schemas (optional dep)."""
+
 try:
-    from pydantic import BaseModel
     from typing import Any, Dict, List, Optional
+
+    from pydantic import BaseModel
 
     class SinglePredictRequest(BaseModel):
         data: Dict[str, Any]

@@ -14,30 +14,55 @@ Signals (weighted)
 """
 
 from dataclasses import dataclass, field
-from typing import List, Optional
+from typing import List
 
 import numpy as np
 import pandas as pd
 
-
 _TARGET_KEYWORDS = {
     # General
-    "target", "label", "class", "output", "result", "response",
-    "outcome", "dependent", "y",
+    "target",
+    "label",
+    "class",
+    "output",
+    "result",
+    "response",
+    "outcome",
+    "dependent",
+    "y",
     # Domain-specific
-    "price", "cost", "salary", "revenue", "sales", "profit",
-    "survived", "survival", "churn", "default", "fraud",
-    "rating", "score", "grade", "rank", "category", "species",
-    "diagnosis", "disease", "status", "approved", "converted",
+    "price",
+    "cost",
+    "salary",
+    "revenue",
+    "sales",
+    "profit",
+    "survived",
+    "survival",
+    "churn",
+    "default",
+    "fraud",
+    "rating",
+    "score",
+    "grade",
+    "rank",
+    "category",
+    "species",
+    "diagnosis",
+    "disease",
+    "status",
+    "approved",
+    "converted",
 }
 
 
 @dataclass
 class TargetDetectionResult:
     """Result of automatic target column detection."""
+
     column: str
-    confidence: float          # 0–1
-    reason: List[str]          # human-readable explanation of signals
+    confidence: float  # 0–1
+    reason: List[str]  # human-readable explanation of signals
     is_ambiguous: bool = False  # True when multiple columns score closely
     alternatives: List[str] = field(default_factory=list)
 
@@ -57,8 +82,9 @@ def _score_column(
 
     # Signal 2 — keyword match
     name_lower = name.lower().replace(" ", "_").replace("-", "_")
-    if any(kw == name_lower or name_lower.endswith("_" + kw) or name_lower.startswith(kw + "_")
-           for kw in _TARGET_KEYWORDS):
+    if any(
+        kw == name_lower or name_lower.endswith("_" + kw) or name_lower.startswith(kw + "_") for kw in _TARGET_KEYWORDS
+    ):
         score += 0.30
     elif any(kw in name_lower for kw in _TARGET_KEYWORDS):
         score += 0.15
@@ -70,7 +96,7 @@ def _score_column(
     unique_ratio = n_unique / n_total if n_total > 0 else 1.0
 
     if unique_ratio < 0.10:
-        score += 0.15   # discrete — good target candidate
+        score += 0.15  # discrete — good target candidate
     elif unique_ratio < 0.50:
         score += 0.05
 
@@ -115,7 +141,7 @@ def detect_target(df: pd.DataFrame) -> TargetDetectionResult:
     scores = {}
 
     for i, col in enumerate(columns):
-        is_last = (i == len(columns) - 1)
+        is_last = i == len(columns) - 1
         scores[col] = _score_column(df[col], col, df, is_last)
 
     sorted_cols = sorted(scores, key=lambda c: scores[c], reverse=True)
@@ -128,7 +154,7 @@ def detect_target(df: pd.DataFrame) -> TargetDetectionResult:
     if best_col == columns[-1]:
         reasons.append("last column (ML convention)")
     if any(kw in name_lower for kw in _TARGET_KEYWORDS):
-        reasons.append(f"column name matches target keywords")
+        reasons.append("column name matches target keywords")
     non_null = df[best_col].dropna()
     unique_ratio = non_null.nunique() / len(non_null) if len(non_null) > 0 else 1.0
     if unique_ratio < 0.10:

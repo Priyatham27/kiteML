@@ -3,9 +3,7 @@ comparison.py — Compare multiple KiteML experiment runs.
 """
 
 from dataclasses import dataclass
-from typing import Any, Dict, List, Optional
-
-import numpy as np
+from typing import List
 
 from kiteml.experiments.tracker import ExperimentRun
 
@@ -13,10 +11,11 @@ from kiteml.experiments.tracker import ExperimentRun
 @dataclass
 class RunComparison:
     """Side-by-side comparison of multiple runs."""
+
     runs: List[ExperimentRun]
     best_run: ExperimentRun
     metric_name: str
-    ranked: List[ExperimentRun]     # runs sorted best→worst by metric
+    ranked: List[ExperimentRun]  # runs sorted best→worst by metric
 
     def print_table(self) -> None:
         W = 70
@@ -28,8 +27,10 @@ class RunComparison:
         for i, run in enumerate(self.ranked):
             score_str = f"{run.score:.4f}" if run.score is not None else "N/A"
             marker = " ★" if i == 0 else "  "
-            print(f"{marker} {run.run_id:<10} {run.model_name:<28} {score_str:>8} "
-                  f"{run.training_time_s:>8.2f} {run.n_features:>8}")
+            print(
+                f"{marker} {run.run_id:<10} {run.model_name:<28} {score_str:>8} "
+                f"{run.training_time_s:>8.2f} {run.n_features:>8}"
+            )
         print("═" * W)
         print(f"  Best: {self.best_run.run_id} ({self.best_run.model_name})")
 
@@ -54,6 +55,7 @@ def compare_runs(
     -------
     RunComparison
     """
+
     def _get_metric(run: ExperimentRun) -> float:
         val = getattr(run, metric, None)
         if val is None:

@@ -5,8 +5,8 @@ Validates every input before model inference to prevent silent failures
 from schema mismatches, wrong dtypes, missing columns, or out-of-range values.
 """
 
-from dataclasses import dataclass, field
-from typing import Any, Dict, List, Optional, Tuple
+from dataclasses import dataclass
+from typing import Any, Dict, List, Optional
 
 import numpy as np
 import pandas as pd
@@ -15,17 +15,19 @@ import pandas as pd
 @dataclass
 class GuardrailViolation:
     """A single validation failure."""
+
     field: str
-    violation_type: str   # "missing_column" | "wrong_dtype" | "null_value" | "out_of_range"
+    violation_type: str  # "missing_column" | "wrong_dtype" | "null_value" | "out_of_range"
     expected: Any
     received: Any
     message: str
-    severity: str         # "error" | "warning"
+    severity: str  # "error" | "warning"
 
 
 @dataclass
 class GuardrailResult:
     """Result of guardrail validation."""
+
     is_valid: bool
     violations: List[GuardrailViolation]
     errors: List[GuardrailViolation]
@@ -36,10 +38,7 @@ class GuardrailResult:
         """Raise ValueError if validation failed."""
         if not self.is_valid:
             messages = [v.message for v in self.errors]
-            raise ValueError(
-                f"Inference input failed validation:\n" +
-                "\n".join(f"  ⚠️  {m}" for m in messages)
-            )
+            raise ValueError("Inference input failed validation:\n" + "\n".join(f"  ⚠️  {m}" for m in messages))
 
 
 class InferenceGuardrails:
@@ -91,18 +90,22 @@ class InferenceGuardrails:
             elif isinstance(X, np.ndarray):
                 if X.ndim == 1:
                     X = X.reshape(1, -1)
-                df = pd.DataFrame(X, columns=self.feature_names[:X.shape[1]])
+                df = pd.DataFrame(X, columns=self.feature_names[: X.shape[1]])
             else:
                 df = pd.DataFrame(X)
         except Exception as e:
             return GuardrailResult(
                 is_valid=False,
-                violations=[GuardrailViolation(
-                    field="input", violation_type="conversion_error",
-                    expected="DataFrame-compatible", received=type(X).__name__,
-                    message=f"Cannot convert input to DataFrame: {e}",
-                    severity="error",
-                )],
+                violations=[
+                    GuardrailViolation(
+                        field="input",
+                        violation_type="conversion_error",
+                        expected="DataFrame-compatible",
+                        received=type(X).__name__,
+                        message=f"Cannot convert input to DataFrame: {e}",
+                        severity="error",
+                    )
+                ],
                 errors=[],
                 warnings=[],
                 summary="Input conversion failed.",
@@ -113,40 +116,46 @@ class InferenceGuardrails:
         # ── Check missing required columns ────────────────────────────────
         for feat in self.feature_names:
             if feat not in input_cols:
-                violations.append(GuardrailViolation(
-                    field=feat,
-                    violation_type="missing_column",
-                    expected=feat,
-                    received=None,
-                    message=f"Required column '{feat}' is missing from input.",
-                    severity="error",
-                ))
+                violations.append(
+                    GuardrailViolation(
+                        field=feat,
+                        violation_type="missing_column",
+                        expected=feat,
+                        received=None,
+                        message=f"Required column '{feat}' is missing from input.",
+                        severity="error",
+                    )
+                )
 
         # ── Check extra columns ───────────────────────────────────────────
         extra = input_cols - set(self.feature_names)
         if extra and not self.allow_extra_columns:
             for col in extra:
-                violations.append(GuardrailViolation(
-                    field=col,
-                    violation_type="extra_column",
-                    expected="not present",
-                    received=col,
-                    message=f"Unexpected column '{col}' in input.",
-                    severity="warning",
-                ))
+                violations.append(
+                    GuardrailViolation(
+                        field=col,
+                        violation_type="extra_column",
+                        expected="not present",
+                        received=col,
+                        message=f"Unexpected column '{col}' in input.",
+                        severity="warning",
+                    )
+                )
 
         # ── Check nulls in present columns ────────────────────────────────
         for feat in self.feature_names:
             if feat in df.columns and df[feat].isna().any():
                 n_null = int(df[feat].isna().sum())
-                violations.append(GuardrailViolation(
-                    field=feat,
-                    violation_type="null_value",
-                    expected="non-null",
-                    received=f"{n_null} null(s)",
-                    message=f"Column '{feat}' contains {n_null} null value(s).",
-                    severity="warning",
-                ))
+                violations.append(
+                    GuardrailViolation(
+                        field=feat,
+                        violation_type="null_value",
+                        expected="non-null",
+                        received=f"{n_null} null(s)",
+                        message=f"Column '{feat}' contains {n_null} null value(s).",
+                        severity="warning",
+                    )
+                )
 
         errors = [v for v in violations if v.severity == "error"]
         warnings = [v for v in violations if v.severity == "warning"]

@@ -23,13 +23,6 @@ That single line is all you need — the selector picks it up automatically.
 """
 
 from sklearn.base import clone
-from sklearn.linear_model import (
-    ElasticNet,
-    Lasso,
-    LinearRegression,
-    LogisticRegression,
-    Ridge,
-)
 from sklearn.ensemble import (
     AdaBoostClassifier,
     AdaBoostRegressor,
@@ -37,6 +30,13 @@ from sklearn.ensemble import (
     GradientBoostingRegressor,
     RandomForestClassifier,
     RandomForestRegressor,
+)
+from sklearn.linear_model import (
+    ElasticNet,
+    Lasso,
+    LinearRegression,
+    LogisticRegression,
+    Ridge,
 )
 from sklearn.neighbors import KNeighborsClassifier, KNeighborsRegressor
 from sklearn.svm import SVC, SVR
@@ -55,12 +55,12 @@ RS = DEFAULT_RANDOM_STATE  # local shorthand keeps lines concise
 #
 CLASSIFICATION_MODELS: dict = {
     "LogisticRegression": LogisticRegression(max_iter=1000, random_state=RS),
-    "RandomForest":       RandomForestClassifier(n_estimators=100, random_state=RS),
-    "GradientBoosting":   GradientBoostingClassifier(n_estimators=100, random_state=RS),
-    "DecisionTree":       DecisionTreeClassifier(random_state=RS),
-    "SVM":                SVC(random_state=RS, probability=True),
-    "KNN":                KNeighborsClassifier(),
-    "AdaBoost":           AdaBoostClassifier(n_estimators=100, random_state=RS),
+    "RandomForest": RandomForestClassifier(n_estimators=100, random_state=RS),
+    "GradientBoosting": GradientBoostingClassifier(n_estimators=100, random_state=RS),
+    "DecisionTree": DecisionTreeClassifier(random_state=RS),
+    "SVM": SVC(random_state=RS, probability=True),
+    "KNN": KNeighborsClassifier(),
+    "AdaBoost": AdaBoostClassifier(n_estimators=100, random_state=RS),
 }
 
 # ---------------------------------------------------------------------------
@@ -72,15 +72,15 @@ CLASSIFICATION_MODELS: dict = {
 #
 REGRESSION_MODELS: dict = {
     "LinearRegression": LinearRegression(),
-    "Ridge":            Ridge(random_state=RS),
-    "Lasso":            Lasso(random_state=RS),
-    "ElasticNet":       ElasticNet(random_state=RS),
-    "RandomForest":     RandomForestRegressor(n_estimators=100, random_state=RS),
+    "Ridge": Ridge(random_state=RS),
+    "Lasso": Lasso(random_state=RS),
+    "ElasticNet": ElasticNet(random_state=RS),
+    "RandomForest": RandomForestRegressor(n_estimators=100, random_state=RS),
     "GradientBoosting": GradientBoostingRegressor(n_estimators=100, random_state=RS),
-    "DecisionTree":     DecisionTreeRegressor(random_state=RS),
-    "SVR":              SVR(),
-    "KNN":              KNeighborsRegressor(),
-    "AdaBoost":         AdaBoostRegressor(n_estimators=100, random_state=RS),
+    "DecisionTree": DecisionTreeRegressor(random_state=RS),
+    "SVR": SVR(),
+    "KNN": KNeighborsRegressor(),
+    "AdaBoost": AdaBoostRegressor(n_estimators=100, random_state=RS),
 }
 
 

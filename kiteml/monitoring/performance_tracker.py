@@ -7,8 +7,8 @@ including p50/p95/p99 latency, throughput, and degradation alerts.
 
 import time
 from collections import deque
-from dataclasses import dataclass, field
-from typing import Deque, Dict, List, Optional, Tuple
+from dataclasses import dataclass
+from typing import Deque, List, Optional
 
 import numpy as np
 
@@ -16,6 +16,7 @@ import numpy as np
 @dataclass
 class LatencySnapshot:
     """Aggregated latency snapshot for a window of requests."""
+
     window_size: int
     p50_ms: float
     p95_ms: float
@@ -30,7 +31,8 @@ class LatencySnapshot:
 @dataclass
 class PerformanceAlert:
     """A detected performance degradation."""
-    alert_type: str    # "high_p99" | "low_throughput" | "latency_spike"
+
+    alert_type: str  # "high_p99" | "low_throughput" | "latency_spike"
     value: float
     threshold: float
     message: str
@@ -102,22 +104,26 @@ class PerformanceTracker:
         now = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
 
         if snap.p99_ms > self.p99_threshold_ms:
-            alerts.append(PerformanceAlert(
-                alert_type="high_p99",
-                value=snap.p99_ms,
-                threshold=self.p99_threshold_ms,
-                message=f"p99 latency {snap.p99_ms:.0f}ms exceeds threshold {self.p99_threshold_ms:.0f}ms",
-                timestamp=now,
-            ))
+            alerts.append(
+                PerformanceAlert(
+                    alert_type="high_p99",
+                    value=snap.p99_ms,
+                    threshold=self.p99_threshold_ms,
+                    message=f"p99 latency {snap.p99_ms:.0f}ms exceeds threshold {self.p99_threshold_ms:.0f}ms",
+                    timestamp=now,
+                )
+            )
 
         if snap.requests_per_second < self.min_throughput_rps and snap.window_size > 10:
-            alerts.append(PerformanceAlert(
-                alert_type="low_throughput",
-                value=snap.requests_per_second,
-                threshold=self.min_throughput_rps,
-                message=f"Throughput {snap.requests_per_second:.2f} rps below min {self.min_throughput_rps:.2f} rps",
-                timestamp=now,
-            ))
+            alerts.append(
+                PerformanceAlert(
+                    alert_type="low_throughput",
+                    value=snap.requests_per_second,
+                    threshold=self.min_throughput_rps,
+                    message=f"Throughput {snap.requests_per_second:.2f} rps below min {self.min_throughput_rps:.2f} rps",
+                    timestamp=now,
+                )
+            )
 
         return alerts
 

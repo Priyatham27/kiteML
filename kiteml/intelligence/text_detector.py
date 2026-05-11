@@ -5,7 +5,7 @@ A column is a text candidate when it contains free-form natural language:
 long strings, high vocabulary diversity, many unique values.
 """
 
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from typing import Dict, List
 
 import pandas as pd
@@ -14,6 +14,7 @@ import pandas as pd
 @dataclass
 class TextColumnInfo:
     """Metadata about a detected text column."""
+
     column: str
     avg_word_count: float
     avg_char_count: float
@@ -25,6 +26,7 @@ class TextColumnInfo:
 @dataclass
 class TextDetectionResult:
     """Result of text column detection across a DataFrame."""
+
     text_columns: List[str]
     details: Dict[str, TextColumnInfo]
     has_text: bool
@@ -80,8 +82,8 @@ def detect_text_columns(
         if confidence >= 0.5:
             suggestion = (
                 "Consider TF-IDF vectorization or sentence embeddings for ML."
-                if avg_words > 6 else
-                "Consider bag-of-words or label encoding."
+                if avg_words > 6
+                else "Consider bag-of-words or label encoding."
             )
             info = TextColumnInfo(
                 column=col,

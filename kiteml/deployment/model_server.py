@@ -5,11 +5,10 @@ Launches a FastAPI server directly from a Result object or a .kiteml bundle.
 Requires: pip install fastapi uvicorn
 """
 
-import os
 import threading
 import time
 from dataclasses import dataclass
-from typing import Any, Optional
+from typing import Any
 
 
 @dataclass
@@ -52,10 +51,7 @@ def serve(
         import fastapi
         import uvicorn
     except ImportError:
-        raise ImportError(
-            "Serving requires FastAPI and Uvicorn.\n"
-            "Install with: pip install fastapi uvicorn"
-        )
+        raise ImportError("Serving requires FastAPI and Uvicorn.\n" "Install with: pip install fastapi uvicorn")
 
     from kiteml.serving.fastapi_app import create_app
 
@@ -64,19 +60,22 @@ def serve(
     server = uvicorn.Server(config)
 
     url = f"http://{host if host != '0.0.0.0' else 'localhost'}:{port}"
-    print(f"\n🚀 KiteML Model Server")
+    print("\n🚀 KiteML Model Server")
     print(f"   Model     : {result.model_name}")
     print(f"   Type      : {result.problem_type}")
     print(f"   API URL   : {url}")
     print(f"   Swagger   : {url}/docs")
     print(f"   Health    : {url}/health")
-    print(f"   Press Ctrl+C to stop\n")
+    print("   Press Ctrl+C to stop\n")
 
     if open_browser:
+
         def _open():
             time.sleep(1.5)
             import webbrowser
+
             webbrowser.open(f"{url}/docs")
+
         threading.Thread(target=_open, daemon=True).start()
 
     if background:
@@ -104,10 +103,12 @@ def serve_bundle(
     port : int
     """
     from kiteml.deployment.realtime_inference import RealtimeInferenceEngine
+
     engine = RealtimeInferenceEngine.from_bundle(bundle_path)
 
     try:
         import uvicorn
+
         from kiteml.serving.fastapi_app import create_app_from_engine
     except ImportError:
         raise ImportError("Install fastapi uvicorn for serving.")

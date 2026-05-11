@@ -5,20 +5,20 @@ Measures target distribution and flags severe imbalance that can lead to
 misleading accuracy metrics and biased models.
 """
 
-from dataclasses import dataclass, field
-from typing import Any, Dict, List, Optional
+from dataclasses import dataclass
+from typing import Any, Dict, List
 
-import numpy as np
 import pandas as pd
 
 
 @dataclass
 class ImbalanceReport:
     """Result of class imbalance detection."""
+
     is_imbalanced: bool
-    severity: str               # "none" | "mild" | "moderate" | "severe" | "extreme"
-    imbalance_ratio: float      # max_class / min_class count
-    class_distribution: Dict[Any, float]   # class → fraction
+    severity: str  # "none" | "mild" | "moderate" | "severe" | "extreme"
+    imbalance_ratio: float  # max_class / min_class count
+    class_distribution: Dict[Any, float]  # class → fraction
     majority_class: Any
     minority_class: Any
     majority_ratio: float
@@ -57,11 +57,14 @@ def detect_imbalance(
 
     if n_total == 0 or len(vc) < 2:
         return ImbalanceReport(
-            is_imbalanced=False, severity="none",
+            is_imbalanced=False,
+            severity="none",
             imbalance_ratio=1.0,
             class_distribution={},
-            majority_class=None, minority_class=None,
-            majority_ratio=1.0, minority_ratio=1.0,
+            majority_class=None,
+            minority_class=None,
+            majority_ratio=1.0,
+            minority_ratio=1.0,
             recommendations=["Only one class detected — check target column."],
         )
 

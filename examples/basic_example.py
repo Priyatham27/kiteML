@@ -3,6 +3,7 @@ basic_example.py - Simple KiteML usage example.
 """
 
 from sklearn.datasets import load_iris
+
 from kiteml import train
 
 # Load the Iris dataset

@@ -7,7 +7,7 @@ Automatically:
   3. Detects seasonality patterns
 """
 
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from typing import Dict, List, Optional
 
 import pandas as pd
@@ -16,12 +16,13 @@ import pandas as pd
 @dataclass
 class DatetimeColumnInfo:
     """Metadata about a detected datetime column."""
+
     column: str
     original_dtype: str
     min_date: Optional[str]
     max_date: Optional[str]
     date_range_days: Optional[int]
-    extracted_features: List[str]    # which features will be extracted
+    extracted_features: List[str]  # which features will be extracted
     has_time_component: bool
     confidence: float
 
@@ -29,6 +30,7 @@ class DatetimeColumnInfo:
 @dataclass
 class DatetimeDetectionResult:
     """Result of datetime column detection."""
+
     datetime_columns: List[str]
     details: Dict[str, DatetimeColumnInfo]
     has_datetime: bool
@@ -131,11 +133,11 @@ def extract_datetime_features(df: pd.DataFrame, columns: List[str]) -> pd.DataFr
             continue
         parsed = pd.to_datetime(df[col], errors="coerce")
         prefix = col
-        df[f"{prefix}_year"]      = parsed.dt.year
-        df[f"{prefix}_month"]     = parsed.dt.month
-        df[f"{prefix}_day"]       = parsed.dt.day
+        df[f"{prefix}_year"] = parsed.dt.year
+        df[f"{prefix}_month"] = parsed.dt.month
+        df[f"{prefix}_day"] = parsed.dt.day
         df[f"{prefix}_dayofweek"] = parsed.dt.dayofweek
-        df[f"{prefix}_quarter"]   = parsed.dt.quarter
+        df[f"{prefix}_quarter"] = parsed.dt.quarter
         if parsed.dt.hour.any():
             df[f"{prefix}_hour"] = parsed.dt.hour
         df.drop(columns=[col], inplace=True)

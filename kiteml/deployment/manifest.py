@@ -7,13 +7,14 @@ is, what it expects, and how to use it safely.
 
 import json
 import time
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from typing import Any, Dict, List, Optional
 
 
 @dataclass
 class ModelManifest:
     """Complete deployment manifest for a KiteML model bundle."""
+
     bundle_id: str
     model_name: str
     problem_type: str
@@ -28,12 +29,12 @@ class ModelManifest:
     n_features: int
 
     # Schema
-    input_schema: Dict[str, str]      # feature → dtype
+    input_schema: Dict[str, str]  # feature → dtype
     target_column: Optional[str]
 
     # Artifacts
-    artifacts: Dict[str, str]          # artifact_name → relative path
-    checksums: Dict[str, str]          # artifact_name → MD5
+    artifacts: Dict[str, str]  # artifact_name → relative path
+    checksums: Dict[str, str]  # artifact_name → MD5
 
     # Reproduction
     random_seed: Optional[int]
@@ -72,6 +73,7 @@ class ModelManifest:
 
     def save(self, path: str) -> None:
         import os
+
         os.makedirs(os.path.dirname(os.path.abspath(path)), exist_ok=True)
         with open(path, "w", encoding="utf-8") as f:
             f.write(self.to_yaml())
@@ -82,9 +84,7 @@ class ModelManifest:
         with open(path, encoding="utf-8") as f:
             content = f.read()
         # Parse the pseudo-YAML (simple key: value)
-        raise NotImplementedError(
-            "Use manifest.json (load_json) for programmatic loading."
-        )
+        raise NotImplementedError("Use manifest.json (load_json) for programmatic loading.")
 
 
 def build_manifest(
@@ -114,6 +114,7 @@ def build_manifest(
     ModelManifest
     """
     import sys
+
     from kiteml.config import DEFAULT_RANDOM_STATE
 
     try:
@@ -125,7 +126,7 @@ def build_manifest(
     input_schema: Dict[str, str] = {}
     if result.preprocessor is not None:
         try:
-            for feat in (result.feature_names or []):
+            for feat in result.feature_names or []:
                 input_schema[feat] = "numeric"
         except Exception:
             pass

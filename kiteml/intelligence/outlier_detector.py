@@ -7,7 +7,7 @@ Supports three detection methods:
   - IsolationForest (advanced, model-based — used for multivariate outliers)
 """
 
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from typing import Dict, List, Optional
 
 import numpy as np
@@ -17,6 +17,7 @@ import pandas as pd
 @dataclass
 class ColumnOutlierInfo:
     """Outlier statistics for a single numeric column."""
+
     column: str
     method: str
     n_outliers: int
@@ -29,10 +30,11 @@ class ColumnOutlierInfo:
 @dataclass
 class OutlierReport:
     """Complete outlier analysis report."""
+
     columns_analyzed: int
     columns_with_outliers: List[str]
     details: Dict[str, ColumnOutlierInfo]
-    total_outlier_rows: int          # rows flagged by any column
+    total_outlier_rows: int  # rows flagged by any column
     outlier_row_ratio: float
     has_outliers: bool
     recommendations: List[str]
@@ -84,10 +86,7 @@ def detect_outliers(
     OutlierReport
     """
     exclude = set(exclude_columns or [])
-    numeric_cols = [
-        c for c in df.select_dtypes(include=[np.number]).columns
-        if c not in exclude
-    ]
+    numeric_cols = [c for c in df.select_dtypes(include=[np.number]).columns if c not in exclude]
 
     details: Dict[str, ColumnOutlierInfo] = {}
     all_outlier_mask = pd.Series(False, index=df.index)
@@ -123,9 +122,7 @@ def detect_outliers(
 
     recommendations: List[str] = []
     if cols_with_outliers:
-        recommendations.append(
-            f"Outliers detected in {len(cols_with_outliers)} column(s): {cols_with_outliers[:5]}"
-        )
+        recommendations.append(f"Outliers detected in {len(cols_with_outliers)} column(s): {cols_with_outliers[:5]}")
         if outlier_row_ratio > 0.05:
             recommendations.append("High outlier rate. Consider robust scaling or winsorization.")
         else:

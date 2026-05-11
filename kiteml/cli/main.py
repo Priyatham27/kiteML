@@ -1,6 +1,7 @@
 """
 main.py — Main entry point for the KiteML CLI.
 """
+
 import sys
 
 from kiteml.cli.parser import build_parser
@@ -14,25 +15,25 @@ def main():
             sys.stdout.reconfigure(encoding="utf-8")
         except AttributeError:
             pass
-            
+
     parser = build_parser()
-    
+
     if len(sys.argv) == 1:
         print_banner()
         parser.print_help()
         sys.exit(0)
-        
+
     args = parser.parse_args()
-    
+
     if not hasattr(args, "func"):
         parser.print_help()
         sys.exit(1)
-        
+
     try:
         # Print banner for commands that aren't purely quiet
         if args.command not in ("completion", "version"):
             print_banner()
-            
+
         sys.exit(args.func(args))
     except KeyboardInterrupt:
         print("\n")

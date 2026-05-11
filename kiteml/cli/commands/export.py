@@ -1,10 +1,10 @@
 """
 commands/export.py — CLI command for exporting to ONNX, Docker, or FastAPI.
 """
-import argparse
+
 import os
 
-from kiteml.cli.ui.colors import print_step, print_info, print_error, print_success
+from kiteml.cli.ui.colors import print_error, print_info, print_step, print_success
 
 
 def setup_export_parser(subparsers):
@@ -20,23 +20,22 @@ def run_export(args):
         print_error(f"Model bundle not found: {args.model}")
         return 1
 
-    from kiteml.deployment.packaging import load_bundle
     try:
         # Since export functions like export_docker take a Result object,
         # we might need to recreate a minimal Result or adapt export_docker to accept bundles.
         # For now, we will notify that bundle -> export is coming, or use the loaded components.
         print_info(f"Exporting {args.model} to {args.format} at {args.output}...")
-        
+
         if args.format == "docker":
             # Generate Dockerfile
             os.makedirs(args.output, exist_ok=True)
             with open(os.path.join(args.output, "Dockerfile"), "w") as f:
                 f.write("FROM python:3.9-slim\nRUN pip install kiteml fastapi uvicorn\n")
             print_step("Generated Dockerfile")
-            
+
         elif args.format == "onnx":
             print_step(f"Generated ONNX model at {args.output}")
-            
+
         elif args.format == "api":
             print_step(f"Generated FastAPI script at {args.output}")
 

@@ -7,8 +7,8 @@ Detects:
   - Redundant features that could be safely dropped
 """
 
-from dataclasses import dataclass, field
-from typing import Dict, List, Optional, Tuple
+from dataclasses import dataclass
+from typing import Dict, List, Optional
 
 import numpy as np
 import pandas as pd
@@ -17,19 +17,21 @@ import pandas as pd
 @dataclass
 class CorrelationPair:
     """A pair of correlated features."""
+
     col_a: str
     col_b: str
     correlation: float
-    is_redundant: bool     # True if |corr| > high_threshold
+    is_redundant: bool  # True if |corr| > high_threshold
 
 
 @dataclass
 class CorrelationReport:
     """Full correlation analysis of a DataFrame."""
+
     high_correlation_pairs: List[CorrelationPair]
-    target_correlations: Dict[str, float]   # col → |corr| with target
-    top_predictors: List[str]               # sorted by |corr| with target
-    redundant_features: List[str]           # likely safe to drop
+    target_correlations: Dict[str, float]  # col → |corr| with target
+    top_predictors: List[str]  # sorted by |corr| with target
+    redundant_features: List[str]  # likely safe to drop
     recommendations: List[str]
 
 
@@ -75,19 +77,20 @@ def analyze_correlations(
                 r = corr_matrix.loc[col_a, col_b]
                 if r >= moderate_threshold:
                     is_redundant = r >= high_threshold
-                    high_pairs.append(CorrelationPair(
-                        col_a=col_a, col_b=col_b,
-                        correlation=round(float(r), 4),
-                        is_redundant=is_redundant,
-                    ))
+                    high_pairs.append(
+                        CorrelationPair(
+                            col_a=col_a,
+                            col_b=col_b,
+                            correlation=round(float(r), 4),
+                            is_redundant=is_redundant,
+                        )
+                    )
                     if is_redundant and col_b not in seen_redundant:
                         redundant.append(col_b)
                         seen_redundant.add(col_b)
 
     if high_pairs:
-        recommendations.append(
-            f"{len(high_pairs)} highly correlated feature pair(s) detected."
-        )
+        recommendations.append(f"{len(high_pairs)} highly correlated feature pair(s) detected.")
     if redundant:
         recommendations.append(
             f"Consider dropping: {redundant[:5]} (corr ≥ {high_threshold:.0%} with another feature)."
@@ -104,9 +107,7 @@ def analyze_correlations(
 
         if top_predictors:
             top_col = top_predictors[0]
-            recommendations.append(
-                f"Strongest predictor: '{top_col}' (|r|={target_corrs[top_col]:.3f})"
-            )
+            recommendations.append(f"Strongest predictor: '{top_col}' (|r|={target_corrs[top_col]:.3f})")
 
     return CorrelationReport(
         high_correlation_pairs=high_pairs,

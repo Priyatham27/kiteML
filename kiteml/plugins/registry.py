@@ -1,12 +1,15 @@
 """
 plugins/registry.py — Plugin registry and loader.
 """
+
 import importlib
 import pkgutil
-from typing import Dict, List, Type
+from typing import Dict, List
+
 from kiteml.plugins.sdk import KiteMLPlugin
 
 _PLUGINS: Dict[str, KiteMLPlugin] = {}
+
 
 def discover_plugins() -> List[str]:
     """Discover plugins installed via pip using the 'kiteml_' prefix namespace."""
@@ -15,6 +18,7 @@ def discover_plugins() -> List[str]:
         if name.startswith("kiteml_"):
             discovered.append(name)
     return discovered
+
 
 def load_plugin(module_name: str) -> bool:
     """Load and initialize a specific plugin module."""
@@ -28,6 +32,7 @@ def load_plugin(module_name: str) -> bool:
     except Exception as e:
         print(f"Failed to load plugin {module_name}: {e}")
     return False
+
 
 def get_installed_plugins() -> Dict[str, KiteMLPlugin]:
     return _PLUGINS

@@ -10,24 +10,26 @@ import hashlib
 import json
 import os
 import time
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from typing import Any, Dict, List, Optional
 
 
 @dataclass
 class LineageStep:
     """A single step in the ML pipeline lineage."""
+
     step_name: str
-    step_type: str     # "data", "preprocessing", "selection", "training", "evaluation", "deployment"
+    step_type: str  # "data", "preprocessing", "selection", "training", "evaluation", "deployment"
     timestamp: str
     duration_s: Optional[float]
-    artifacts: Dict[str, str]    # artifact_name → checksum or path
+    artifacts: Dict[str, str]  # artifact_name → checksum or path
     metadata: Dict[str, Any]
 
 
 @dataclass
 class PipelineLineage:
     """Complete lineage of a KiteML training run."""
+
     lineage_id: str
     model_name: str
     problem_type: str
@@ -90,64 +92,71 @@ def build_lineage(result: Any, dataset: Optional[Any] = None) -> PipelineLineage
     if dataset is not None:
         try:
             import pandas as pd
+
             n_rows, n_cols = dataset.shape
-            ds_hash = hashlib.md5(
-                pd.util.hash_pandas_object(dataset).values.tobytes()
-            ).hexdigest()[:12]
+            ds_hash = hashlib.md5(pd.util.hash_pandas_object(dataset).values.tobytes()).hexdigest()[:12]
             dataset_meta = {"n_rows": n_rows, "n_cols": n_cols}
             dataset_artifacts = {"dataset_hash": ds_hash}
         except Exception:
             pass
 
     if dataset is not None or result.data_profile:
-        steps.append(LineageStep(
-            step_name="Load & Profile Dataset",
-            step_type="data",
-            timestamp=created_at,
-            duration_s=None,
-            artifacts=dataset_artifacts,
-            metadata=dataset_meta,
-        ))
+        steps.append(
+            LineageStep(
+                step_name="Load & Profile Dataset",
+                step_type="data",
+                timestamp=created_at,
+                duration_s=None,
+                artifacts=dataset_artifacts,
+                metadata=dataset_meta,
+            )
+        )
 
     # ── Step 2: Preprocessing ─────────────────────────────────────────────
-    steps.append(LineageStep(
-        step_name="Preprocess Features",
-        step_type="preprocessing",
-        timestamp=created_at,
-        duration_s=None,
-        artifacts={"preprocessor": "preprocessor.joblib"},
-        metadata={
-            "n_features": len(result.feature_names or []),
-            "feature_names": list(result.feature_names or []),
-        },
-    ))
+    steps.append(
+        LineageStep(
+            step_name="Preprocess Features",
+            step_type="preprocessing",
+            timestamp=created_at,
+            duration_s=None,
+            artifacts={"preprocessor": "preprocessor.joblib"},
+            metadata={
+                "n_features": len(result.feature_names or []),
+                "feature_names": list(result.feature_names or []),
+            },
+        )
+    )
 
     # ── Step 3: Model Selection ───────────────────────────────────────────
-    steps.append(LineageStep(
-        step_name="Select Best Model (CV)",
-        step_type="selection",
-        timestamp=created_at,
-        duration_s=None,
-        artifacts={},
-        metadata={
-            "candidates_evaluated": len(result.all_results or {}),
-            "winner": result.model_name,
-            "all_scores": {
-                k: round(float(v["score"] if isinstance(v, dict) else v), 4)
-                for k, v in (result.all_results or {}).items()
+    steps.append(
+        LineageStep(
+            step_name="Select Best Model (CV)",
+            step_type="selection",
+            timestamp=created_at,
+            duration_s=None,
+            artifacts={},
+            metadata={
+                "candidates_evaluated": len(result.all_results or {}),
+                "winner": result.model_name,
+                "all_scores": {
+                    k: round(float(v["score"] if isinstance(v, dict) else v), 4)
+                    for k, v in (result.all_results or {}).items()
+                },
             },
-        },
-    ))
+        )
+    )
 
     # ── Step 4: Training ──────────────────────────────────────────────────
-    steps.append(LineageStep(
-        step_name=f"Train {result.model_name}",
-        step_type="training",
-        timestamp=created_at,
-        duration_s=result.times.training if result.times else None,
-        artifacts={"model": "model.joblib"},
-        metadata={"model_class": result.model_name},
-    ))
+    steps.append(
+        LineageStep(
+            step_name=f"Train {result.model_name}",
+            step_type="training",
+            timestamp=created_at,
+            duration_s=result.times.training if result.times else None,
+            artifacts={"model": "model.joblib"},
+            metadata={"model_class": result.model_name},
+        )
+    )
 
     # ── Step 5: Evaluation ────────────────────────────────────────────────
     score_val = None
@@ -156,17 +165,19 @@ def build_lineage(result: Any, dataset: Optional[Any] = None) -> PipelineLineage
     except Exception:
         pass
 
-    steps.append(LineageStep(
-        step_name="Evaluate Model",
-        step_type="evaluation",
-        timestamp=created_at,
-        duration_s=None,
-        artifacts={},
-        metadata={
-            "score": score_val,
-            "problem_type": result.problem_type,
-        },
-    ))
+    steps.append(
+        LineageStep(
+            step_name="Evaluate Model",
+            step_type="evaluation",
+            timestamp=created_at,
+            duration_s=None,
+            artifacts={},
+            metadata={
+                "score": score_val,
+                "problem_type": result.problem_type,
+            },
+        )
+    )
 
     total_duration = result.times.total if result.times else 0.0
 

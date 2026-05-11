@@ -18,8 +18,9 @@ from kiteml.deployment.inference_guardrails import InferenceGuardrails
 @dataclass
 class PredictionResult:
     """Result of a single inference call."""
+
     prediction: Any
-    probabilities: Optional[Dict] = None   # class → probability (classification)
+    probabilities: Optional[Dict] = None  # class → probability (classification)
     latency_ms: float = 0.0
     warnings: List[str] = None
 
@@ -69,6 +70,7 @@ class RealtimeInferenceEngine:
     def from_bundle(cls, bundle_path: str) -> "RealtimeInferenceEngine":
         """Load inference engine from a .kiteml bundle directory."""
         from kiteml.deployment.packaging import load_bundle
+
         bundle = load_bundle(bundle_path)
         meta = bundle.get("metadata", {})
         return cls(
@@ -115,7 +117,7 @@ class RealtimeInferenceEngine:
         elif isinstance(X, np.ndarray):
             if X.ndim == 1:
                 X = X.reshape(1, -1)
-            df = pd.DataFrame(X, columns=self.feature_names[:X.shape[1]])
+            df = pd.DataFrame(X, columns=self.feature_names[: X.shape[1]])
         else:
             df = pd.DataFrame(X)
 
@@ -139,8 +141,8 @@ class RealtimeInferenceEngine:
             proba = self.model.predict_proba(X_transformed)
             classes = (
                 [str(c) for c in self.model.classes_]
-                if hasattr(self.model, "classes_") else
-                [str(i) for i in range(proba.shape[1])]
+                if hasattr(self.model, "classes_")
+                else [str(i) for i in range(proba.shape[1])]
             )
             probabilities = {cls: round(float(p), 4) for cls, p in zip(classes, proba[0])}
 

@@ -8,18 +8,18 @@ Python version, and configuration.
 import hashlib
 import json
 import os
-import sys
 import time
-from dataclasses import dataclass, field
-from typing import Any, Dict, Optional
+from dataclasses import dataclass
+from typing import Any, Dict
 
+from kiteml.config import DEFAULT_CV_FOLDS, DEFAULT_RANDOM_STATE
 from kiteml.deployment.environment_capture import capture_environment
-from kiteml.config import DEFAULT_RANDOM_STATE, DEFAULT_CV_FOLDS
 
 
 @dataclass
 class ReproducibilitySnapshot:
     """Complete snapshot for run reproducibility."""
+
     run_id: str
     random_seed: int
     cv_folds: int
@@ -63,9 +63,9 @@ def capture_snapshot(run_id: str = "unknown") -> ReproducibilitySnapshot:
     env = capture_environment()
 
     from kiteml import config as cfg
+
     kiteml_config = {
-        k: v for k, v in cfg.__dict__.items()
-        if not k.startswith("_") and isinstance(v, (int, float, str, bool))
+        k: v for k, v in cfg.__dict__.items() if not k.startswith("_") and isinstance(v, (int, float, str, bool))
     }
 
     # Compute env hash (key packages + python version)

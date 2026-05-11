@@ -10,7 +10,7 @@ Records every prediction made in production and surfaces:
 
 import time
 from collections import defaultdict
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from typing import Any, Dict, List, Optional
 
 import numpy as np
@@ -19,9 +19,10 @@ import numpy as np
 @dataclass
 class PredictionRecord:
     """A single recorded prediction."""
+
     timestamp: float
     prediction: Any
-    confidence: Optional[float]   # max probability for classifiers
+    confidence: Optional[float]  # max probability for classifiers
     latency_ms: float
     input_hash: Optional[str]
 
@@ -29,6 +30,7 @@ class PredictionRecord:
 @dataclass
 class PredictionStats:
     """Aggregated prediction statistics."""
+
     total_predictions: int
     unique_predictions: int
     prediction_distribution: Dict[str, float]
@@ -66,6 +68,7 @@ class PredictionMonitor:
         if input_data is not None:
             try:
                 import hashlib
+
                 input_hash = hashlib.md5(str(input_data).encode()).hexdigest()[:8]
             except Exception:
                 pass
@@ -79,17 +82,22 @@ class PredictionMonitor:
         )
         self._records.append(record)
         if len(self._records) > self.max_history:
-            self._records = self._records[-self.max_history:]
+            self._records = self._records[-self.max_history :]
 
     def stats(self, last_n: Optional[int] = None) -> PredictionStats:
         """Compute aggregate statistics over recorded predictions."""
         records = self._records[-last_n:] if last_n else self._records
         if not records:
             return PredictionStats(
-                total_predictions=0, unique_predictions=0,
-                prediction_distribution={}, avg_confidence=None,
-                min_confidence=None, max_confidence=None,
-                avg_latency_ms=0.0, p99_latency_ms=0.0, time_window_s=0.0,
+                total_predictions=0,
+                unique_predictions=0,
+                prediction_distribution={},
+                avg_confidence=None,
+                min_confidence=None,
+                max_confidence=None,
+                avg_latency_ms=0.0,
+                p99_latency_ms=0.0,
+                time_window_s=0.0,
             )
 
         preds = [str(r.prediction) for r in records]
@@ -126,13 +134,11 @@ class PredictionMonitor:
         stats = self.stats()
         if stats.avg_confidence is not None and stats.avg_confidence < low_confidence_threshold:
             warnings.append(
-                f"⚠️ Low average confidence: {stats.avg_confidence:.2%} "
-                f"(threshold: {low_confidence_threshold:.0%})"
+                f"⚠️ Low average confidence: {stats.avg_confidence:.2%} " f"(threshold: {low_confidence_threshold:.0%})"
             )
         if stats.p99_latency_ms > high_latency_threshold_ms:
             warnings.append(
-                f"⚠️ High p99 latency: {stats.p99_latency_ms:.0f}ms "
-                f"(threshold: {high_latency_threshold_ms:.0f}ms)"
+                f"⚠️ High p99 latency: {stats.p99_latency_ms:.0f}ms " f"(threshold: {high_latency_threshold_ms:.0f}ms)"
             )
         return warnings
 

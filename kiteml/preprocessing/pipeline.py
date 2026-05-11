@@ -25,13 +25,14 @@ sklearn Pipeline benefits
   advanced users who want to plug it directly into sklearn GridSearchCV.
 """
 
+from typing import List, Optional
+
 import numpy as np
 import pandas as pd
 from sklearn.compose import ColumnTransformer
 from sklearn.impute import SimpleImputer
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import OneHotEncoder, StandardScaler
-from typing import List, Optional
 
 
 class Preprocessor:
@@ -100,28 +101,34 @@ class Preprocessor:
         transformers = []
 
         if num_cols:
-            num_pipeline = Pipeline([
-                ("imputer", SimpleImputer(strategy="mean")),
-            ])
+            num_pipeline = Pipeline(
+                [
+                    ("imputer", SimpleImputer(strategy="mean")),
+                ]
+            )
             transformers.append(("num", num_pipeline, num_cols))
 
         if cat_cols:
-            cat_pipeline = Pipeline([
-                ("imputer", SimpleImputer(strategy="most_frequent")),
-                ("encoder", OneHotEncoder(handle_unknown="ignore", sparse_output=False)),
-            ])
+            cat_pipeline = Pipeline(
+                [
+                    ("imputer", SimpleImputer(strategy="most_frequent")),
+                    ("encoder", OneHotEncoder(handle_unknown="ignore", sparse_output=False)),
+                ]
+            )
             transformers.append(("cat", cat_pipeline, cat_cols))
 
         col_transform = ColumnTransformer(
             transformers=transformers,
-            remainder="drop",       # safely ignore any surprise columns
+            remainder="drop",  # safely ignore any surprise columns
             verbose_feature_names_out=False,  # clean feature names without prefix
         )
 
-        full_pipeline = Pipeline([
-            ("col_transform", col_transform),
-            ("scaler", StandardScaler()),
-        ])
+        full_pipeline = Pipeline(
+            [
+                ("col_transform", col_transform),
+                ("scaler", StandardScaler()),
+            ]
+        )
 
         return full_pipeline
 
@@ -175,12 +182,8 @@ class Preprocessor:
         X = X.copy()
 
         # ── Detect column types ──────────────────────────────────────────
-        self.num_cols = X.select_dtypes(
-            include=["int64", "float64", "int32", "float32"]
-        ).columns.tolist()
-        self.cat_cols = X.select_dtypes(
-            include=["object", "str", "category", "bool"]
-        ).columns.tolist()
+        self.num_cols = X.select_dtypes(include=["int64", "float64", "int32", "float32"]).columns.tolist()
+        self.cat_cols = X.select_dtypes(include=["object", "str", "category", "bool"]).columns.tolist()
 
         # ── Build and fit the sklearn Pipeline ───────────────────────────
         self._pipeline = self._build_pipeline(self.num_cols, self.cat_cols)
@@ -216,9 +219,7 @@ class Preprocessor:
             If called before ``fit_transform``.
         """
         if not self.is_fitted:
-            raise RuntimeError(
-                "Preprocessor is not fitted. Call fit_transform() on training data first."
-            )
+            raise RuntimeError("Preprocessor is not fitted. Call fit_transform() on training data first.")
         return self._pipeline.transform(X.copy())
 
     # ------------------------------------------------------------------

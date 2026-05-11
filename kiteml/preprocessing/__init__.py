@@ -7,7 +7,7 @@ Individual helpers (cleaner, encoder, scaler) remain available for
 custom workflows.
 """
 
-from kiteml.preprocessing.pipeline import Preprocessor
 from kiteml.preprocessing.cleaner import handle_missing_values
 from kiteml.preprocessing.encoder import encode_categoricals
+from kiteml.preprocessing.pipeline import Preprocessor
 from kiteml.preprocessing.scaler import scale_features

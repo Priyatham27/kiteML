@@ -6,24 +6,26 @@ when drift, anomaly, or performance thresholds are exceeded.
 """
 
 import time
-from dataclasses import dataclass, field
-from typing import Any, Callable, Dict, List, Optional
+from dataclasses import dataclass
+from typing import Callable, Dict, List, Optional
 
 
 @dataclass
 class AlertRule:
     """A single alert rule definition."""
+
     name: str
-    metric: str           # e.g. "psi", "p99_latency_ms", "anomaly_ratio"
+    metric: str  # e.g. "psi", "p99_latency_ms", "anomaly_ratio"
     threshold: float
-    operator: str         # ">" | ">=" | "<" | "<="
-    severity: str         # "info" | "warning" | "critical"
+    operator: str  # ">" | ">=" | "<" | "<="
+    severity: str  # "info" | "warning" | "critical"
     message_template: str
 
 
 @dataclass
 class Alert:
     """A fired alert instance."""
+
     rule_name: str
     metric: str
     value: float
@@ -48,16 +50,41 @@ class AlertEngine:
 
     # Built-in default rules
     DEFAULT_RULES: List[AlertRule] = [
-        AlertRule("high_drift", "psi", 0.2, ">", "critical",
-                  "Data drift PSI={value:.3f} exceeds threshold {threshold}. Consider retraining."),
-        AlertRule("moderate_drift", "psi", 0.1, ">", "warning",
-                  "Moderate drift detected PSI={value:.3f}. Monitor closely."),
-        AlertRule("high_anomaly_ratio", "anomaly_ratio", 0.05, ">", "warning",
-                  "Anomaly ratio {value:.1%} exceeds {threshold:.1%} of production inputs."),
-        AlertRule("high_p99_latency", "p99_latency_ms", 500.0, ">", "warning",
-                  "p99 latency {value:.0f}ms exceeds threshold {threshold:.0f}ms."),
-        AlertRule("low_confidence", "avg_confidence", 0.6, "<", "warning",
-                  "Average confidence {value:.2%} below threshold {threshold:.2%}."),
+        AlertRule(
+            "high_drift",
+            "psi",
+            0.2,
+            ">",
+            "critical",
+            "Data drift PSI={value:.3f} exceeds threshold {threshold}. Consider retraining.",
+        ),
+        AlertRule(
+            "moderate_drift", "psi", 0.1, ">", "warning", "Moderate drift detected PSI={value:.3f}. Monitor closely."
+        ),
+        AlertRule(
+            "high_anomaly_ratio",
+            "anomaly_ratio",
+            0.05,
+            ">",
+            "warning",
+            "Anomaly ratio {value:.1%} exceeds {threshold:.1%} of production inputs.",
+        ),
+        AlertRule(
+            "high_p99_latency",
+            "p99_latency_ms",
+            500.0,
+            ">",
+            "warning",
+            "p99 latency {value:.0f}ms exceeds threshold {threshold:.0f}ms.",
+        ),
+        AlertRule(
+            "low_confidence",
+            "avg_confidence",
+            0.6,
+            "<",
+            "warning",
+            "Average confidence {value:.2%} below threshold {threshold:.2%}.",
+        ),
     ]
 
     def __init__(
@@ -77,8 +104,7 @@ class AlertEngine:
         print(f"{icon}  [{alert.severity.upper()}] {alert.message}")
 
     def _evaluate(self, rule: AlertRule, value: float) -> bool:
-        ops = {">": float.__gt__, ">=": float.__ge__,
-               "<": float.__lt__, "<=": float.__le__}
+        ops = {">": float.__gt__, ">=": float.__ge__, "<": float.__lt__, "<=": float.__le__}
         op = ops.get(rule.operator)
         return op(value, rule.threshold) if op else False
 
@@ -105,9 +131,7 @@ class AlertEngine:
                 continue
             value = metrics[rule.metric]
             if self._evaluate(rule, value):
-                msg = rule.message_template.format(
-                    value=value, threshold=rule.threshold
-                )
+                msg = rule.message_template.format(value=value, threshold=rule.threshold)
                 alert = Alert(
                     rule_name=rule.name,
                     metric=rule.metric,
@@ -122,7 +146,9 @@ class AlertEngine:
                 self.on_alert(alert)
 
                 if self.log_file:
-                    import json, os
+                    import json
+                    import os
+
                     os.makedirs(os.path.dirname(os.path.abspath(self.log_file)), exist_ok=True)
                     with open(self.log_file, "a", encoding="utf-8") as f:
                         f.write(json.dumps(alert.__dict__) + "\n")
@@ -140,8 +166,4 @@ class AlertEngine:
         counts = {"info": 0, "warning": 0, "critical": 0}
         for a in self.fired_alerts:
             counts[a.severity] = counts.get(a.severity, 0) + 1
-        return (
-            f"🚨 {counts['critical']} critical | "
-            f"⚠️ {counts['warning']} warning | "
-            f"ℹ️ {counts['info']} info"
-        )
+        return f"🚨 {counts['critical']} critical | " f"⚠️ {counts['warning']} warning | " f"ℹ️ {counts['info']} info"

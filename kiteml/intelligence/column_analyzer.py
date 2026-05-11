@@ -22,25 +22,25 @@ from dataclasses import dataclass, field
 from enum import Enum
 from typing import Dict, List, Optional
 
-import numpy as np
 import pandas as pd
 
 
 class ColumnType(str, Enum):
-    NUMERICAL   = "numerical"
+    NUMERICAL = "numerical"
     CATEGORICAL = "categorical"
-    ORDINAL     = "ordinal"
-    BOOLEAN     = "boolean"
-    DATETIME    = "datetime"
-    TEXT        = "text"
-    IDENTIFIER  = "identifier"
-    CONSTANT    = "constant"
-    UNKNOWN     = "unknown"
+    ORDINAL = "ordinal"
+    BOOLEAN = "boolean"
+    DATETIME = "datetime"
+    TEXT = "text"
+    IDENTIFIER = "identifier"
+    CONSTANT = "constant"
+    UNKNOWN = "unknown"
 
 
 @dataclass
 class ColumnProfile:
     """Semantic profile of a single DataFrame column."""
+
     name: str
     dtype: str
     column_type: ColumnType
@@ -48,22 +48,20 @@ class ColumnProfile:
     unique_ratio: float
     null_ratio: float
     sample_values: List
-    confidence: float          # 0–1 confidence in the inferred type
+    confidence: float  # 0–1 confidence in the inferred type
     notes: List[str] = field(default_factory=list)
 
 
 @dataclass
 class ColumnAnalysisResult:
     """Full analysis of all columns in a DataFrame."""
+
     profiles: Dict[str, ColumnProfile]
-    type_summary: Dict[str, int]   # ColumnType → count
+    type_summary: Dict[str, int]  # ColumnType → count
 
     def of_type(self, column_type: ColumnType) -> List[str]:
         """Return column names matching the given type."""
-        return [
-            name for name, p in self.profiles.items()
-            if p.column_type == column_type
-        ]
+        return [name for name, p in self.profiles.items() if p.column_type == column_type]
 
     def to_dict(self) -> dict:
         return {
@@ -131,29 +129,61 @@ def _classify_column(series: pd.Series, name: str) -> ColumnProfile:
 
     # ── CONSTANT ─────────────────────────────────────────────────────────
     if n_unique <= 1:
-        return ColumnProfile(name, dtype_str, ColumnType.CONSTANT,
-                             n_unique, unique_ratio, null_ratio, sample_vals,
-                             confidence=0.99, notes=["single unique value"])
+        return ColumnProfile(
+            name,
+            dtype_str,
+            ColumnType.CONSTANT,
+            n_unique,
+            unique_ratio,
+            null_ratio,
+            sample_vals,
+            confidence=0.99,
+            notes=["single unique value"],
+        )
 
     # ── DATETIME (dtype) ──────────────────────────────────────────────────
     if pd.api.types.is_datetime64_any_dtype(series):
-        return ColumnProfile(name, dtype_str, ColumnType.DATETIME,
-                             n_unique, unique_ratio, null_ratio, sample_vals,
-                             confidence=0.99, notes=["datetime64 dtype"])
+        return ColumnProfile(
+            name,
+            dtype_str,
+            ColumnType.DATETIME,
+            n_unique,
+            unique_ratio,
+            null_ratio,
+            sample_vals,
+            confidence=0.99,
+            notes=["datetime64 dtype"],
+        )
 
     # ── BOOLEAN ──────────────────────────────────────────────────────────
     if pd.api.types.is_bool_dtype(series):
-        return ColumnProfile(name, dtype_str, ColumnType.BOOLEAN,
-                             n_unique, unique_ratio, null_ratio, sample_vals,
-                             confidence=0.99, notes=["bool dtype"])
+        return ColumnProfile(
+            name,
+            dtype_str,
+            ColumnType.BOOLEAN,
+            n_unique,
+            unique_ratio,
+            null_ratio,
+            sample_vals,
+            confidence=0.99,
+            notes=["bool dtype"],
+        )
 
     if n_unique == 2:
         vals = set(non_null.unique())
         if vals <= {0, 1} or vals <= {True, False} or vals <= {"yes", "no"} or vals <= {"y", "n"}:
             notes.append("binary values")
-            return ColumnProfile(name, dtype_str, ColumnType.BOOLEAN,
-                                 n_unique, unique_ratio, null_ratio, sample_vals,
-                                 confidence=0.95, notes=notes)
+            return ColumnProfile(
+                name,
+                dtype_str,
+                ColumnType.BOOLEAN,
+                n_unique,
+                unique_ratio,
+                null_ratio,
+                sample_vals,
+                confidence=0.95,
+                notes=notes,
+            )
 
     # ── STRING / OBJECT branch ────────────────────────────────────────────
     if pd.api.types.is_object_dtype(series) or pd.api.types.is_string_dtype(series):
@@ -162,68 +192,142 @@ def _classify_column(series: pd.Series, name: str) -> ColumnProfile:
         # Datetime string detection
         if _is_datetime_parseable(str_series):
             notes.append("parseable as datetime")
-            return ColumnProfile(name, dtype_str, ColumnType.DATETIME,
-                                 n_unique, unique_ratio, null_ratio, sample_vals,
-                                 confidence=0.85, notes=notes)
+            return ColumnProfile(
+                name,
+                dtype_str,
+                ColumnType.DATETIME,
+                n_unique,
+                unique_ratio,
+                null_ratio,
+                sample_vals,
+                confidence=0.85,
+                notes=notes,
+            )
 
         # Text / NLP detection
         avg_words = _avg_word_count(str_series)
         if avg_words > 5 or (unique_ratio > 0.9 and avg_words > 2):
             notes.append(f"avg {avg_words:.1f} words per value")
-            return ColumnProfile(name, dtype_str, ColumnType.TEXT,
-                                 n_unique, unique_ratio, null_ratio, sample_vals,
-                                 confidence=0.80, notes=notes)
+            return ColumnProfile(
+                name,
+                dtype_str,
+                ColumnType.TEXT,
+                n_unique,
+                unique_ratio,
+                null_ratio,
+                sample_vals,
+                confidence=0.80,
+                notes=notes,
+            )
 
         # Ordinal detection
         lower_vals = {str(v).strip().lower() for v in non_null.unique()}
         for ordinal_set in _ORDINAL_SETS:
             if lower_vals <= ordinal_set or ordinal_set <= lower_vals:
                 notes.append("matches ordinal vocabulary")
-                return ColumnProfile(name, dtype_str, ColumnType.ORDINAL,
-                                     n_unique, unique_ratio, null_ratio, sample_vals,
-                                     confidence=0.88, notes=notes)
+                return ColumnProfile(
+                    name,
+                    dtype_str,
+                    ColumnType.ORDINAL,
+                    n_unique,
+                    unique_ratio,
+                    null_ratio,
+                    sample_vals,
+                    confidence=0.88,
+                    notes=notes,
+                )
 
         # Identifier: name hints + near-unique
         name_lower = name.lower().replace(" ", "_")
         if unique_ratio > 0.95 and any(kw in name_lower for kw in _ID_KEYWORDS):
             notes.append("high uniqueness + ID name pattern")
-            return ColumnProfile(name, dtype_str, ColumnType.IDENTIFIER,
-                                 n_unique, unique_ratio, null_ratio, sample_vals,
-                                 confidence=0.90, notes=notes)
+            return ColumnProfile(
+                name,
+                dtype_str,
+                ColumnType.IDENTIFIER,
+                n_unique,
+                unique_ratio,
+                null_ratio,
+                sample_vals,
+                confidence=0.90,
+                notes=notes,
+            )
 
         # Categorical
         notes.append(f"{n_unique} unique values")
-        return ColumnProfile(name, dtype_str, ColumnType.CATEGORICAL,
-                             n_unique, unique_ratio, null_ratio, sample_vals,
-                             confidence=0.85, notes=notes)
+        return ColumnProfile(
+            name,
+            dtype_str,
+            ColumnType.CATEGORICAL,
+            n_unique,
+            unique_ratio,
+            null_ratio,
+            sample_vals,
+            confidence=0.85,
+            notes=notes,
+        )
 
     # ── NUMERIC branch ────────────────────────────────────────────────────
     if pd.api.types.is_numeric_dtype(series):
         # Identifier: integer + near-unique + name hint
         name_lower = name.lower().replace(" ", "_")
-        if (pd.api.types.is_integer_dtype(series)
-                and unique_ratio > 0.95
-                and any(kw in name_lower for kw in _ID_KEYWORDS)):
+        if (
+            pd.api.types.is_integer_dtype(series)
+            and unique_ratio > 0.95
+            and any(kw in name_lower for kw in _ID_KEYWORDS)
+        ):
             notes.append("integer identifier pattern")
-            return ColumnProfile(name, dtype_str, ColumnType.IDENTIFIER,
-                                 n_unique, unique_ratio, null_ratio, sample_vals,
-                                 confidence=0.88, notes=notes)
+            return ColumnProfile(
+                name,
+                dtype_str,
+                ColumnType.IDENTIFIER,
+                n_unique,
+                unique_ratio,
+                null_ratio,
+                sample_vals,
+                confidence=0.88,
+                notes=notes,
+            )
 
         # Categorical numeric: low cardinality integers
         if pd.api.types.is_integer_dtype(series) and n_unique <= 20 and unique_ratio < 0.05:
             notes.append(f"low-cardinality integer ({n_unique} values)")
-            return ColumnProfile(name, dtype_str, ColumnType.CATEGORICAL,
-                                 n_unique, unique_ratio, null_ratio, sample_vals,
-                                 confidence=0.75, notes=notes)
+            return ColumnProfile(
+                name,
+                dtype_str,
+                ColumnType.CATEGORICAL,
+                n_unique,
+                unique_ratio,
+                null_ratio,
+                sample_vals,
+                confidence=0.75,
+                notes=notes,
+            )
 
         notes.append("continuous numeric")
-        return ColumnProfile(name, dtype_str, ColumnType.NUMERICAL,
-                             n_unique, unique_ratio, null_ratio, sample_vals,
-                             confidence=0.92, notes=notes)
+        return ColumnProfile(
+            name,
+            dtype_str,
+            ColumnType.NUMERICAL,
+            n_unique,
+            unique_ratio,
+            null_ratio,
+            sample_vals,
+            confidence=0.92,
+            notes=notes,
+        )
 
-    return ColumnProfile(name, dtype_str, ColumnType.UNKNOWN,
-                         n_unique, unique_ratio, null_ratio, sample_vals,
-                         confidence=0.0, notes=["unrecognized dtype"])
+    return ColumnProfile(
+        name,
+        dtype_str,
+        ColumnType.UNKNOWN,
+        n_unique,
+        unique_ratio,
+        null_ratio,
+        sample_vals,
+        confidence=0.0,
+        notes=["unrecognized dtype"],
+    )
 
 
 def analyze_columns(

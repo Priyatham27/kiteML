@@ -25,7 +25,6 @@ convention.  The report layer converts R² to RMSE for display purposes.
 import logging
 from typing import Any, Dict, Optional, Tuple
 
-import numpy as np
 import pandas as pd
 from sklearn.model_selection import cross_val_score
 
@@ -84,10 +83,7 @@ def select_best_model(
         models = get_regression_models()
         scoring = "r2"
     else:
-        raise ValueError(
-            f"Unknown problem_type '{problem_type}'. "
-            "Expected 'classification' or 'regression'."
-        )
+        raise ValueError(f"Unknown problem_type '{problem_type}'. " "Expected 'classification' or 'regression'.")
 
     # ── Cross-validate every candidate ───────────────────────────────────
     raw_scores: Dict[str, Optional[float]] = {}
@@ -107,7 +103,7 @@ def select_best_model(
             raw_scores[name] = mean_score
             errors[name] = None
             logger.debug("  %s → %.4f (±%.4f)", name, mean_score, scores.std())
-        except Exception as exc:                       # noqa: BLE001
+        except Exception as exc:  # noqa: BLE001
             raw_scores[name] = None
             errors[name] = str(exc)
             logger.warning("  %s → FAILED: %s", name, exc)
@@ -132,7 +128,7 @@ def select_best_model(
             "error": None,
         }
     for name in errors:
-        if errors[name] is not None:                   # failed models
+        if errors[name] is not None:  # failed models
             all_results[name] = {
                 "score": None,
                 "rank": None,
@@ -141,7 +137,7 @@ def select_best_model(
 
     # ── Select best model ─────────────────────────────────────────────────
     best_name = sorted_names[0]
-    best_model = models[best_name]                     # unfitted instance
+    best_model = models[best_name]  # unfitted instance
 
     logger.info(
         "🏆 Best model: %s  (CV %s = %.4f)",

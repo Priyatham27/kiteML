@@ -1,12 +1,10 @@
 """
 commands/serve.py — CLI command for starting an inference server.
 """
-import argparse
+
 import os
 
-from kiteml.cli.ui.colors import print_step, print_info, print_error
-from kiteml.deployment.packaging import load_bundle
-from kiteml.output.result import Result
+from kiteml.cli.ui.colors import print_error, print_info, print_step
 
 
 def setup_serve_parser(subparsers):
@@ -25,14 +23,15 @@ def run_serve(args):
     print_info(f"Loading model bundle from {args.model}...")
     try:
         from kiteml.deployment.model_server import serve as serve_model
+
         # We need a dummy Result or we can pass the bundle path directly if model_server supports it.
         # Actually, our model_server.serve takes a Result object OR we can construct one.
         # Let's import the server logic that can run standalone
         from kiteml.deployment.model_server import serve_bundle
-        
+
         print_step(f"Starting server on {args.host}:{args.port}")
         serve_bundle(args.model, host=args.host, port=args.port)
-        
+
     except ImportError as e:
         print_error(f"Serving requires extra dependencies: {e}")
         print_info("Run `pip install fastapi uvicorn`")

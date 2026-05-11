@@ -1,11 +1,12 @@
 """
 commands/profile.py — CLI command for dataset intelligence.
 """
-import argparse
+
 import os
 
-from kiteml.cli.ui.colors import print_step, print_info, print_error, print_success, print_header
 import pandas as pd
+
+from kiteml.cli.ui.colors import print_error, print_header, print_info, print_step, print_success
 
 
 def setup_profile_parser(subparsers):
@@ -24,28 +25,29 @@ def run_profile(args):
     print_info(f"Loading data from {args.data}...")
     try:
         df = pd.read_csv(args.data) if args.data.endswith(".csv") else pd.read_parquet(args.data)
-        from kiteml.profiling.inspector import DatasetInspector
         from kiteml.profiling.html_export import export_html
-        
+        from kiteml.profiling.inspector import DatasetInspector
+
         inspector = DatasetInspector(df, target=args.target)
         profile = inspector.profile()
-        
+
         print_header("Dataset Profile")
         print_step(f"Rows: {profile.n_rows:,} | Columns: {profile.n_cols:,}")
         if args.target:
             print_step(f"Target: '{args.target}' (Type: {profile.target_type})")
         print_step(f"Quality Score: {profile.quality_score:.1f}/100")
-        
+
         if profile.warnings:
             print_header("Data Quality Warnings")
             for w in profile.warnings:
                 from kiteml.cli.ui.colors import print_warning
+
                 print_warning(w)
-                
+
         if args.html:
             export_html(profile, args.html)
             print_success(f"HTML profile exported to {args.html}")
-            
+
     except Exception as e:
         print_error(f"Profiling failed: {e}")
         return 1

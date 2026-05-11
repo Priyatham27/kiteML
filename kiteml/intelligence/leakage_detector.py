@@ -6,8 +6,8 @@ possible leakage from future data, duplicate target encodings, or accidental
 copies of the label.
 """
 
-from dataclasses import dataclass, field
-from typing import Any, Dict, List, Optional
+from dataclasses import dataclass
+from typing import List
 
 import numpy as np
 import pandas as pd
@@ -17,7 +17,7 @@ import pandas as pd
 class LeakageRisk:
     column: str
     correlation_with_target: float
-    risk_level: str              # "low" | "high" | "critical"
+    risk_level: str  # "low" | "high" | "critical"
     reason: str
 
 
@@ -70,16 +70,15 @@ def detect_leakage(
         for col, corr_val in corrs.items():
             if corr_val >= high_threshold:
                 level = "critical" if corr_val >= critical_threshold else "high"
-                reason = (
-                    f"Pearson |r| = {corr_val:.4f} with target — "
-                    "may be a target copy or future data."
+                reason = f"Pearson |r| = {corr_val:.4f} with target — " "may be a target copy or future data."
+                risks.append(
+                    LeakageRisk(
+                        column=col,
+                        correlation_with_target=round(float(corr_val), 4),
+                        risk_level=level,
+                        reason=reason,
+                    )
                 )
-                risks.append(LeakageRisk(
-                    column=col,
-                    correlation_with_target=round(float(corr_val), 4),
-                    risk_level=level,
-                    reason=reason,
-                ))
                 if level == "critical":
                     critical.append(col)
 
@@ -90,12 +89,14 @@ def detect_leakage(
             # Check if this column, when encoded numerically, is identical to y
             if pd.api.types.is_numeric_dtype(series) and pd.api.types.is_numeric_dtype(y):
                 if series.equals(y.astype(series.dtype)):
-                    risks.append(LeakageRisk(
-                        column=col,
-                        correlation_with_target=1.0,
-                        risk_level="critical",
-                        reason="Column is an exact copy of the target.",
-                    ))
+                    risks.append(
+                        LeakageRisk(
+                            column=col,
+                            correlation_with_target=1.0,
+                            risk_level="critical",
+                            reason="Column is an exact copy of the target.",
+                        )
+                    )
                     critical.append(col)
         except Exception:
             pass

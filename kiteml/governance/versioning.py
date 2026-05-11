@@ -9,14 +9,15 @@ import json
 import os
 import re
 import time
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from typing import Any, Dict, List, Optional
 
 
 @dataclass
 class ModelVersion:
     """A semantic version record for a KiteML model."""
-    version: str          # e.g. "v1.2.0"
+
+    version: str  # e.g. "v1.2.0"
     model_name: str
     score: Optional[float]
     problem_type: str
@@ -28,6 +29,7 @@ class ModelVersion:
 @dataclass
 class VersionRegistry:
     """Registry of all versions for a model."""
+
     model_name: str
     versions: List[ModelVersion]
     current_version: Optional[str]

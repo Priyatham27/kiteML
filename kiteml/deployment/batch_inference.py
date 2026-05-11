@@ -5,10 +5,9 @@ Supports chunked streaming inference over CSVs, Parquet files, and DataFrames
 with progress tracking and optional output writing.
 """
 
-import os
 import time
-from dataclasses import dataclass, field
-from typing import Any, Dict, List, Optional, Union
+from dataclasses import dataclass
+from typing import Any, List, Optional, Union
 
 import numpy as np
 import pandas as pd
@@ -17,12 +16,13 @@ import pandas as pd
 @dataclass
 class BatchResult:
     """Result of a batch inference operation."""
+
     predictions: np.ndarray
-    probabilities: Optional[np.ndarray]   # shape (n, n_classes) or None
+    probabilities: Optional[np.ndarray]  # shape (n, n_classes) or None
     n_rows: int
     n_chunks: int
     elapsed_s: float
-    throughput_rps: float                 # rows per second
+    throughput_rps: float  # rows per second
 
     def to_dataframe(self) -> pd.DataFrame:
         """Return predictions as a DataFrame (with probabilities if available)."""
@@ -78,10 +78,7 @@ def batch_predict(
     all_probas: List[np.ndarray] = []
     n_chunks = 0
     n_rows = 0
-    has_proba = (
-        result.problem_type == "classification"
-        and hasattr(result.model, "predict_proba")
-    )
+    has_proba = result.problem_type == "classification" and hasattr(result.model, "predict_proba")
 
     # ── Load data chunks ──────────────────────────────────────────────────
     def _chunk_dataframe(df: pd.DataFrame):
@@ -135,9 +132,9 @@ def batch_predict(
             elapsed = time.perf_counter() - t0
             rps = n_rows / elapsed if elapsed > 0 else 0
             print(
-                f"\r  Chunk {n_chunks:4d} | Rows processed: {n_rows:7,} | "
-                f"{rps:,.0f} rows/s",
-                end="", flush=True,
+                f"\r  Chunk {n_chunks:4d} | Rows processed: {n_rows:7,} | " f"{rps:,.0f} rows/s",
+                end="",
+                flush=True,
             )
 
     if verbose:
@@ -158,10 +155,7 @@ def batch_predict(
     )
 
     if verbose:
-        print(
-            f"✅ Batch complete: {n_rows:,} rows in {elapsed:.2f}s "
-            f"({throughput:,.0f} rows/s)"
-        )
+        print(f"✅ Batch complete: {n_rows:,} rows in {elapsed:.2f}s " f"({throughput:,.0f} rows/s)")
 
     if output_path:
         batch_result.save_csv(output_path)

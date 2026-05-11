@@ -9,11 +9,10 @@ Extracts global feature importance from fitted models using:
 Also provides SHAP-ready hooks for future integration.
 """
 
-from dataclasses import dataclass, field
-from typing import Any, Dict, List, Optional, Tuple
+from dataclasses import dataclass
+from typing import Any, Dict, List, Optional
 
 import numpy as np
-import pandas as pd
 
 
 @dataclass
@@ -21,30 +20,36 @@ class FeatureImportanceEntry:
     feature: str
     importance: float
     rank: int
-    direction: str      # "positive" | "negative" | "unknown"
+    direction: str  # "positive" | "negative" | "unknown"
     interpretation: str
 
 
 @dataclass
 class ExplainabilityReport:
     """Model explainability results."""
+
     model_name: str
-    method: str             # "feature_importances_" | "coef_" | "permutation" | "unavailable"
+    method: str  # "feature_importances_" | "coef_" | "permutation" | "unavailable"
     feature_importances: List[FeatureImportanceEntry]
     top_features: List[str]
     summary: str
-    shap_ready: bool        # True if SHAP can be applied to this model type
+    shap_ready: bool  # True if SHAP can be applied to this model type
 
     def to_dict(self) -> Dict[str, float]:
         return {e.feature: e.importance for e in self.feature_importances}
 
 
 _SHAP_COMPATIBLE = {
-    "RandomForestClassifier", "RandomForestRegressor",
-    "GradientBoostingClassifier", "GradientBoostingRegressor",
-    "DecisionTreeClassifier", "DecisionTreeRegressor",
-    "XGBClassifier", "XGBRegressor",
-    "LGBMClassifier", "LGBMRegressor",
+    "RandomForestClassifier",
+    "RandomForestRegressor",
+    "GradientBoostingClassifier",
+    "GradientBoostingRegressor",
+    "DecisionTreeClassifier",
+    "DecisionTreeRegressor",
+    "XGBClassifier",
+    "XGBRegressor",
+    "LGBMClassifier",
+    "LGBMRegressor",
 }
 
 
@@ -97,6 +102,7 @@ def explain_model(
     elif X_test is not None and y_test is not None:
         try:
             from sklearn.inspection import permutation_importance
+
             result = permutation_importance(model, X_test, y_test, n_repeats=5, random_state=42)
             raw = result.importances_mean
             method = "permutation"
@@ -122,16 +128,21 @@ def explain_model(
                 direction = "unknown"
                 interp = f"Permutation importance: {imp:.4f}"
 
-            importances.append(FeatureImportanceEntry(
-                feature=feat, importance=round(abs_imp, 6),
-                rank=rank, direction=direction, interpretation=interp,
-            ))
+            importances.append(
+                FeatureImportanceEntry(
+                    feature=feat,
+                    importance=round(abs_imp, 6),
+                    rank=rank,
+                    direction=direction,
+                    interpretation=interp,
+                )
+            )
 
         top_features = [e.feature for e in importances[:5]]
         summary = (
-            f"Top predictor: '{top_features[0]}' "
-            f"(importance={importances[0].importance:.4f}) via {method}."
-            if top_features else "No feature importance available."
+            f"Top predictor: '{top_features[0]}' " f"(importance={importances[0].importance:.4f}) via {method}."
+            if top_features
+            else "No feature importance available."
         )
     else:
         top_features = []

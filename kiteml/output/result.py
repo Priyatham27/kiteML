@@ -14,17 +14,17 @@ Encapsulates:
 """
 
 import warnings
-from dataclasses import dataclass, field, asdict
+from dataclasses import asdict, dataclass, field
 from typing import Any, Dict, List, Optional, Union
 
 import joblib
 import numpy as np
 import pandas as pd
 
-
 # ===========================================================================
 # 🔹 Typed Metrics Dataclasses
 # ===========================================================================
+
 
 @dataclass
 class ClassificationMetrics:
@@ -52,6 +52,7 @@ class ClassificationMetrics:
     classification_report : str
         Full text report from sklearn.metrics.classification_report.
     """
+
     accuracy: float = 0.0
     precision: float = 0.0
     recall: float = 0.0
@@ -80,6 +81,7 @@ class RegressionMetrics:
     mae : float
         Mean absolute error.
     """
+
     r2_score: float = 0.0
     mse: float = 0.0
     rmse: float = 0.0
@@ -102,19 +104,18 @@ class TrainingTimes:
     training : float
         Seconds spent in model.fit() on the full training set.
     """
+
     total: float = 0.0
     training: float = 0.0
 
     def __str__(self) -> str:
-        return (
-            f"Total: {self.total:.2f}s  |  "
-            f"Training: {self.training:.2f}s"
-        )
+        return f"Total: {self.total:.2f}s  |  " f"Training: {self.training:.2f}s"
 
 
 # ===========================================================================
 # 🔹 Result
 # ===========================================================================
+
 
 class Result:
     """
@@ -170,11 +171,11 @@ class Result:
         self.preprocessor = preprocessor
         self.feature_names = feature_names or []
         self.feature_importances = feature_importances
-        self.data_profile = data_profile   # Phase 2: DataProfile object
+        self.data_profile = data_profile  # Phase 2: DataProfile object
 
         # ── Time tracking ─────────────────────────────────────────────────
         self.times = TrainingTimes(total=elapsed_time, training=training_time)
-        self.elapsed_time = elapsed_time   # backward compat alias
+        self.elapsed_time = elapsed_time  # backward compat alias
 
         # ── Typed metrics ─────────────────────────────────────────────────
         self.metrics = self._coerce_metrics(metrics, problem_type)
@@ -277,7 +278,7 @@ class Result:
     def summary(self) -> None:
         """Print a clean, human-readable training summary."""
         sep = "─" * 46
-        print(f"\n🪁 KiteML Training Summary")
+        print("\n🪁 KiteML Training Summary")
         print(sep)
         print(f"  Problem Type  : {self.problem_type}")
         print(f"  Best Model    : {self.model_name}")
@@ -314,9 +315,7 @@ class Result:
         # Model leaderboard
         if self.all_results:
             scored = {
-                k: v["score"]
-                for k, v in self.all_results.items()
-                if isinstance(v, dict) and v.get("score") is not None
+                k: v["score"] for k, v in self.all_results.items() if isinstance(v, dict) and v.get("score") is not None
             }
             if scored:
                 print(sep)
@@ -351,7 +350,7 @@ class Result:
             "preprocessor": self.preprocessor,
             "feature_names": self.feature_names,
             "problem_type": self.problem_type,
-            "metrics": self.metrics,          # typed dataclass
+            "metrics": self.metrics,  # typed dataclass
             "metrics_dict": self.metrics.to_dict(),  # plain dict for interop
             "feature_importances": self.feature_importances,
             "times": self.times,
@@ -406,8 +405,7 @@ class Result:
         """
         if self.preprocessor is None:
             raise RuntimeError(
-                "No preprocessor attached to this Result. "
-                "Re-run kiteml.train() to get a fully wired Result."
+                "No preprocessor attached to this Result. " "Re-run kiteml.train() to get a fully wired Result."
             )
         return self.preprocessor.transform(X)
 
@@ -465,9 +463,7 @@ class Result:
         X_processed = self._preprocess_input(X)
 
         # ── Check for predict_proba support ──────────────────────────────
-        has_proba = hasattr(self.model, "predict_proba") and callable(
-            getattr(self.model, "predict_proba", None)
-        )
+        has_proba = hasattr(self.model, "predict_proba") and callable(getattr(self.model, "predict_proba", None))
 
         if has_proba:
             return self.model.predict_proba(X_processed)
@@ -496,9 +492,7 @@ class Result:
     # 🔹 Feature Importance
     # ------------------------------------------------------------------
 
-    def feature_importance(
-        self, top_n: Optional[int] = None
-    ) -> Optional[Dict[str, float]]:
+    def feature_importance(self, top_n: Optional[int] = None) -> Optional[Dict[str, float]]:
         """
         Return feature importance values, sorted by absolute magnitude.
 
@@ -556,18 +550,18 @@ class Result:
                 rank = None
                 error = None if score is not None else str(info)
 
-            rows.append({
-                "Rank": rank,
-                "Model": name,
-                "CV Score": score,
-                "Best": name == self.model_name,
-                "Error": error,
-            })
+            rows.append(
+                {
+                    "Rank": rank,
+                    "Model": name,
+                    "CV Score": score,
+                    "Best": name == self.model_name,
+                    "Error": error,
+                }
+            )
 
         df = pd.DataFrame(rows)
-        df = df.sort_values(
-            "Rank", ascending=True, na_position="last"
-        ).reset_index(drop=True)
+        df = df.sort_values("Rank", ascending=True, na_position="last").reset_index(drop=True)
         return df
 
     def ranking(self) -> None:
@@ -595,9 +589,7 @@ class Result:
             else:
                 rank_str = f"#{int(row['Rank'])}"
                 marker = " ✓" if row["Best"] else ""
-                print(
-                    f"  {rank_str:<5} {row['Model']:<26} {row['CV Score']:>8.4f}{marker}"
-                )
+                print(f"  {rank_str:<5} {row['Model']:<26} {row['CV Score']:>8.4f}{marker}")
 
         print("═" * W)
 
@@ -609,8 +601,7 @@ class Result:
         """Raise a helpful error if no DataProfile is attached."""
         if self.data_profile is None:
             raise RuntimeError(
-                f"result.{method_name}() requires a DataProfile. "
-                "Re-run kiteml.train() — profiling is automatic."
+                f"result.{method_name}() requires a DataProfile. " "Re-run kiteml.train() — profiling is automatic."
             )
 
     def profile(self, output: str = "terminal") -> None:
@@ -626,9 +617,11 @@ class Result:
         self._require_profile("profile")
         if output == "html":
             from kiteml.profiling.html_export import export_html
+
             export_html(self.data_profile)
         else:
             from kiteml.profiling.report_generator import generate_profile_report
+
             print(generate_profile_report(self.data_profile))
 
     def recommendations(self) -> None:
@@ -736,6 +729,7 @@ class Result:
         """
         self._require_profile("export_html")
         from kiteml.profiling.html_export import export_html
+
         return export_html(self.data_profile, path=path)
 
     # ------------------------------------------------------------------
@@ -768,6 +762,7 @@ class Result:
         PackageResult
         """
         from kiteml.deployment.packaging import package as _package
+
         return _package(self, path=path, target_column=target_column, overwrite=overwrite)
 
     def batch_predict(
@@ -796,8 +791,8 @@ class Result:
         BatchResult
         """
         from kiteml.deployment.batch_inference import batch_predict as _bp
-        return _bp(self, data=data, chunk_size=chunk_size,
-                   output_path=output_path, verbose=verbose)
+
+        return _bp(self, data=data, chunk_size=chunk_size, output_path=output_path, verbose=verbose)
 
     def monitor_drift(
         self,
@@ -823,10 +818,10 @@ class Result:
         DriftReport
         """
         from kiteml.monitoring.drift_monitor import check_drift
+
         if reference_data is None:
             raise ValueError(
-                "reference_data is required for drift monitoring. "
-                "Pass your training DataFrame as reference_data."
+                "reference_data is required for drift monitoring. " "Pass your training DataFrame as reference_data."
             )
         report = check_drift(
             reference_df=reference_data,
@@ -860,6 +855,7 @@ class Result:
         OnnxExportResult
         """
         from kiteml.deployment.onnx_export import export_onnx as _export
+
         return _export(
             model=self.model,
             feature_names=self.feature_names or [],
@@ -890,6 +886,7 @@ class Result:
         DockerExportResult
         """
         from kiteml.deployment.docker_export import export_docker as _docker
+
         return _docker(self, output_dir=output_dir, port=port)
 
     def serve(
@@ -916,6 +913,7 @@ class Result:
             Auto-open Swagger UI. Default False.
         """
         from kiteml.deployment.model_server import serve as _serve
+
         _serve(self, host=host, port=port, background=background, open_browser=open_browser)
 
     def generate_api(
@@ -939,6 +937,7 @@ class Result:
             Path to the generated file.
         """
         from kiteml.deployment.api_generator import generate_api as _gen
+
         return _gen(self, output_dir=output_dir, filename=filename)
 
     def experiment(
@@ -967,6 +966,7 @@ class Result:
         ExperimentRun
         """
         from kiteml.experiments.tracker import track
+
         return track(
             self,
             experiment_name=experiment_name,
@@ -1001,9 +1001,13 @@ class Result:
         ModelVersion
         """
         from kiteml.governance.versioning import version_model
+
         return version_model(
-            self, version=version, bump=bump,
-            notes=notes, bundle_path=bundle_path,
+            self,
+            version=version,
+            bump=bump,
+            notes=notes,
+            bundle_path=bundle_path,
         )
 
     def lineage(
@@ -1025,6 +1029,7 @@ class Result:
         PipelineLineage
         """
         from kiteml.governance.lineage import build_lineage
+
         lin = build_lineage(self, dataset=dataset)
         if print_tree:
             lin.print_lineage()
@@ -1039,6 +1044,7 @@ class Result:
         ModelSignature
         """
         from kiteml.governance.signatures import sign_model
+
         sig = sign_model(self)
         print(f"🔏 Model signature: {sig.fingerprint}")
         return sig
@@ -1064,6 +1070,7 @@ class Result:
             Path to saved dashboard.
         """
         from kiteml.profiling.deployment_dashboard import generate_dashboard
+
         return generate_dashboard(self, path=path, drift_report=drift_report)
 
     def realtime_engine(self):
@@ -1075,6 +1082,7 @@ class Result:
         RealtimeInferenceEngine
         """
         from kiteml.deployment.realtime_inference import RealtimeInferenceEngine
+
         return RealtimeInferenceEngine(
             model=self.model,
             feature_names=self.feature_names or [],
@@ -1101,11 +1109,11 @@ class Result:
         DataContract
         """
         from kiteml.monitoring.data_contracts import DataContract
+
         contract = DataContract.from_result(self, version=version)
         if save_path:
             contract.save(save_path)
         return contract
-
 
     def __repr__(self) -> str:
         score_str = f"{self.score:.4f}" if self.score is not None else "N/A"
@@ -1115,4 +1123,3 @@ class Result:
             f"type={self.problem_type} | score={score_str} | "
             f"time={self.times.total:.2f}s | profile={has_profile}>"
         )
-

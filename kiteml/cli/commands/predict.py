@@ -1,12 +1,10 @@
 """
 commands/predict.py — CLI command for batch inference.
 """
-import argparse
+
 import os
 
-from kiteml.cli.ui.colors import print_step, print_info, print_error, print_success
-from kiteml.deployment.packaging import load_bundle
-import pandas as pd
+from kiteml.cli.ui.colors import print_error, print_info, print_step, print_success
 
 
 def setup_predict_parser(subparsers):
@@ -28,7 +26,7 @@ def run_predict(args):
 
     print_info(f"Loading bundle: {args.model}")
     from kiteml.deployment.batch_inference import BatchInferenceEngine
-    
+
     try:
         engine = BatchInferenceEngine.from_bundle(args.model)
         print_info(f"Running predictions on {args.data} (chunk size: {args.chunk_size})")

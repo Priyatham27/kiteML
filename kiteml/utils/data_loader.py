@@ -2,8 +2,9 @@
 data_loader.py - Load datasets from various sources.
 """
 
-import pandas as pd
 from typing import Union
+
+import pandas as pd
 
 
 def load_data(data: Union[str, pd.DataFrame]) -> pd.DataFrame:
@@ -39,11 +40,7 @@ def load_data(data: Union[str, pd.DataFrame]) -> pd.DataFrame:
             return pd.read_parquet(data)
         else:
             raise ValueError(
-                f"Unsupported file format: {data}. "
-                "Supported formats: .csv, .xls, .xlsx, .json, .parquet"
+                f"Unsupported file format: {data}. " "Supported formats: .csv, .xls, .xlsx, .json, .parquet"
             )
 
-    raise ValueError(
-        f"Unsupported data type: {type(data)}. "
-        "Pass a file path (str) or a pandas DataFrame."
-    )
+    raise ValueError(f"Unsupported data type: {type(data)}. " "Pass a file path (str) or a pandas DataFrame.")

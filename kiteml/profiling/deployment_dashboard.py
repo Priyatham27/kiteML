@@ -6,10 +6,8 @@ metrics, feature importance, drift status, and deployment readiness.
 """
 
 import html
-import json
 import time
 from typing import Any, Optional
-
 
 _CSS = """
 body{font-family:'Segoe UI',Arial,sans-serif;background:#080c14;color:#e2e8f0;margin:0;padding:24px;}
@@ -32,8 +30,12 @@ td{padding:5px 8px;border-bottom:1px solid #1e293b;}
 """
 
 
-def _badge(text, cls): return f'<span class="badge badge-{cls}">{html.escape(str(text))}</span>'
-def _bar(ratio): return f'<div class="bar-bg"><div class="bar" style="width:{int(min(ratio,1)*100)}%"></div></div>'
+def _badge(text, cls):
+    return f'<span class="badge badge-{cls}">{html.escape(str(text))}</span>'
+
+
+def _bar(ratio):
+    return f'<div class="bar-bg"><div class="bar" style="width:{int(min(ratio,1)*100)}%"></div></div>'
 
 
 def generate_dashboard(
@@ -113,17 +115,18 @@ def generate_dashboard(
 
     # ── Model Leaderboard ─────────────────────────────────────────────────
     if result.all_results:
+
         def _get_score(val):
             if isinstance(val, dict):
                 return float(val.get("score") or 0)
             return float(val or 0)
-            
+
         sorted_results = sorted(result.all_results.items(), key=lambda x: _get_score(x[1]), reverse=True)
         rows = "".join(
             f"<tr><td>{'★ ' if i==0 else '  '}{html.escape(model)}</td>"
             f"<td>{round(_get_score(score),4)}</td>"
             f"<td>{_bar(_get_score(score) if _get_score(score) > 0 else 0)}</td></tr>"
-            for i,(model,score) in enumerate(sorted_results[:8])
+            for i, (model, score) in enumerate(sorted_results[:8])
         )
         sections.append(f"""
     <div class="card">
@@ -138,7 +141,7 @@ def generate_dashboard(
         rows = "".join(
             f"<tr><td>{html.escape(feat)}</td><td>{round(abs(imp),4)}</td>"
             f"<td>{_bar(abs(imp)/(max_fi+1e-8))}</td></tr>"
-            for feat,imp in fi_sorted
+            for feat, imp in fi_sorted
         )
         sections.append(f"""
     <div class="card">
@@ -150,8 +153,7 @@ def generate_dashboard(
     if has_profile:
         q = result.data_profile.quality
         mr = result.data_profile.master_recommendations
-        health_cls = {"excellent": "ok", "good": "ok", "fair": "warn", "poor": "err"}.get(
-            mr.overall_health, "warn")
+        health_cls = {"excellent": "ok", "good": "ok", "fair": "warn", "poor": "err"}.get(mr.overall_health, "warn")
         sections.append(f"""
     <div class="card">
       <h2>🧠 Data Intelligence</h2>
@@ -185,9 +187,11 @@ def generate_dashboard(
         ("Preprocessor attached", result.preprocessor is not None, "ok" if result.preprocessor else "warn"),
         ("Feature names defined", bool(result.feature_names), "ok" if result.feature_names else "err"),
         ("DataProfile available", has_profile, "ok" if has_profile else "warn"),
-        ("No leakage detected",
-         not (has_profile and result.data_profile.leakage.has_leakage_risk),
-         "ok" if not (has_profile and result.data_profile.leakage.has_leakage_risk) else "err"),
+        (
+            "No leakage detected",
+            not (has_profile and result.data_profile.leakage.has_leakage_risk),
+            "ok" if not (has_profile and result.data_profile.leakage.has_leakage_risk) else "err",
+        ),
     ]
     check_rows = "".join(
         f"<tr><td>{html.escape(label)}</td><td>{_badge('PASS' if ok else 'FAIL', cls)}</td></tr>"

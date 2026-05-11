@@ -17,23 +17,22 @@ Bundle Layout
 └── lineage.json          ← training lineage
 """
 
-import hashlib
-import json
 import os
 import shutil
 import time
 import uuid
 from dataclasses import dataclass
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, Optional
 
-from kiteml.deployment.serialization import save_joblib, save_json, _md5
 from kiteml.deployment.environment_capture import capture_environment
 from kiteml.deployment.manifest import build_manifest
+from kiteml.deployment.serialization import _md5, save_joblib, save_json
 
 
 @dataclass
 class PackageResult:
     """Result of a packaging operation."""
+
     bundle_path: str
     bundle_id: str
     artifacts: Dict[str, str]
@@ -81,9 +80,7 @@ def package(
         if overwrite:
             shutil.rmtree(path)
         else:
-            raise FileExistsError(
-                f"Bundle already exists at '{path}'. Use overwrite=True to replace."
-            )
+            raise FileExistsError(f"Bundle already exists at '{path}'. Use overwrite=True to replace.")
 
     os.makedirs(path, exist_ok=True)
     bundle_id = str(uuid.uuid4())[:8]
@@ -160,9 +157,7 @@ def package(
 
     # ── Compute total size ────────────────────────────────────────────────
     total_bytes = sum(
-        os.path.getsize(os.path.join(path, f))
-        for f in os.listdir(path)
-        if os.path.isfile(os.path.join(path, f))
+        os.path.getsize(os.path.join(path, f)) for f in os.listdir(path) if os.path.isfile(os.path.join(path, f))
     )
 
     result_obj = PackageResult(
@@ -225,6 +220,7 @@ def load_bundle(path: str) -> Dict[str, Any]:
 
 # ── Helpers ──────────────────────────────────────────────────────────────────
 
+
 def _build_schema(result: Any) -> Dict:
     """Extract feature schema from a Result object."""
     schema: Dict[str, Any] = {
@@ -237,8 +233,7 @@ def _build_schema(result: Any) -> Dict:
     if result.data_profile is not None:
         try:
             schema["column_types"] = {
-                col: profile.column_type.value
-                for col, profile in result.data_profile.column_analysis.profiles.items()
+                col: profile.column_type.value for col, profile in result.data_profile.column_analysis.profiles.items()
             }
         except Exception:
             pass
@@ -258,6 +253,7 @@ def _safe_float(v: Any) -> Any:
     """Convert numpy floats to Python floats for JSON safety."""
     try:
         import numpy as np
+
         if isinstance(v, (np.floating, np.integer)):
             return float(v)
     except Exception:

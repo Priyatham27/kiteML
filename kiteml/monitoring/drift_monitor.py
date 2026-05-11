@@ -12,8 +12,8 @@ PSI Guide:
   > 0.2  → Significant change (retrain)
 """
 
-from dataclasses import dataclass, field
-from typing import Any, Dict, List, Optional, Tuple
+from dataclasses import dataclass
+from typing import Dict, List, Optional, Tuple
 
 import numpy as np
 import pandas as pd
@@ -22,6 +22,7 @@ import pandas as pd
 @dataclass
 class FeatureDriftResult:
     """Drift result for one feature."""
+
     feature: str
     psi: float
     ks_statistic: float
@@ -29,12 +30,13 @@ class FeatureDriftResult:
     mean_shift: Optional[float]
     std_shift: Optional[float]
     drift_detected: bool
-    severity: str    # "none" | "moderate" | "high"
+    severity: str  # "none" | "moderate" | "high"
 
 
 @dataclass
 class DriftReport:
     """Complete data drift analysis."""
+
     reference_rows: int
     current_rows: int
     drifted_features: List[str]
@@ -78,6 +80,7 @@ def _compute_ks(a: np.ndarray, b: np.ndarray) -> Tuple[float, float]:
     """Compute KS statistic and p-value."""
     try:
         from scipy.stats import ks_2samp
+
         stat, p = ks_2samp(a, b)
         return round(float(stat), 4), round(float(p), 4)
     except ImportError:
@@ -157,9 +160,14 @@ def check_drift(
             drifted.append(feat)
 
         feature_results[feat] = FeatureDriftResult(
-            feature=feat, psi=psi, ks_statistic=ks_stat, ks_p_value=ks_p,
-            mean_shift=mean_shift, std_shift=std_shift,
-            drift_detected=drift_detected, severity=severity,
+            feature=feat,
+            psi=psi,
+            ks_statistic=ks_stat,
+            ks_p_value=ks_p,
+            mean_shift=mean_shift,
+            std_shift=std_shift,
+            drift_detected=drift_detected,
+            severity=severity,
         )
 
     overall_psi = round(float(np.mean(all_psis)) if all_psis else 0.0, 4)

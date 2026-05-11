@@ -1,4 +1,5 @@
 """serving/middleware.py — Request logging middleware for KiteML serving."""
+
 import time
 from typing import Callable
 

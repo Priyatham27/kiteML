@@ -10,22 +10,23 @@ import os
 import platform
 import sys
 import time
-from dataclasses import dataclass, field
-from typing import Any, Dict, List, Optional
+from dataclasses import dataclass
+from typing import Dict
 
 
 @dataclass
 class EnvironmentSnapshot:
     """Complete environment snapshot for reproducibility."""
+
     captured_at: str
     python_version: str
     platform_info: str
     os_info: str
     architecture: str
-    packages: Dict[str, str]       # package_name → version
+    packages: Dict[str, str]  # package_name → version
     kiteml_version: str
-    key_packages: Dict[str, str]   # subset of most important ML packages
-    env_vars: Dict[str, str]       # relevant env variables
+    key_packages: Dict[str, str]  # subset of most important ML packages
+    env_vars: Dict[str, str]  # relevant env variables
 
     def to_dict(self) -> dict:
         return self.__dict__.copy()
@@ -51,13 +52,26 @@ class EnvironmentSnapshot:
 
 
 _KEY_PACKAGES = [
-    "scikit-learn", "sklearn", "numpy", "pandas", "scipy",
-    "joblib", "kiteml", "xgboost", "lightgbm", "catboost",
-    "fastapi", "uvicorn", "onnx", "skl2onnx",
+    "scikit-learn",
+    "sklearn",
+    "numpy",
+    "pandas",
+    "scipy",
+    "joblib",
+    "kiteml",
+    "xgboost",
+    "lightgbm",
+    "catboost",
+    "fastapi",
+    "uvicorn",
+    "onnx",
+    "skl2onnx",
 ]
 
 _RELEVANT_ENV_VARS = [
-    "PYTHONPATH", "PYTHONHASHSEED", "OMP_NUM_THREADS",
+    "PYTHONPATH",
+    "PYTHONHASHSEED",
+    "OMP_NUM_THREADS",
     "SKLEARN_ALLOW_DEPRECATED_SKLEARN_PACKAGE_INSTALL",
     "CUDA_VISIBLE_DEVICES",
 ]
