@@ -70,4 +70,3 @@ def print_header(message: str):
 def print_success(message: str):
     icon = "\U0001f389 "
     safe_print(f"\n{BOLD}{colorize(icon + message, GREEN)}{RESET}")
-

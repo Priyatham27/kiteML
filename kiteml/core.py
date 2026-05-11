@@ -63,9 +63,11 @@ def _setup_utf8_logging():
         pass
 
     handler = logging.StreamHandler(
-        stream=io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8", errors="replace")
-        if hasattr(sys.stdout, "buffer")
-        else sys.stdout
+        stream=(
+            io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8", errors="replace")
+            if hasattr(sys.stdout, "buffer")
+            else sys.stdout
+        )
     )
     handler.setFormatter(logging.Formatter("%(message)s"))
     logger.addHandler(handler)
