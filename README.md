@@ -4,12 +4,11 @@
     <strong>Train production-grade ML models with a single line of code.</strong>
   </p>
   <p align="center">
-    <a href="https://pypi.org/project/kiteml/"><img src="https://img.shields.io/pypi/v/kiteml?color=blue&label=PyPI" alt="PyPI Version"></a>
-    <a href="https://pypi.org/project/kiteml/"><img src="https://img.shields.io/pypi/pyversions/kiteml" alt="Python Versions"></a>
-    <a href="https://github.com/kiteml/kiteml/actions"><img src="https://img.shields.io/github/actions/workflow/status/kiteml/kiteml/test.yml?label=tests" alt="Tests"></a>
-    <a href="https://codecov.io/gh/kiteml/kiteml"><img src="https://img.shields.io/codecov/c/github/kiteml/kiteml?color=green" alt="Coverage"></a>
-    <a href="https://github.com/kiteml/kiteml/blob/main/LICENSE"><img src="https://img.shields.io/github/license/kiteml/kiteml?color=brightgreen" alt="License"></a>
-    <a href="https://pepy.tech/project/kiteml"><img src="https://img.shields.io/pepy/dt/kiteml?color=orange" alt="Downloads"></a>
+    <a href="https://pypi.org/project/kiteml-ai/"><img src="https://img.shields.io/pypi/v/kiteml-ai?color=blue&label=PyPI" alt="PyPI Version"></a>
+    <a href="https://pypi.org/project/kiteml-ai/"><img src="https://img.shields.io/pypi/pyversions/kiteml-ai" alt="Python Versions"></a>
+    <a href="https://github.com/Priyatham27/kiteML/actions"><img src="https://img.shields.io/github/actions/workflow/status/Priyatham27/kiteML/test.yml?label=tests" alt="Tests"></a>
+    <a href="https://github.com/Priyatham27/kiteML/blob/main/LICENSE"><img src="https://img.shields.io/github/license/Priyatham27/kiteML?color=brightgreen" alt="License"></a>
+    <a href="https://pepy.tech/project/kiteml-ai"><img src="https://img.shields.io/pepy/dt/kiteml-ai?color=orange" alt="Downloads"></a>
   </p>
 </p>
 
@@ -42,18 +41,20 @@ KiteML is an intelligent AutoML framework that automates the entire ML pipeline 
 ## Installation
 
 ```bash
-pip install kiteml
+pip install kiteml-ai
 ```
 
 ### Extras
 
 ```bash
-pip install kiteml[serving]   # FastAPI model server
-pip install kiteml[onnx]      # ONNX export support
-pip install kiteml[wandb]     # Weights & Biases tracking
-pip install kiteml[mlflow]    # MLflow experiment tracking
-pip install kiteml[all]       # Everything
+pip install kiteml-ai[serving]   # FastAPI model server
+pip install kiteml-ai[onnx]      # ONNX export support
+pip install kiteml-ai[wandb]     # Weights & Biases tracking
+pip install kiteml-ai[mlflow]    # MLflow experiment tracking
+pip install kiteml-ai[all]       # Everything
 ```
+
+> **Note:** The PyPI package is `kiteml-ai`. The Python import remains `import kiteml` — same as `scikit-learn` → `sklearn`.
 
 ---
 
@@ -70,7 +71,7 @@ print(result.summary())
 result.save_model("my_model.pkl")
 
 # Regression
-result = train("housing.csv", target="price", task_type="regression")
+result = train("housing.csv", target="price", problem_type="regression")
 print(result.summary())
 
 # Make predictions
@@ -135,7 +136,7 @@ We welcome contributions! See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
 
 ```bash
 # Development setup
-git clone https://github.com/kiteml/kiteml.git
+git clone https://github.com/Priyatham27/kiteML.git
 cd kiteml
 pip install -e ".[dev]"
 pytest tests/
