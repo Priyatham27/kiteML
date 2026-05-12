@@ -9,11 +9,11 @@ build-backend = "setuptools.build_meta"
 
 # ── Project Metadata ────────────────────────────────────────────────
 [project]
-name = "kiteml"
+name = "kiteml-ai"
 version = "1.0.0"
 description = "Train production-grade ML models with a single line of code — intelligent AutoML for everyone."
 readme = "README.md"
-license = {text = "MIT"}
+license = "MIT"
 requires-python = ">=3.11"
 authors = [
     {name = "KiteML Team", email = "priyathamprime7@gmail.com"},
@@ -38,7 +38,6 @@ classifiers = [
     "Intended Audience :: Developers",
     "Intended Audience :: Science/Research",
     "Intended Audience :: Education",
-    "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
     "Programming Language :: Python :: 3",
 
