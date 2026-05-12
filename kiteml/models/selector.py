@@ -86,8 +86,8 @@ def select_best_model(
         raise ValueError(f"Unknown problem_type '{problem_type}'. " "Expected 'classification' or 'regression'.")
 
     # ── Cross-validate every candidate ───────────────────────────────────
-    raw_scores: dict[str, Optional[float]] = {}
-    errors: dict[str, Optional[str]] = {}
+    raw_scores: dict[str, float | None] = {}
+    errors: dict[str, str | None] = {}
 
     for name, model in models.items():
         try:

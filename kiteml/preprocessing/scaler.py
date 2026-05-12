@@ -8,7 +8,7 @@ import pandas as pd
 from sklearn.preprocessing import StandardScaler
 
 
-def scale_features(X: pd.DataFrame, scaler: Optional[StandardScaler] = None) -> tuple[pd.DataFrame, StandardScaler]:
+def scale_features(X: pd.DataFrame, scaler: StandardScaler | None = None) -> tuple[pd.DataFrame, StandardScaler]:
     """
     Scale features using StandardScaler.
 

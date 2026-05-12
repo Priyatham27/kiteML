@@ -89,9 +89,9 @@ class AlertEngine:
 
     def __init__(
         self,
-        rules: Optional[list[AlertRule]] = None,
-        on_alert: Optional[Callable[[Alert], None]] = None,
-        log_file: Optional[str] = None,
+        rules: list[AlertRule] | None = None,
+        on_alert: Callable[[Alert], None] | None = None,
+        log_file: str | None = None,
     ):
         self.rules = rules if rules is not None else list(self.DEFAULT_RULES)
         self.on_alert = on_alert or self._default_on_alert

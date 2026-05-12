@@ -18,9 +18,9 @@ class FeatureContract:
     name: str
     dtype: str  # "float", "int", "str", "bool"
     nullable: bool = False
-    min_value: Optional[float] = None
-    max_value: Optional[float] = None
-    allowed_values: Optional[list[Any]] = None  # for categoricals
+    min_value: float | None = None
+    max_value: float | None = None
+    allowed_values: list[Any] | None = None  # for categoricals
     description: str = ""
 
 

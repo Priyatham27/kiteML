@@ -22,9 +22,9 @@ class PredictionRecord:
 
     timestamp: float
     prediction: Any
-    confidence: Optional[float]  # max probability for classifiers
+    confidence: float | None  # max probability for classifiers
     latency_ms: float
-    input_hash: Optional[str]
+    input_hash: str | None
 
 
 @dataclass
@@ -34,9 +34,9 @@ class PredictionStats:
     total_predictions: int
     unique_predictions: int
     prediction_distribution: dict[str, float]
-    avg_confidence: Optional[float]
-    min_confidence: Optional[float]
-    max_confidence: Optional[float]
+    avg_confidence: float | None
+    min_confidence: float | None
+    max_confidence: float | None
     avg_latency_ms: float
     p99_latency_ms: float
     time_window_s: float
@@ -60,8 +60,8 @@ class PredictionMonitor:
         self,
         prediction: Any,
         latency_ms: float = 0.0,
-        confidence: Optional[float] = None,
-        input_data: Optional[Any] = None,
+        confidence: float | None = None,
+        input_data: Any | None = None,
     ) -> None:
         """Record a single prediction."""
         input_hash = None
@@ -84,7 +84,7 @@ class PredictionMonitor:
         if len(self._records) > self.max_history:
             self._records = self._records[-self.max_history :]
 
-    def stats(self, last_n: Optional[int] = None) -> PredictionStats:
+    def stats(self, last_n: int | None = None) -> PredictionStats:
         """Compute aggregate statistics over recorded predictions."""
         records = self._records[-last_n:] if last_n else self._records
         if not records:

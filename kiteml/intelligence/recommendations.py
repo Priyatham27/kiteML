@@ -25,7 +25,7 @@ class MasterRecommendation:
     priority: str  # "critical" | "high" | "medium" | "low"
     category: str  # "leakage" | "quality" | "imbalance" | "features" | "memory" | ...
     message: str
-    action: Optional[str] = None
+    action: str | None = None
 
 
 @dataclass
@@ -65,14 +65,14 @@ class MasterRecommendationReport:
 
 
 def build_recommendation_report(
-    quality: Optional[QualityReport] = None,
-    leakage: Optional[LeakageReport] = None,
-    imbalance: Optional[ImbalanceReport] = None,
-    outliers: Optional[OutlierReport] = None,
-    features: Optional[FeatureRecommendationReport] = None,
-    correlations: Optional[CorrelationReport] = None,
-    cardinality: Optional[CardinalityReport] = None,
-    memory: Optional[MemoryReport] = None,
+    quality: QualityReport | None = None,
+    leakage: LeakageReport | None = None,
+    imbalance: ImbalanceReport | None = None,
+    outliers: OutlierReport | None = None,
+    features: FeatureRecommendationReport | None = None,
+    correlations: CorrelationReport | None = None,
+    cardinality: CardinalityReport | None = None,
+    memory: MemoryReport | None = None,
 ) -> MasterRecommendationReport:
     """
     Build a unified, prioritized recommendation report from all intelligence modules.

@@ -75,9 +75,9 @@ def _setup_utf8_logging():
 
 
 def train(
-    data: Union[str, pd.DataFrame],
-    target: Optional[str] = None,
-    problem_type: Optional[str] = None,
+    data: str | pd.DataFrame,
+    target: str | None = None,
+    problem_type: str | None = None,
     test_size: float = DEFAULT_TEST_SIZE,
     scale: bool = True,
     random_state: int = DEFAULT_RANDOM_STATE,
@@ -221,12 +221,12 @@ def train(
     # ------------------------------------------------------------------ #
     feature_importances = None
     if hasattr(best_model, "feature_importances_") and feature_names:
-        feature_importances = dict(zip(feature_names, best_model.feature_importances_))
+        feature_importances = dict(zip(feature_names, best_model.feature_importances_, strict=False))
     elif hasattr(best_model, "coef_") and feature_names:
         coef = best_model.coef_
         if coef.ndim > 1:
             coef = coef[0]  # first row for multi-class
-        feature_importances = dict(zip(feature_names, coef))
+        feature_importances = dict(zip(feature_names, coef, strict=False))
 
     # ------------------------------------------------------------------ #
     # Step 10 – Generate human-readable report                             #

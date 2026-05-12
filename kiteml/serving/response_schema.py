@@ -7,7 +7,7 @@ try:
 
     class PredictResponse(BaseModel):
         predictions: list[Any]
-        probabilities: Optional[list[dict[str, float]]] = None
+        probabilities: list[dict[str, float]] | None = None
         n_rows: int
         model: str
         problem_type: str

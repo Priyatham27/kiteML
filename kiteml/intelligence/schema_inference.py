@@ -24,16 +24,16 @@ class ColumnSchema:
     n_unique: int
     unique_ratio: float
     # Numeric only
-    min_val: Optional[float] = None
-    max_val: Optional[float] = None
-    mean: Optional[float] = None
-    median: Optional[float] = None
-    std: Optional[float] = None
-    skewness: Optional[float] = None
-    distribution: Optional[str] = None  # "normal","right_skewed","left_skewed","uniform","bimodal"
+    min_val: float | None = None
+    max_val: float | None = None
+    mean: float | None = None
+    median: float | None = None
+    std: float | None = None
+    skewness: float | None = None
+    distribution: str | None = None  # "normal","right_skewed","left_skewed","uniform","bimodal"
     # Categorical only
-    top_values: Optional[list[Any]] = None
-    top_freqs: Optional[list[float]] = None
+    top_values: list[Any] | None = None
+    top_freqs: list[float] | None = None
 
 
 @dataclass

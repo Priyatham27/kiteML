@@ -48,7 +48,7 @@ class AuditLogger:
     def __init__(
         self,
         model_name: str,
-        log_path: Optional[str] = None,
+        log_path: str | None = None,
         actor: str = "system",
     ):
         self.model_name = model_name
@@ -89,14 +89,14 @@ class AuditLogger:
             severity=severity,
         )
 
-    def log_retrain(self, reason: str, new_score: Optional[float] = None) -> AuditEntry:
+    def log_retrain(self, reason: str, new_score: float | None = None) -> AuditEntry:
         return self._log(
             "retrain",
             {"reason": reason, "new_score": new_score},
             severity="info",
         )
 
-    def read_log(self, last_n: Optional[int] = None) -> list:
+    def read_log(self, last_n: int | None = None) -> list:
         """Read and parse the audit log."""
         if not os.path.exists(self.log_path):
             return []

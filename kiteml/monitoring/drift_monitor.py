@@ -27,8 +27,8 @@ class FeatureDriftResult:
     psi: float
     ks_statistic: float
     ks_p_value: float
-    mean_shift: Optional[float]
-    std_shift: Optional[float]
+    mean_shift: float | None
+    std_shift: float | None
     drift_detected: bool
     severity: str  # "none" | "moderate" | "high"
 
@@ -97,7 +97,7 @@ def _compute_ks(a: np.ndarray, b: np.ndarray) -> tuple[float, float]:
 def check_drift(
     reference_df: pd.DataFrame,
     current_df: pd.DataFrame,
-    feature_names: Optional[list[str]] = None,
+    feature_names: list[str] | None = None,
     psi_threshold_moderate: float = 0.1,
     psi_threshold_high: float = 0.2,
     ks_threshold: float = 0.05,

@@ -58,7 +58,7 @@ class InferenceGuardrails:
     def __init__(
         self,
         feature_names: list[str],
-        schema: Optional[dict] = None,
+        schema: dict | None = None,
         allow_extra_columns: bool = True,
     ):
         self.feature_names = feature_names

@@ -18,7 +18,7 @@ class BatchResult:
     """Result of a batch inference operation."""
 
     predictions: np.ndarray
-    probabilities: Optional[np.ndarray]  # shape (n, n_classes) or None
+    probabilities: np.ndarray | None  # shape (n, n_classes) or None
     n_rows: int
     n_chunks: int
     elapsed_s: float
@@ -42,9 +42,9 @@ class BatchResult:
 
 def batch_predict(
     result: Any,
-    data: Union[str, pd.DataFrame],
+    data: str | pd.DataFrame,
     chunk_size: int = 1000,
-    output_path: Optional[str] = None,
+    output_path: str | None = None,
     validate: bool = True,
     verbose: bool = True,
 ) -> BatchResult:

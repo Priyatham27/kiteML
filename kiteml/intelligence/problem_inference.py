@@ -25,7 +25,7 @@ class ProblemInferenceResult:
     subtype: str  # "binary" | "multiclass" | "continuous" | "discrete_regression"
     confidence: float  # 0–1
     evidence: list[str]  # human-readable justification
-    n_classes: Optional[int] = None
+    n_classes: int | None = None
 
 
 def infer_problem_type_advanced(

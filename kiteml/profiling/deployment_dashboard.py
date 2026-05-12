@@ -41,7 +41,7 @@ def _bar(ratio):
 def generate_dashboard(
     result: Any,
     path: str = "kiteml_dashboard.html",
-    drift_report: Optional[Any] = None,
+    drift_report: Any | None = None,
 ) -> str:
     """
     Generate a production deployment dashboard HTML file.

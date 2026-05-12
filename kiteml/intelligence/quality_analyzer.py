@@ -6,13 +6,12 @@ mixed-type columns, and corrupted string patterns.
 """
 
 from dataclasses import dataclass
-from enum import Enum
-from typing import Optional
+from enum import StrEnum
 
 import pandas as pd
 
 
-class Severity(str, Enum):
+class Severity(StrEnum):
     INFO = "info"
     WARNING = "warning"
     ERROR = "error"
@@ -23,7 +22,7 @@ class QualityIssue:
     """A single detected data quality problem."""
 
     issue_type: str
-    column: Optional[str]  # None → dataset-level
+    column: str | None  # None → dataset-level
     severity: Severity
     description: str
     affected_count: int

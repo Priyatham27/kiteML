@@ -72,7 +72,7 @@ class Preprocessor:
         self.is_fitted: bool = False
 
         # Populated in fit_transform() once column types are known
-        self._pipeline: Optional[Pipeline] = None
+        self._pipeline: Pipeline | None = None
 
     # ------------------------------------------------------------------
     # 🔹 Internal builder
@@ -227,7 +227,7 @@ class Preprocessor:
     # ------------------------------------------------------------------
 
     @property
-    def sklearn_pipeline(self) -> Optional[Pipeline]:
+    def sklearn_pipeline(self) -> Pipeline | None:
         """
         The raw fitted sklearn Pipeline backing this Preprocessor.
 

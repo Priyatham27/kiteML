@@ -55,7 +55,7 @@ class PackageResult:
 def package(
     result: Any,
     path: str,
-    target_column: Optional[str] = None,
+    target_column: str | None = None,
     overwrite: bool = False,
 ) -> PackageResult:
     """

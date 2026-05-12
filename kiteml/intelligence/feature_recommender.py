@@ -41,7 +41,7 @@ class FeatureRecommendationReport:
 def generate_recommendations(
     df: pd.DataFrame,
     column_analysis: ColumnAnalysisResult,
-    target: Optional[str] = None,
+    target: str | None = None,
 ) -> FeatureRecommendationReport:
     """
     Generate feature engineering recommendations from column analysis.

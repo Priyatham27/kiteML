@@ -19,9 +19,9 @@ class DatetimeColumnInfo:
 
     column: str
     original_dtype: str
-    min_date: Optional[str]
-    max_date: Optional[str]
-    date_range_days: Optional[int]
+    min_date: str | None
+    max_date: str | None
+    date_range_days: int | None
     extracted_features: list[str]  # which features will be extracted
     has_time_component: bool
     confidence: float
@@ -36,7 +36,7 @@ class DatetimeDetectionResult:
     has_datetime: bool
 
 
-def _try_parse_datetime(series: pd.Series) -> Optional[pd.Series]:
+def _try_parse_datetime(series: pd.Series) -> pd.Series | None:
     """Return parsed datetime series or None if parsing fails."""
     try:
         parsed = pd.to_datetime(series, errors="coerce")
@@ -64,7 +64,7 @@ def detect_datetime_columns(df: pd.DataFrame) -> DatetimeDetectionResult:
 
     for col in df.columns:
         series = df[col]
-        parsed: Optional[pd.Series] = None
+        parsed: pd.Series | None = None
         original_dtype = str(series.dtype)
         confidence = 0.0
 

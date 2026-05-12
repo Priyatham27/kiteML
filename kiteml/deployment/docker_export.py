@@ -195,7 +195,7 @@ def export_docker(
     result: Any,
     output_dir: str,
     port: int = 8000,
-    bundle_path: Optional[str] = None,
+    bundle_path: str | None = None,
 ) -> DockerExportResult:
     """
     Generate a complete Docker deployment package.

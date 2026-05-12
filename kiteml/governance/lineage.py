@@ -22,7 +22,7 @@ class LineageStep:
     step_name: str
     step_type: str  # "data", "preprocessing", "selection", "training", "evaluation", "deployment"
     timestamp: str
-    duration_s: Optional[float]
+    duration_s: float | None
     artifacts: dict[str, str]  # artifact_name → checksum or path
     metadata: dict[str, Any]
 
@@ -67,7 +67,7 @@ class PipelineLineage:
         print("═" * W)
 
 
-def build_lineage(result: Any, dataset: Optional[Any] = None) -> PipelineLineage:
+def build_lineage(result: Any, dataset: Any | None = None) -> PipelineLineage:
     """
     Build a PipelineLineage from a KiteML Result.
 

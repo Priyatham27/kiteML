@@ -25,7 +25,7 @@ class MetadataStore:
         Override default store root directory.
     """
 
-    def __init__(self, namespace: str = "default", store_path: Optional[str] = None):
+    def __init__(self, namespace: str = "default", store_path: str | None = None):
         self.namespace = namespace
         self._root = store_path or _DEFAULT_STORE
         self._path = os.path.join(self._root, f"{namespace}.json")

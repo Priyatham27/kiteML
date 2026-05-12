@@ -21,8 +21,8 @@ from typing import Any, Optional
 def generate_report(
     metrics: dict[str, Any],
     problem_type: str = "classification",
-    model_name: Optional[str] = None,
-    all_results: Optional[dict[str, dict[str, Any]]] = None,
+    model_name: str | None = None,
+    all_results: dict[str, dict[str, Any]] | None = None,
 ) -> str:
     """
     Generate a formatted KiteML evaluation report string.

@@ -20,11 +20,11 @@ class ModelVersion:
 
     version: str  # e.g. "v1.2.0"
     model_name: str
-    score: Optional[float]
+    score: float | None
     problem_type: str
     notes: str
     created_at: str
-    bundle_path: Optional[str] = None
+    bundle_path: str | None = None
 
 
 @dataclass
@@ -33,9 +33,9 @@ class VersionRegistry:
 
     model_name: str
     versions: list[ModelVersion]
-    current_version: Optional[str]
+    current_version: str | None
 
-    def latest(self) -> Optional[ModelVersion]:
+    def latest(self) -> ModelVersion | None:
         return self.versions[-1] if self.versions else None
 
 
@@ -63,11 +63,11 @@ def _bump(version: str, bump_type: str = "patch") -> str:
 
 def version_model(
     result: Any,
-    version: Optional[str] = None,
+    version: str | None = None,
     bump: str = "patch",
     notes: str = "",
-    bundle_path: Optional[str] = None,
-    store_path: Optional[str] = None,
+    bundle_path: str | None = None,
+    store_path: str | None = None,
 ) -> ModelVersion:
     """
     Record a semantic version for a trained KiteML model.
@@ -132,7 +132,7 @@ def version_model(
 
 def get_history(
     model_name: str,
-    store_path: Optional[str] = None,
+    store_path: str | None = None,
 ) -> list[ModelVersion]:
     """Retrieve version history for a model."""
     store = store_path or _DEFAULT_REGISTRY

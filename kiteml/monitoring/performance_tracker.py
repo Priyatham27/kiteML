@@ -72,7 +72,7 @@ class PerformanceTracker:
         self._timestamps.append(time.time())
         self._total_requests += 1
 
-    def snapshot(self) -> Optional[LatencySnapshot]:
+    def snapshot(self) -> LatencySnapshot | None:
         """Compute current window statistics."""
         if len(self._latencies) < 2:
             return None

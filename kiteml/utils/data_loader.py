@@ -7,7 +7,7 @@ from typing import Union
 import pandas as pd
 
 
-def load_data(data: Union[str, pd.DataFrame]) -> pd.DataFrame:
+def load_data(data: str | pd.DataFrame) -> pd.DataFrame:
     """
     Load data from a file path or return the DataFrame directly.
 

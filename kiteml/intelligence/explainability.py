@@ -56,8 +56,8 @@ _SHAP_COMPATIBLE = {
 def explain_model(
     model: Any,
     feature_names: list[str],
-    X_test: Optional[np.ndarray] = None,
-    y_test: Optional[Any] = None,
+    X_test: np.ndarray | None = None,
+    y_test: Any | None = None,
     top_n: int = 20,
 ) -> ExplainabilityReport:
     """
@@ -83,7 +83,7 @@ def explain_model(
     importances: list[FeatureImportanceEntry] = []
     method = "unavailable"
 
-    raw: Optional[np.ndarray] = None
+    raw: np.ndarray | None = None
 
     # ── Method 1: feature_importances_ ───────────────────────────────────
     if hasattr(model, "feature_importances_"):

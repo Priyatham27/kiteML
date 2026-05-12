@@ -37,7 +37,7 @@ class CorrelationReport:
 
 def analyze_correlations(
     df: pd.DataFrame,
-    target: Optional[str] = None,
+    target: str | None = None,
     high_threshold: float = 0.90,
     moderate_threshold: float = 0.70,
 ) -> CorrelationReport:

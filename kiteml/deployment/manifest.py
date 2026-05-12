@@ -24,22 +24,22 @@ class ModelManifest:
     python_version: str
 
     # Model metadata
-    score: Optional[float]
+    score: float | None
     metric_name: str
     feature_names: list[str]
     n_features: int
 
     # Schema
     input_schema: dict[str, str]  # feature → dtype
-    target_column: Optional[str]
+    target_column: str | None
 
     # Artifacts
     artifacts: dict[str, str]  # artifact_name → relative path
     checksums: dict[str, str]  # artifact_name → MD5
 
     # Reproduction
-    random_seed: Optional[int]
-    training_duration_s: Optional[float]
+    random_seed: int | None
+    training_duration_s: float | None
     notes: str = ""
 
     def to_dict(self) -> dict:
@@ -93,7 +93,7 @@ def build_manifest(
     bundle_id: str,
     artifacts: dict[str, str],
     checksums: dict[str, str],
-    target_column: Optional[str] = None,
+    target_column: str | None = None,
 ) -> ModelManifest:
     """
     Build a ModelManifest from a KiteML Result object.

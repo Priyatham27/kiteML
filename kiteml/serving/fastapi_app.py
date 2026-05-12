@@ -44,7 +44,7 @@ def create_app(result: Any):
 
     class PredictResponse(BaseModel):
         predictions: list[Any]
-        probabilities: Optional[list[dict[str, float]]] = None
+        probabilities: list[dict[str, float]] | None = None
         n_rows: int
         model: str
         problem_type: str
@@ -92,7 +92,7 @@ def create_app(result: Any):
             if req.return_probabilities and hasattr(result.model, "predict_proba"):
                 raw = result.model.predict_proba(X)
                 classes = [str(c) for c in getattr(result.model, "classes_", range(raw.shape[1]))]
-                probas = [dict(zip(classes, row.tolist())) for row in raw]
+                probas = [dict(zip(classes, row.tolist(), strict=False)) for row in raw]
 
             _counter[0] += len(preds)
             return PredictResponse(

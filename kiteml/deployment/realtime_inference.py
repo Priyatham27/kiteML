@@ -20,7 +20,7 @@ class PredictionResult:
     """Result of a single inference call."""
 
     prediction: Any
-    probabilities: Optional[dict] = None  # class → probability (classification)
+    probabilities: dict | None = None  # class → probability (classification)
     latency_ms: float = 0.0
     warnings: list[str] = None
 
@@ -55,8 +55,8 @@ class RealtimeInferenceEngine:
         model: Any,
         feature_names: list[str],
         problem_type: str,
-        preprocessor: Optional[Any] = None,
-        schema: Optional[dict] = None,
+        preprocessor: Any | None = None,
+        schema: dict | None = None,
     ):
         self.model = model
         self.preprocessor = preprocessor
@@ -83,7 +83,7 @@ class RealtimeInferenceEngine:
 
     def predict(
         self,
-        X: Union[dict, pd.DataFrame, np.ndarray],
+        X: dict | pd.DataFrame | np.ndarray,
         validate: bool = True,
     ) -> PredictionResult:
         """
@@ -141,7 +141,7 @@ class RealtimeInferenceEngine:
                 if hasattr(self.model, "classes_")
                 else [str(i) for i in range(proba.shape[1])]
             )
-            probabilities = {cls: round(float(p), 4) for cls, p in zip(classes, proba[0])}
+            probabilities = {cls: round(float(p), 4) for cls, p in zip(classes, proba[0], strict=False)}
 
         latency_ms = (time.perf_counter() - t0) * 1000
         self._call_count += 1

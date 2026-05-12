@@ -42,10 +42,10 @@ class DataProfile:
     # ── Intelligence layers ───────────────────────────────────────────────
     schema: DataSchema
     column_analysis: ColumnAnalysisResult
-    target_detection: Optional[TargetDetectionResult]
+    target_detection: TargetDetectionResult | None
     problem_inference: ProblemInferenceResult
     quality: QualityReport
-    imbalance: Optional[ImbalanceReport]  # None for regression
+    imbalance: ImbalanceReport | None  # None for regression
     outliers: OutlierReport
     leakage: LeakageReport
     correlations: CorrelationReport

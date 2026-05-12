@@ -7,7 +7,7 @@ import os
 from typing import Optional
 
 
-def setup_logger(name: str = "kiteml", log_file: Optional[str] = None, debug: bool = False) -> logging.Logger:
+def setup_logger(name: str = "kiteml", log_file: str | None = None, debug: bool = False) -> logging.Logger:
     """Configure structured logging for KiteML diagnostics."""
     logger = logging.getLogger(name)
     logger.setLevel(logging.DEBUG if debug else logging.INFO)

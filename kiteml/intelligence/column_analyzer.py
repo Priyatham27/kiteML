@@ -19,13 +19,12 @@ constant    → single-value useless columns
 """
 
 from dataclasses import dataclass, field
-from enum import Enum
-from typing import Optional
+from enum import StrEnum
 
 import pandas as pd
 
 
-class ColumnType(str, Enum):
+class ColumnType(StrEnum):
     NUMERICAL = "numerical"
     CATEGORICAL = "categorical"
     ORDINAL = "ordinal"
@@ -331,7 +330,7 @@ def _classify_column(series: pd.Series, name: str) -> ColumnProfile:
 
 def analyze_columns(
     df: pd.DataFrame,
-    exclude: Optional[list[str]] = None,
+    exclude: list[str] | None = None,
 ) -> ColumnAnalysisResult:
     """
     Analyze every column in a DataFrame and return semantic type profiles.

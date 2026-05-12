@@ -25,13 +25,13 @@ class ExperimentRun:
     experiment_name: str
     model_name: str
     problem_type: str
-    score: Optional[float]
+    score: float | None
     metrics: dict[str, float]
     training_time_s: float
     n_features: int
     feature_names: list[str]
     all_results: dict[str, float]
-    dataset_hash: Optional[str]
+    dataset_hash: str | None
     tags: dict[str, str]
     notes: str
     created_at: str
@@ -62,10 +62,10 @@ def _hash_dataframe(df: Any) -> str:
 def track(
     result: Any,
     experiment_name: str = "default",
-    dataset: Optional[Any] = None,
-    tags: Optional[dict[str, str]] = None,
+    dataset: Any | None = None,
+    tags: dict[str, str] | None = None,
     notes: str = "",
-    store_path: Optional[str] = None,
+    store_path: str | None = None,
 ) -> ExperimentRun:
     """
     Record a KiteML training run to the experiment store.
@@ -144,7 +144,7 @@ def track(
 
 def list_runs(
     experiment_name: str = "default",
-    store_path: Optional[str] = None,
+    store_path: str | None = None,
 ) -> list[ExperimentRun]:
     """List all recorded runs for an experiment."""
     store = store_path or _DEFAULT_STORE

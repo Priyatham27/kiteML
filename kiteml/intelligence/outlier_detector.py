@@ -22,8 +22,8 @@ class ColumnOutlierInfo:
     method: str
     n_outliers: int
     outlier_ratio: float
-    lower_bound: Optional[float]
-    upper_bound: Optional[float]
+    lower_bound: float | None
+    upper_bound: float | None
     example_values: list[float]
 
 
@@ -66,7 +66,7 @@ def detect_outliers(
     df: pd.DataFrame,
     method: str = "iqr",
     zscore_threshold: float = 3.0,
-    exclude_columns: Optional[list[str]] = None,
+    exclude_columns: list[str] | None = None,
 ) -> OutlierReport:
     """
     Detect outliers in numeric columns.

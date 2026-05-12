@@ -153,17 +153,17 @@ class Result:
     def __init__(
         self,
         model: Any,
-        metrics: Union[dict[str, Any], ClassificationMetrics, RegressionMetrics],
+        metrics: dict[str, Any] | ClassificationMetrics | RegressionMetrics,
         report: str,
         problem_type: str,
-        all_results: Optional[dict[str, Any]] = None,
-        model_name: Optional[str] = None,
-        preprocessor: Optional[Any] = None,
-        feature_importances: Optional[dict[str, float]] = None,
-        feature_names: Optional[list[str]] = None,
+        all_results: dict[str, Any] | None = None,
+        model_name: str | None = None,
+        preprocessor: Any | None = None,
+        feature_importances: dict[str, float] | None = None,
+        feature_names: list[str] | None = None,
         elapsed_time: float = 0.0,
         training_time: float = 0.0,
-        data_profile: Optional[Any] = None,
+        data_profile: Any | None = None,
     ):
         self.model = model
         self.model_name = model_name or type(model).__name__
@@ -188,9 +188,9 @@ class Result:
 
     @staticmethod
     def _coerce_metrics(
-        metrics: Union[dict[str, Any], ClassificationMetrics, RegressionMetrics],
+        metrics: dict[str, Any] | ClassificationMetrics | RegressionMetrics,
         problem_type: str,
-    ) -> Union[ClassificationMetrics, RegressionMetrics]:
+    ) -> ClassificationMetrics | RegressionMetrics:
         """
         Accept either a raw dict (legacy) or a typed dataclass.
 
@@ -223,42 +223,42 @@ class Result:
     # ------------------------------------------------------------------
 
     @property
-    def accuracy(self) -> Optional[float]:
+    def accuracy(self) -> float | None:
         """Classification accuracy (``None`` for regression tasks)."""
         if isinstance(self.metrics, ClassificationMetrics):
             return self.metrics.accuracy
         return None
 
     @property
-    def f1(self) -> Optional[float]:
+    def f1(self) -> float | None:
         """Weighted F1 score (``None`` for regression tasks)."""
         if isinstance(self.metrics, ClassificationMetrics):
             return self.metrics.f1_score
         return None
 
     @property
-    def r2(self) -> Optional[float]:
+    def r2(self) -> float | None:
         """R² score (``None`` for classification tasks)."""
         if isinstance(self.metrics, RegressionMetrics):
             return self.metrics.r2_score
         return None
 
     @property
-    def rmse(self) -> Optional[float]:
+    def rmse(self) -> float | None:
         """Root Mean Squared Error (``None`` for classification tasks)."""
         if isinstance(self.metrics, RegressionMetrics):
             return self.metrics.rmse
         return None
 
     @property
-    def mae(self) -> Optional[float]:
+    def mae(self) -> float | None:
         """Mean Absolute Error (``None`` for classification tasks)."""
         if isinstance(self.metrics, RegressionMetrics):
             return self.metrics.mae
         return None
 
     @property
-    def score(self) -> Optional[float]:
+    def score(self) -> float | None:
         """
         Primary score for the task type.
 
@@ -494,7 +494,7 @@ class Result:
     # 🔹 Feature Importance
     # ------------------------------------------------------------------
 
-    def feature_importance(self, top_n: Optional[int] = None) -> Optional[dict[str, float]]:
+    def feature_importance(self, top_n: int | None = None) -> dict[str, float] | None:
         """
         Return feature importance values, sorted by absolute magnitude.
 
@@ -529,7 +529,7 @@ class Result:
     # 🔹 Leaderboard helpers
     # ------------------------------------------------------------------
 
-    def leaderboard(self) -> Optional[pd.DataFrame]:
+    def leaderboard(self) -> pd.DataFrame | None:
         """
         Return a sorted DataFrame of all model cross-validation scores.
 
@@ -741,7 +741,7 @@ class Result:
     def package(
         self,
         path: str = "model.kiteml",
-        target_column: Optional[str] = None,
+        target_column: str | None = None,
         overwrite: bool = False,
     ):
         """
@@ -771,7 +771,7 @@ class Result:
         self,
         data,
         chunk_size: int = 1000,
-        output_path: Optional[str] = None,
+        output_path: str | None = None,
         verbose: bool = True,
     ):
         """
@@ -946,7 +946,7 @@ class Result:
         self,
         experiment_name: str = "default",
         dataset=None,
-        tags: Optional[dict[str, str]] = None,
+        tags: dict[str, str] | None = None,
         notes: str = "",
     ):
         """
@@ -979,10 +979,10 @@ class Result:
 
     def version(
         self,
-        version: Optional[str] = None,
+        version: str | None = None,
         bump: str = "patch",
         notes: str = "",
-        bundle_path: Optional[str] = None,
+        bundle_path: str | None = None,
     ):
         """
         Record a semantic version for this model.
@@ -1095,7 +1095,7 @@ class Result:
     def data_contract(
         self,
         version: str = "1.0.0",
-        save_path: Optional[str] = None,
+        save_path: str | None = None,
     ):
         """
         Generate a formal data contract from this Result.
