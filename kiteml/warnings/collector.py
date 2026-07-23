@@ -17,6 +17,7 @@ class WarningCollector:
     def __init__(self, policy: WarningPolicy | None = None) -> None:
         self.policy = policy or WarningPolicy()
         self._warnings: list[KiteMLWarning] = []
+        self._warning_keys: set[tuple[str, str]] = set()
 
     @property
     def warnings(self) -> list[KiteMLWarning]:
@@ -33,11 +34,11 @@ class WarningCollector:
         if processed is None:
             return False
 
-        # Deduplication check
-        for w in self._warnings:
-            if w.code == processed.code and w.message == processed.message:
-                return False
+        key = (processed.code, processed.message)
+        if key in self._warning_keys:
+            return False
 
+        self._warning_keys.add(key)
         self._warnings.append(processed)
         return True
 
@@ -81,6 +82,7 @@ class WarningCollector:
     def clear(self) -> None:
         """Clear all collected warnings."""
         self._warnings.clear()
+        self._warning_keys.clear()
 
     def __len__(self) -> int:
         return len(self._warnings)
