@@ -31,6 +31,7 @@ def main() -> int:
     # 1. Import check
     try:
         import kiteml
+
         results.append(check("Import kiteml", True))
     except ImportError as e:
         results.append(check(f"Import kiteml: {e}", False))

@@ -109,7 +109,7 @@ def update_changelog(new_version: str) -> None:
         # Insert after the first ---
         idx = content.find("---", content.find("---") + 1)
         if idx != -1:
-            content = content[:idx] + f"---\n\n{new_entry}" + content[idx + 3:]
+            content = content[:idx] + f"---\n\n{new_entry}" + content[idx + 3 :]
 
     CHANGELOG_FILE.write_text(content, encoding="utf-8")
     print(f"  Updated {CHANGELOG_FILE.relative_to(ROOT)}")
@@ -121,6 +121,7 @@ def build_package() -> None:
     dist_dir = ROOT / "dist"
     if dist_dir.exists():
         import shutil
+
         shutil.rmtree(dist_dir)
 
     result = subprocess.run(

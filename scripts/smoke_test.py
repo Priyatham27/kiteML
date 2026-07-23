@@ -30,6 +30,7 @@ def check(label: str, func) -> bool:
 def test_import():
     """Test basic import."""
     import kiteml
+
     assert kiteml.__version__
 
 
@@ -102,6 +103,7 @@ def test_cli_parser():
 def test_result_class():
     """Test Result class instantiation."""
     from kiteml.output.result import Result
+
     assert Result is not None
 
 

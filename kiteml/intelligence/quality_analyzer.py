@@ -16,6 +16,7 @@ else:
     class StrEnum(str, Enum):
         pass
 
+
 import pandas as pd
 
 
