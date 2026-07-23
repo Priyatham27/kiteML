@@ -18,8 +18,8 @@ identifier  → unique row IDs (customer_id, order_id)
 constant    → single-value useless columns
 """
 
-from dataclasses import dataclass, field
 import sys
+from dataclasses import dataclass, field
 from enum import Enum
 
 if sys.version_info >= (3, 11):

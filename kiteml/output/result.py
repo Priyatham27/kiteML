@@ -601,12 +601,13 @@ class Result:
     # 🔹 Phase 2 — Intelligence Layer Methods
     # ------------------------------------------------------------------
 
-    def _require_profile(self, method_name: str):
+    def _require_profile(self, method_name: str) -> Any:
         """Raise a helpful error if no DataProfile is attached."""
         if self.data_profile is None:
             raise RuntimeError(
                 f"result.{method_name}() requires a DataProfile. " "Re-run kiteml.train() — profiling is automatic."
             )
+        return self.data_profile
 
     def profile(self, output: str = "terminal") -> None:
         """
@@ -618,25 +619,25 @@ class Result:
             ``'terminal'`` (default) prints to stdout.
             ``'html'`` saves to ``kiteml_report.html``.
         """
-        self._require_profile("profile")
+        dp = self._require_profile("profile")
         if output == "html":
             from kiteml.profiling.html_export import export_html
 
-            export_html(self.data_profile)
+            export_html(dp)
         else:
             from kiteml.profiling.report_generator import generate_profile_report
 
-            safe_print(generate_profile_report(self.data_profile))
+            safe_print(generate_profile_report(dp))
 
     def recommendations(self) -> None:
         """Print all prioritized intelligence recommendations."""
-        self._require_profile("recommendations")
-        self.data_profile.master_recommendations.print_report()
+        dp = self._require_profile("recommendations")
+        dp.master_recommendations.print_report()
 
     def data_quality_report(self) -> None:
         """Print the data quality report (issues, score, summary)."""
-        self._require_profile("data_quality_report")
-        q = self.data_profile.quality
+        dp = self._require_profile("data_quality_report")
+        q = dp.quality
         W = 54
         safe_print("\n" + "═" * W)
         safe_print("  🪁  KiteML — Data Quality Report")
@@ -656,8 +657,8 @@ class Result:
 
     def leakage_report(self) -> None:
         """Print the leakage detection report."""
-        self._require_profile("leakage_report")
-        lk = self.data_profile.leakage
+        dp = self._require_profile("leakage_report")
+        lk = dp.leakage
         W = 54
         safe_print("\n" + "═" * W)
         safe_print("  🪁  KiteML — Leakage Detection Report")
@@ -681,7 +682,7 @@ class Result:
 
         Covers column types, recommendations, and top importances.
         """
-        self._require_profile("feature_summary")
+        dp = self._require_profile("feature_summary")
         W = 56
         safe_print("\n" + "═" * W)
         safe_print("  🪁  KiteML — Feature Intelligence Summary")
@@ -689,11 +690,11 @@ class Result:
 
         # Column type breakdown
         safe_print("  Column Types:")
-        for col_type, count in self.data_profile.column_analysis.type_summary.items():
+        for col_type, count in dp.column_analysis.type_summary.items():
             safe_print(f"    {col_type:<20} {count}")
 
         # Feature recommendations
-        feat_recs = self.data_profile.feature_recommendations
+        feat_recs = dp.feature_recommendations
         if feat_recs.recommendations:
             safe_print("─" * W)
             safe_print("  Feature Recommendations:")
@@ -731,10 +732,10 @@ class Result:
         str
             Path where the HTML file was saved.
         """
-        self._require_profile("export_html")
+        dp = self._require_profile("export_html")
         from kiteml.profiling.html_export import export_html
 
-        return export_html(self.data_profile, path=path)
+        return export_html(dp, path=path)
 
     # ------------------------------------------------------------------
     # 🔹 Phase 3 — Production & Deployment Layer

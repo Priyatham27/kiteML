@@ -147,6 +147,7 @@ class Preprocessor:
         -------
         list of str
         """
+        assert self._pipeline is not None
         col_transform = self._pipeline.named_steps["col_transform"]
         names: list[str] = []
 
@@ -218,7 +219,7 @@ class Preprocessor:
         RuntimeError
             If called before ``fit_transform``.
         """
-        if not self.is_fitted:
+        if not self.is_fitted or self._pipeline is None:
             raise RuntimeError("Preprocessor is not fitted. Call fit_transform() on training data first.")
         return self._pipeline.transform(X.copy())
 

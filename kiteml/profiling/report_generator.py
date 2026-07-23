@@ -132,8 +132,8 @@ def generate_profile_report(profile: DataProfile) -> str:
         header("📅 Datetime Columns")
         sep()
         for col in profile.datetime.datetime_columns:
-            info = profile.datetime.details[col]
-            row(f"  {col}", f"range: {info.date_range_days} days")
+            dt_info = profile.datetime.details[col]
+            row(f"  {col}", f"range: {dt_info.date_range_days} days")
 
     # ── Memory ────────────────────────────────────────────────────────────
     sep()

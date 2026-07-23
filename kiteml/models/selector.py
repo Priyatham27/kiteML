@@ -25,6 +25,7 @@ convention.  The report layer converts R² to RMSE for display purposes.
 import logging
 from typing import Any, Optional
 
+import numpy as np
 import pandas as pd
 from sklearn.model_selection import cross_val_score
 
@@ -35,8 +36,8 @@ logger = logging.getLogger(__name__)
 
 
 def select_best_model(
-    X_train: pd.DataFrame,
-    y_train: pd.Series,
+    X_train: pd.DataFrame | np.ndarray,
+    y_train: Any,
     problem_type: str = "classification",
     random_state: int = DEFAULT_RANDOM_STATE,
     cv: int = DEFAULT_CV_FOLDS,

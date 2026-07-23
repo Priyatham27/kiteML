@@ -5,8 +5,8 @@ Scans for: duplicate rows, constant columns, high missing rate,
 mixed-type columns, and corrupted string patterns.
 """
 
-from dataclasses import dataclass
 import sys
+from dataclasses import dataclass
 from enum import Enum
 
 if sys.version_info >= (3, 11):

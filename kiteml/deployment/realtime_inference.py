@@ -22,7 +22,7 @@ class PredictionResult:
     prediction: Any
     probabilities: dict | None = None  # class → probability (classification)
     latency_ms: float = 0.0
-    warnings: list[str] = None
+    warnings: list[str] | None = None
 
     def __post_init__(self):
         if self.warnings is None:

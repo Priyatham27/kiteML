@@ -104,7 +104,7 @@ class PredictionMonitor:
         latencies = [r.latency_ms for r in records]
         confidences = [r.confidence for r in records if r.confidence is not None]
 
-        counts = defaultdict(int)
+        counts: dict[str, int] = defaultdict(int)
         for p in preds:
             counts[p] += 1
         total = len(records)

@@ -5,7 +5,7 @@ integrations/wandb.py — Weights & Biases integration.
 from typing import Any
 
 
-def setup_wandb(project_name: str, entity: str = None) -> bool:
+def setup_wandb(project_name: str, entity: str | None = None) -> bool:
     """Initialize W&B integration."""
     try:
         import wandb
@@ -16,7 +16,7 @@ def setup_wandb(project_name: str, entity: str = None) -> bool:
     return True
 
 
-def log_run_wandb(result: Any, tags: list = None) -> None:
+def log_run_wandb(result: Any, tags: list[Any] | None = None) -> None:
     """Log a KiteML Result to W&B."""
     try:
         import wandb
@@ -37,7 +37,7 @@ def log_run_wandb(result: Any, tags: list = None) -> None:
     wandb.log(valid_metrics)
 
     if tags:
-        wandb.run.tags = tags + (wandb.run.tags or ())
+        wandb.run.tags = list(tags) + list(wandb.run.tags or [])
 
     bundle_path = f"{result.model_name}_wandb_export.kiteml"
     result.package(bundle_path)

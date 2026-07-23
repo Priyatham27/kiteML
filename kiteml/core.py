@@ -176,6 +176,7 @@ def train(
         raise ValueError(
             f"Target column '{target}' not found in the dataset. " f"Available columns: {list(df.columns)}"
         )
+    assert target is not None
 
     if problem_type is not None and problem_type not in ("classification", "regression"):
         raise ValueError(
