@@ -145,8 +145,11 @@ def train(
     # ------------------------------------------------------------------ #
     # Step 2 – Validate inputs & Validation Pipeline                       #
     # ------------------------------------------------------------------ #
-    if target is None and isinstance(df, pd.DataFrame) and len(df.columns) > 0:
-        target = df.columns[-1]
+    from kiteml.pipeline import create_dx_pipeline
+    from kiteml.warnings import ValidationWarning
+
+    dx_pipeline = create_dx_pipeline()
+    warning_collector = dx_pipeline.warning_manager.collector
 
     val_summary = None
     if validate_data:
@@ -154,7 +157,21 @@ def train(
         val_pipeline = ValidationPipeline()
         val_summary = val_pipeline.validate(df, target=target, problem_type=problem_type)
 
+        # Collect non-fatal validation warnings
+        for v_name, v_data in val_summary.validator_results.items():
+            for m in v_data.get("messages", []):
+                if m.get("severity") == "warning":
+                    dx_pipeline.add_warning(
+                        ValidationWarning(
+                            message=m.get("description", "Validation warning"),
+                            code=m.get("code", "KML-W-V001"),
+                            recommendation=m.get("recommendation"),
+                            source=v_name,
+                        )
+                    )
+
         if not val_summary.ready_for_training:
+            dx_pipeline.set_validation_status("Failed")
             logger.error("\n" + val_summary.summary_text())
             err_details = []
             for v_data in val_summary.validator_results.values():
@@ -280,6 +297,8 @@ def train(
     # ------------------------------------------------------------------ #
     # Step 12 — Build and return Result                                   #
     # ------------------------------------------------------------------ #
+    dx_pipeline.set_training_status("Completed")
+
     result = Result(
         model=best_model,
         model_name=best_model_name,
@@ -294,6 +313,8 @@ def train(
         training_time=training_time,
         data_profile=data_profile,
         validation=val_summary,
+        warning_collector=warning_collector,
+        diagnostics=dx_pipeline.get_diagnostics(),
     )
 
     return result

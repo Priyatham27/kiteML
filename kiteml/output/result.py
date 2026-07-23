@@ -165,7 +165,11 @@ class Result:
         training_time: float = 0.0,
         data_profile: Any | None = None,
         validation: Any | None = None,
+        warning_collector: Any | None = None,
+        diagnostics: Any | None = None,
     ):
+        from kiteml.warnings.collector import WarningCollector
+
         self.model = model
         self.model_name = model_name or type(model).__name__
         self.report_text = report
@@ -176,6 +180,8 @@ class Result:
         self.feature_importances = feature_importances
         self.data_profile = data_profile  # Phase 2: DataProfile object
         self.validation = validation  # Epic 2: ValidationSummary object
+        self.warning_collector = warning_collector or WarningCollector()
+        self.diagnostics_obj = diagnostics
 
         # ── Time tracking ─────────────────────────────────────────────────
         self.times = TrainingTimes(total=elapsed_time, training=training_time)
@@ -736,6 +742,54 @@ class Result:
         from kiteml.profiling.html_export import export_html
 
         return export_html(dp, path=path)
+
+    # ------------------------------------------------------------------
+    # 🔹 Warning Framework Methods (Story 3.4)
+    # ------------------------------------------------------------------
+
+    def warnings(self) -> list[Any]:
+        """Return all non-fatal warnings collected during validation and training."""
+        return self.warning_collector.warnings
+
+    def warning_summary(self) -> str:
+        """Return an aggregated warning summary report string."""
+        from kiteml.warnings.report import WarningReport
+
+        report = WarningReport(warnings=self.warnings())
+        return report.summary_text()
+
+    def has_warnings(self) -> bool:
+        """Return True if any warnings were emitted during execution."""
+        return len(self.warnings()) > 0
+
+    def warning_count(self) -> int:
+        """Return total number of collected warnings."""
+        return len(self.warnings())
+
+    def suggestions(self) -> list[Any]:
+        """Generate context-aware ranked recommendations for the dataset and result."""
+        from kiteml.suggestions.engine import SuggestionEngine
+
+        engine = SuggestionEngine()
+        ctx = {
+            "df": getattr(self.data_profile, "df", None) if self.data_profile else None,
+            "available_columns": self.feature_names,
+        }
+        return engine.generate(ctx)
+
+    def diagnostics(self) -> str:
+        """Return formatted execution diagnostics summary string."""
+        if self.diagnostics_obj and hasattr(self.diagnostics_obj, "summary_text"):
+            return self.diagnostics_obj.summary_text()
+        from kiteml.pipeline.diagnostics import Diagnostics
+
+        diag = Diagnostics(
+            status="WARNINGS" if self.has_warnings() else "SUCCESS",
+            warning_count=self.warning_count(),
+            suggestion_count=len(self.suggestions()),
+            execution_time=self.times.total,
+        )
+        return diag.summary_text()
 
     # ------------------------------------------------------------------
     # 🔹 Phase 3 — Production & Deployment Layer

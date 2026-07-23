@@ -1,0 +1,3 @@
+"""
+tests/exceptions package initialization.
+"""

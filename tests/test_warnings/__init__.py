@@ -1,0 +1,3 @@
+"""
+tests/warnings package initialization.
+"""
