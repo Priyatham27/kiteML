@@ -164,6 +164,7 @@ class Result:
         elapsed_time: float = 0.0,
         training_time: float = 0.0,
         data_profile: Any | None = None,
+        validation: Any | None = None,
     ):
         self.model = model
         self.model_name = model_name or type(model).__name__
@@ -174,6 +175,7 @@ class Result:
         self.feature_names = feature_names or []
         self.feature_importances = feature_importances
         self.data_profile = data_profile  # Phase 2: DataProfile object
+        self.validation = validation  # Epic 2: ValidationSummary object
 
         # ── Time tracking ─────────────────────────────────────────────────
         self.times = TrainingTimes(total=elapsed_time, training=training_time)

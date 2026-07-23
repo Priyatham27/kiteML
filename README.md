@@ -34,7 +34,7 @@ KiteML is an intelligent AutoML framework that automates the entire ML pipeline 
 
 ## Requirements
 
-- **Python 3.11+** (3.11, 3.12, and 3.13 are officially supported)
+- **Python 3.10+** (3.10, 3.11, 3.12, and 3.13 are officially supported)
 
 ---
 

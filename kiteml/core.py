@@ -46,6 +46,7 @@ from kiteml.preprocessing.pipeline import Preprocessor
 from kiteml.training.trainer import train_model
 from kiteml.utils.data_loader import load_data
 from kiteml.utils.type_inference import infer_problem_type
+from kiteml.validation.pipeline import ValidationPipeline
 
 logger = logging.getLogger(__name__)
 
@@ -83,6 +84,7 @@ def train(
     random_state: int = DEFAULT_RANDOM_STATE,
     cv: int = DEFAULT_CV_FOLDS,
     verbose: bool = DEFAULT_VERBOSE,
+    validate_data: bool = True,
 ) -> Result:
     """
     Train and evaluate ML models on the given dataset.
@@ -109,19 +111,21 @@ def train(
         Default from ``kiteml.config.DEFAULT_CV_FOLDS`` (5).
     verbose : bool
         Emit progress messages via the ``kiteml.core`` logger. Default ``True``.
+    validate_data : bool
+        Execute automatic ValidationPipeline before training. Default ``True``.
 
     Returns
     -------
     Result
         A :class:`~kiteml.output.result.Result` containing the best model,
         typed metrics (ClassificationMetrics or RegressionMetrics), report,
-        feature importances, fitted Preprocessor, and per-phase timings.
+        feature importances, fitted Preprocessor, per-phase timings, and ValidationSummary.
 
     Raises
     ------
     ValueError
         If the dataset is empty, the target column is missing, or
-        ``problem_type`` is an unrecognised string.
+        validation checks fail.
     """
     # ------------------------------------------------------------------ #
     # Configure logging level for this run                                 #
@@ -139,14 +143,34 @@ def train(
     df = load_data(data)
 
     # ------------------------------------------------------------------ #
-    # Step 2 – Validate inputs                                             #
+    # Step 2 – Validate inputs & Validation Pipeline                       #
     # ------------------------------------------------------------------ #
+    if target is None and isinstance(df, pd.DataFrame) and len(df.columns) > 0:
+        target = df.columns[-1]
+
+    val_summary = None
+    if validate_data:
+        logger.info("🪁 Running Validation Pipeline...")
+        val_pipeline = ValidationPipeline()
+        val_summary = val_pipeline.validate(df, target=target, problem_type=problem_type)
+
+        if not val_summary.ready_for_training:
+            logger.error("\n" + val_summary.summary_text())
+            err_details = []
+            for v_data in val_summary.validator_results.values():
+                for m in v_data.get("messages", []):
+                    if m.get("severity") in ("error", "critical"):
+                        err_details.append(m.get("description", ""))
+            err_str = " | ".join(err_details)
+            raise ValueError(
+                f"Validation failed with {val_summary.error_count + val_summary.critical_count} error(s): {err_str}"
+            )
+
+        if verbose:
+            logger.info(f"✅ Validation passed ({val_summary.health_score}/100 - {val_summary.health_grade})")
+
     if df.empty:
         raise ValueError("The dataset is empty.")
-
-    if target is None:
-        target = df.columns[-1]
-        logger.info(f"ℹ️  No target specified — using last column: '{target}'")
 
     if target not in df.columns:
         raise ValueError(
@@ -268,6 +292,7 @@ def train(
         elapsed_time=total_elapsed,
         training_time=training_time,
         data_profile=data_profile,
+        validation=val_summary,
     )
 
     return result
