@@ -252,13 +252,13 @@ kiteml/
 
 ## 📖 Documentation & Community
 
-Comprehensive documentation is available at [https://kiteml.github.io/kiteml](https://kiteml.github.io/kiteml):
+Comprehensive documentation is available at [https://priyatham27.github.io/kiteML/](https://priyatham27.github.io/kiteML/):
 
-- [Getting Started Guide](https://kiteml.github.io/kiteml/getting_started/)
-- [User Guides (Epics 1–5)](https://kiteml.github.io/kiteml/user_guides/)
-- [CLI Reference](https://kiteml.github.io/kiteml/cli/)
-- [API Reference](https://kiteml.github.io/kiteml/api/)
-- [Architecture Specifications](https://kiteml.github.io/kiteml/architecture/)
+- [Getting Started Guide](https://priyatham27.github.io/kiteML/getting_started/)
+- [User Guides (Epics 1–5)](https://priyatham27.github.io/kiteML/user_guides/intelligence/profiling_leakage/)
+- [CLI Reference](https://priyatham27.github.io/kiteML/getting_started/quickstart_cli/)
+- [API Reference](https://priyatham27.github.io/kiteML/api/core/)
+- [Architecture Specifications](https://priyatham27.github.io/kiteML/architecture/overview/)
 
 ---
 

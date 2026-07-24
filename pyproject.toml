@@ -111,12 +111,12 @@ kiteml = "kiteml.cli.main:main"
 
 # ── Project URLs ────────────────────────────────────────────────────
 [project.urls]
-Homepage = "https://github.com/kiteml/kiteml"
-Repository = "https://github.com/kiteml/kiteml"
-Documentation = "https://kiteml.github.io/kiteml"
-"Bug Tracker" = "https://github.com/kiteml/kiteml/issues"
-Changelog = "https://github.com/kiteml/kiteml/blob/main/CHANGELOG.md"
-Discussions = "https://github.com/kiteml/kiteml/discussions"
+Homepage = "https://github.com/Priyatham27/kiteML"
+Repository = "https://github.com/Priyatham27/kiteML"
+Documentation = "https://priyatham27.github.io/kiteML/"
+"Bug Tracker" = "https://github.com/Priyatham27/kiteML/issues"
+Changelog = "https://github.com/Priyatham27/kiteML/blob/main/CHANGELOG.md"
+Discussions = "https://github.com/Priyatham27/kiteML/discussions"
 
 # ── Setuptools Configuration ────────────────────────────────────────
 [tool.setuptools]
