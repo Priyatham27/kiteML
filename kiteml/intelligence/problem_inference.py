@@ -73,6 +73,16 @@ def infer_problem_type_advanced(
         )
 
     # ── Numeric target ────────────────────────────────────────────────────
+    # Float dtype with > 2 unique values → regression
+    if pd.api.types.is_float_dtype(target) and n_unique > 2:
+        evidence.append("float dtype with >2 unique values → regression")
+        return ProblemInferenceResult(
+            problem_type="regression",
+            subtype="continuous",
+            confidence=0.95,
+            evidence=evidence,
+        )
+
     # Entropy-based: few unique values relative to total → classification
     # Signal 1: unique ratio
     if unique_ratio < 0.02 or n_unique <= 20:

@@ -1,80 +1,109 @@
 """
-trainer.py — Final model training engine.
-
-Responsibility
---------------
-This module has *one job*: fit the selected model on the full training set.
-
-It is intentionally thin.  Keeping training isolated from selection and
-evaluation means future changes (distributed training, GPU, incremental
-learning) only touch this file.
-
-Why not just call model.fit() in core.py?
------------------------------------------
-Separation of concerns.  core.py is the orchestrator; trainer.py is the
-execution layer.  This pattern mirrors scikit-learn's own Pipeline design
-and makes each component unit-testable in isolation.
-
-Time Tracking
--------------
-Training time is measured with time.perf_counter() (highest available
-resolution) and returned alongside the fitted model so core.py can include
-it in the Result and surface it to the user.  This is surfaced at INFO
-level so users always see how long training took without needing verbose
-debug output.
+trainer.py — ModelTrainer for cross-validation fitting and model evaluation in KiteML.
 """
 
-import logging
-import time
 from typing import Any
 
 import numpy as np
+import pandas as pd
+from sklearn.dummy import DummyClassifier, DummyRegressor
+from sklearn.metrics import accuracy_score, r2_score
 
-logger = logging.getLogger(__name__)
+from kiteml.training.cross_validation import CrossValidationEngine
 
 
-def train_model(
-    model: Any,
-    X_train: np.ndarray,
-    y_train: Any,
-) -> tuple[Any, float]:
+class ModelTrainer:
     """
-    Fit the model on the provided training data.
+    Executes cross-validated model training and baseline fitting.
+    """
+
+    def train_model(
+        self,
+        X_train: pd.DataFrame,
+        y_train: pd.Series,
+        task_type: str,
+        n_splits: int = 5,
+        random_state: int = 42,
+        model: Any = None,
+    ) -> tuple[Any, list[float]]:
+        """
+        Train baseline model across CV folds.
+
+        Parameters
+        ----------
+        X_train : pd.DataFrame
+            Training features.
+        y_train : pd.Series
+            Training target.
+        task_type : str
+            ML task type.
+        n_splits : int
+            Number of folds.
+        random_state : int
+            Random seed.
+        model : Any, optional
+            Scikit-learn estimator instance.
+
+        Returns
+        -------
+        tuple[Any, list[float]]
+            Fitted baseline model and list of CV fold scores.
+        """
+        if model is None:
+            if "classification" in task_type:
+                from sklearn.ensemble import RandomForestClassifier
+
+                model = RandomForestClassifier(n_estimators=50, random_state=random_state)
+            else:
+                from sklearn.ensemble import RandomForestRegressor
+
+                model = RandomForestRegressor(n_estimators=50, random_state=random_state)
+
+        cv = CrossValidationEngine().get_cv(task_type=task_type, n_splits=n_splits, random_state=random_state)
+        scores: list[float] = []
+
+        for train_idx, val_idx in cv.split(X_train, y_train):
+            X_tr, X_val = X_train.iloc[train_idx], X_train.iloc[val_idx]
+            y_tr, y_val = y_train.iloc[train_idx], y_train.iloc[val_idx]
+
+            fold_model = model.__class__(**model.get_params())
+            fold_model.fit(X_tr, y_tr)
+            preds = fold_model.predict(X_val)
+
+            if "classification" in task_type:
+                if not pd.api.types.is_integer_dtype(preds) and not pd.api.types.is_bool_dtype(preds):
+                    preds = np.round(preds).astype(int)
+                score = float(accuracy_score(y_val, preds))
+            else:
+                score = float(r2_score(y_val, preds))
+            scores.append(score)
+
+        # Fit final model on full training set
+        model.fit(X_train, y_train)
+        return model, scores
+
+
+def train_model(model: Any, X_train: Any, y_train: Any) -> tuple[Any, float]:
+    """
+    Train a single model instance on X_train and y_train and return fitted model with elapsed time.
 
     Parameters
     ----------
-    model : estimator
-        Any scikit-learn compatible *unfitted* model instance.
-    X_train : array-like of shape (n_samples, n_features)
-        Processed training feature matrix (output of Preprocessor).
-    y_train : array-like of shape (n_samples,)
-        Training target vector.
+    model : Any
+        Estimator instance.
+    X_train : pd.DataFrame
+        Training features.
+    y_train : pd.Series
+        Training target.
 
     Returns
     -------
-    model : estimator
-        The *fitted* model (mutated in-place by sklearn convention, but
-        also returned for explicit assignment clarity).
-    training_time : float
-        Wall-clock seconds the ``model.fit()`` call took, measured with
-        ``time.perf_counter()`` for sub-millisecond accuracy.
-
-    Notes
-    -----
-    * Training time is logged at INFO level so it is always visible to
-      the user without needing to enable DEBUG logging.
-    * The function does **not** perform any splitting or preprocessing —
-      that is core.py's responsibility.
+    tuple[Any, float]
+        Fitted model and training time in seconds.
     """
-    model_name = type(model).__name__
-    n_samples = len(y_train) if hasattr(y_train, "__len__") else "?"
+    import time
 
-    logger.debug("⚙️  Fitting %s on %s samples…", model_name, n_samples)
-
-    t0 = time.perf_counter()
+    start_time = time.time()
     model.fit(X_train, y_train)
-    training_time = time.perf_counter() - t0
-
-    logger.info("⏱️  %s trained in %.2fs", model_name, training_time)
-
-    return model, training_time
+    elapsed = time.time() - start_time
+    return model, elapsed
