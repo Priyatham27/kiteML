@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <rect width="200" height="200" fill="#0B0F19"/>
+  <g id="kite-geometry">
+    <!-- Top Diamond Half -->
+    <polygon points="100,12 182,100 100,100 18,100" fill="#FFFFFF"/>
+    <!-- Bottom Diamond Half -->
+    <polygon points="18,100 100,100 182,100 100,188" fill="#FFFFFF"/>
+  </g>
+  <g id="circuit-tree" stroke="#0B0F19" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Central Vertical Trunk -->
+    <line x1="100" y1="165" x2="100" y2="48" stroke-width="7"/>
+    <!-- Left Angled Branch -->
+    <line x1="100" y1="115" x2="62" y2="77" stroke-width="6"/>
+    <!-- Right Angled Branch -->
+    <line x1="100" y1="115" x2="138" y2="77" stroke-width="6"/>
+    <!-- Top Center Branch -->
+    <line x1="100" y1="70" x2="100" y2="48" stroke-width="6"/>
+  </g>
+  <g id="circuit-nodes">
+    <!-- Top Node -->
+    <circle cx="100" cy="48" r="9" fill="#0B0F19"/>
+    <circle cx="100" cy="48" r="4.5" fill="#FFFFFF"/>
+    <!-- Left Node -->
+    <circle cx="62" cy="77" r="8.5" fill="#0B0F19"/>
+    <circle cx="62" cy="77" r="4" fill="#FFFFFF"/>
+    <!-- Right Node -->
+    <circle cx="138" cy="77" r="8.5" fill="#0B0F19"/>
+    <circle cx="138" cy="77" r="4" fill="#FFFFFF"/>
+  </g>
+</svg>

@@ -5,6 +5,8 @@ site_url: https://priyatham27.github.io/kiteML/
 
 theme:
   name: material
+  logo: assets/logo.svg
+  favicon: assets/favicon.svg
   language: en
   palette:
     - media: "(prefers-color-scheme: light)"
