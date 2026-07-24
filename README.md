@@ -1,7 +1,7 @@
 <p align="center">
   <h1 align="center">🪁 KiteML</h1>
   <p align="center">
-    <strong>Train production-grade ML models with a single line of code.</strong>
+    <strong>Train production-grade ML models with a single line of code — intelligent AutoML for everyone.</strong>
   </p>
   <p align="center">
     <a href="https://pypi.org/project/kiteml-ai/"><img src="https://img.shields.io/pypi/v/kiteml-ai?color=blue&label=PyPI" alt="PyPI Version"></a>
@@ -14,177 +14,275 @@
 
 ---
 
-KiteML is an intelligent AutoML framework that automates the entire ML pipeline — from raw data to production-ready models. It handles preprocessing, feature engineering, model selection, training, evaluation, serving, and deployment, all through a clean Python API and powerful CLI.
+KiteML is a full-stack, production-grade **Intelligent AutoML Ecosystem** that automates the complete machine learning lifecycle — from raw dataset ingestion, data profiling, and leakage detection to automated feature engineering, DAG pipeline execution, model selection, REST API serving, ONNX/Docker deployment, and production drift monitoring.
 
 ---
 
-## Features
+## 🚀 Key Features Matrix
 
-| Category | Capabilities |
-|---|---|
-| **Core ML** | Auto preprocessing, model selection, cross-validated training, evaluation reports |
-| **Intelligence** | Explainability (SHAP/feature importance), imbalance detection, data profiling |
-| **Production** | FastAPI serving, ONNX export, Docker packaging, batch & real-time inference |
-| **CLI** | 14 subcommands — `train`, `serve`, `predict`, `profile`, `doctor`, and more |
-| **Integrations** | WandB, MLflow, plugin SDK for custom extensions |
-| **Governance** | Model cards, audit logging, experiment tracking |
-| **I/O Formats** | CSV, Excel, JSON, Parquet |
-
----
-
-## Requirements
-
-- **Python 3.10+** (3.10, 3.11, 3.12, and 3.13 are officially supported)
+| Subsystem | Capabilities |
+| :--- | :--- |
+| **Core AutoML** | Single-line training (`train()`), auto problem inference (classification & regression), cross-validated model selection, metric evaluation. |
+| **Intelligence Layer** | Dataset profiling, automatic data leakage detection, cardinality analysis, severe class imbalance detection, SHAP explainability. |
+| **Data Validation** | Schema validation contracts, target variable sanity checks, data quality guards, leak-prevention pre-flight checks. |
+| **Intelligent ML Pipeline** | Automated imputation, scaling, and categorical encoding; feature engineering; voting feature selection; DAG execution engine; `.kml` package serialization with SHA-256 integrity checksums. |
+| **Developer Experience (DX)** | Structured error catalog (`KML-XXX`), configurable warning policies (`KML-W-XXX`), context-aware typo suggestions (`match_column_name`), and execution diagnostic boxes. |
+| **Production Deployment** | Automated FastAPI REST server (`kiteml serve`), optimized ONNX export, Docker container packaging, realtime & batch inference guardrails. |
+| **CLI Ecosystem** | 14 rich subcommands: `train`, `serve`, `predict`, `profile`, `doctor`, `init`, `playground`, `dashboard`, `monitor`, `export`, `benchmark`, `experiment`, `plugins`, `version`. |
+| **MLOps & Governance** | Automated Model Card generation (`model_card.json`), audit logging, population stability drift monitoring (PSI/KS-test), WandB & MLflow experiment tracking adapters. |
 
 ---
 
-## Installation
+## 🏛️ System Architecture
+
+```
+                                    🪁 KiteML Ecosystem Architecture
+                                    
+  ┌──────────────────────┐   ┌──────────────────────┐   ┌──────────────────────────────────┐
+  │  Epic 1: Intelligence│   │   Epic 2: Validation │   │  Epic 3: Developer Experience    │
+  │  • Data Profiling    │   │  • Schema Checks     │   │  • Structured Errors (KML-XXX)   │
+  │  • Leakage Detection │   │  • Target Sanity     │   │  • Warning Engine (KML-W-XXX)    │
+  │  • Imbalance Scans   │   │  • Quality Rules     │   │  • Typo Suggestions Engine       │
+  │  • SHAP & Importance │   │  • Leak Guards       │   │  • 14-Command CLI Suite          │
+  └──────────┬───────────┘   └──────────┬───────────┘   └────────────────┬─────────────────┘
+             │                          │                                │
+             └──────────────────────────┼────────────────────────────────┘
+                                        ▼
+  ┌────────────────────────────────────────────────────────────────────────────────────────┐
+  │                         Epic 4: Intelligent ML Pipeline                                │
+  │  • Preprocessing Engine   • Automated Feature Creation   • Voting Feature Selection    │
+  │  • DAG Execution Pipeline • Native .kml Serialization    • Execution Replay Timeline   │
+  │  • Unified KiteMLPipeline Orchestrator                                                 │
+  └─────────────────────────────────────┬──────────────────────────────────────────────────┘
+                                        │
+                                        ▼
+  ┌────────────────────────────────────────────────────────────────────────────────────────┐
+  │                     Epic 5: Intelligent Training & Deployment                          │
+  │  • Cross-Validated Model Selection    • FastAPI REST Serving     • ONNX Exporter         │
+  │  • Docker Container Packager          • Inference Guardrails     • Production Drift Monitor│
+  │  • Model Cards & Compliance Logs      • WandB & MLflow Adapters  • Extensible Plugin SDK   │
+  └────────────────────────────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## ⚙️ Requirements
+
+- **Python**: `3.10`, `3.11`, `3.12`, or `3.13` (officially supported)
+
+---
+
+## 📦 Installation
 
 ```bash
 pip install kiteml-ai
 ```
 
-### Extras
+> **Import Note**: The package name on PyPI is `kiteml-ai`. The Python import remains `import kiteml`.
+
+### Optional Extras
 
 ```bash
-pip install kiteml-ai[serving]   # FastAPI model server
-pip install kiteml-ai[onnx]      # ONNX export support
-pip install kiteml-ai[wandb]     # Weights & Biases tracking
-pip install kiteml-ai[mlflow]    # MLflow experiment tracking
-pip install kiteml-ai[all]       # Everything
+pip install kiteml-ai[serving]   # FastAPI REST model server & OpenAPI docs
+pip install kiteml-ai[onnx]      # ONNX model graph conversion & ONNX Runtime
+pip install kiteml-ai[wandb]     # Weights & Biases experiment tracking
+pip install kiteml-ai[mlflow]    # MLflow tracking & model registry
+pip install kiteml-ai[docs]      # MkDocs documentation builder
+pip install kiteml-ai[all]       # Complete ecosystem dependencies
 ```
-
-> **Note:** The PyPI package is `kiteml-ai`. The Python import remains `import kiteml` — same as `scikit-learn` → `sklearn`.
 
 ---
 
-## Quick Start
+## ⚡ Quick Start
 
-### Python API
+### 1. Simple AutoML Training (`train()`)
 
 ```python
-from kiteml import train
+from kiteml import train, load
 
-# Classification
-result = train("data.csv", target="label")
+# Train classification model with automatic preprocessing & model selection
+result = train("customer_churn.csv", target="Exited")
+
+# Print summary & execution diagnostics
 print(result.summary())
-result.save_model("my_model.pkl")
+print(result.diagnostics())
 
-# Regression
-result = train("housing.csv", target="price", problem_type="regression")
-print(result.summary())
+# Make predictions on new dataset
+predictions = result.predict(new_df)
 
-# Make predictions
-predictions = result.predict(new_data)
+# Save best model artifact
+result.save_model("churn_model.pkl")
+
+# Reload saved model
+saved_result = load("churn_model.pkl")
 ```
 
-### CLI
+### 2. End-to-End Pipeline Orchestration (`KiteMLPipeline`)
+
+For fine-grained control over preprocessing, feature engineering, feature selection, and `.kml` package serialization:
+
+```python
+from kiteml import KiteMLPipeline
+import pandas as pd
+
+df = pd.read_csv("housing.csv")
+
+# Initialize and fit unified pipeline
+pipeline = KiteMLPipeline()
+build_result = pipeline.build(df, target="price")
+
+# Inspect pipeline summary and replay timeline
+print(build_result.report.summary())
+
+# Transform new dataset through trained DAG
+transformed_df = pipeline.transform(new_df)
+
+# Save as production-ready .kml package with SHA-256 integrity verification
+pipeline.save("housing_pipeline.kml")
+
+# Load pipeline for deployment
+loaded_pipeline = KiteMLPipeline.load("housing_pipeline.kml")
+```
+
+### 3. Command Line Interface (CLI)
 
 ```bash
-# Train a model
-kiteml train data.csv --target label
+# 1. Train a model with automatic reporting
+kiteml train data.csv --target label --save model.pkl
 
-# Train with options
-kiteml train data.csv --target price --type regression --save model.pkl
+# 2. Profile a dataset for leakage, outliers, and quality issues
+kiteml profile data.csv --target label
 
-# Serve a model
+# 3. Serve a model via production REST API (FastAPI)
 kiteml serve model.pkl --port 8000
 
-# Profile your dataset
-kiteml profile data.csv
+# 4. Make batch predictions
+kiteml predict model.pkl new_data.csv --output predictions.csv
 
-# Run diagnostics
+# 5. Run environment diagnostics
 kiteml doctor
 ```
 
 ---
 
-## 🚀 Epic 4 Complete — Intelligent Machine Learning Pipeline
+## 🖥️ CLI Commands Ecosystem
 
-KiteML now includes a production-ready Intelligent Machine Learning Pipeline.
+KiteML includes 14 subcommands out-of-the-box:
 
-### Features
-
-| Component | Description |
-|---|---|
-| **Intelligent Preprocessing Engine** | Automatically profiles datasets, infers column types, and generates optimal imputation, encoding, and scaling strategies |
-| **Automatic Feature Engineering** | Discovers and creates meaningful features from datetime, numeric, categorical, and text columns |
-| **Intelligent Feature Selection** | Multi-selector voting system to identify and remove low-value features while preserving model-critical ones |
-| **Transformation Pipeline** | DAG-based execution engine that applies preprocessing, engineering, and selection decisions in the correct order |
-| **Pipeline Serialization** | Save and load production-ready pipelines as native `.kml` packages with SHA-256 integrity verification |
-| **Pipeline Reporting** | Transparent execution reports with interactive replay timeline, HTML dashboards, and JSON exports |
-| **Pipeline Orchestration** | Unified `KiteMLPipeline` API that coordinates every subsystem through a single workflow call |
-
-These systems automatically analyze datasets, generate preprocessing plans, execute transformations, produce detailed reports, and create reproducible pipelines for deployment.
-
-```python
-from kiteml import KiteMLPipeline
-
-# Full AutoML preprocessing pipeline in one call
-pipeline = KiteMLPipeline()
-result = pipeline.build(df, target="price")
-
-# Inspect results
-print(result.report.summary())
-
-# Save for deployment
-pipeline.save("house_price.kml")
+```
+kiteml
+├── train       Train models with automatic preprocessing & cross-validation
+├── serve       Start a FastAPI REST server with OpenAPI documentation
+├── predict     Generate predictions from a trained model or .kml package
+├── profile     Analyze dataset quality, imbalance, and leakage risks
+├── doctor      Validate Python environment, dependencies, and GPU drivers
+├── init        Scaffold a new production ML project template
+├── playground  Download sample datasets (churn, housing, iris)
+├── dashboard   Launch local interactive HTML performance dashboard
+├── monitor     Check statistical data drift (PSI) on production data streams
+├── export      Export models to ONNX graph format or Docker containers
+├── benchmark   Run execution benchmarks across model algorithms
+├── experiment  List and inspect local experiment tracking logs
+├── plugins     List, install, and manage custom pipeline plugins
+└── version     Display KiteML ecosystem versions and build info
 ```
 
 ---
 
-## Architecture
+## 🚀 Production Deployment & MLOps
+
+### REST API Serving
+Deploy models with auto-generated OpenAPI documentation (`http://localhost:8000/docs`):
+
+```bash
+kiteml serve model.pkl --port 8000 --workers 4
+```
+
+### ONNX & Docker Export
+```bash
+# Export model to optimized ONNX graph format
+kiteml export model.pkl --format onnx --output model.onnx
+
+# Generate production Dockerfile & container package
+kiteml export model.pkl --format docker --output ./docker_deploy/
+```
+
+### Model Governance & Drift Monitoring
+Every trained model automatically generates a structured `model_card.json` containing lineage, evaluation metrics, and feature importance. Monitor live predictions for statistical distribution shift:
+
+```python
+from kiteml.monitoring import DriftMonitor
+
+monitor = DriftMonitor(reference_data=train_df)
+drift_report = monitor.detect_drift(current_inference_df)
+print(drift_report.summary())
+```
+
+---
+
+## 📁 Repository Structure
 
 ```
 kiteml/
-├── core.py              # Main train() function
+├── core.py              # Main train() function & execution entrypoint
 ├── orchestration/       # KiteMLPipeline — unified AutoML orchestrator
-├── pipeline/            # DAG-based transformation pipeline engine
-├── preprocessing/       # Auto cleaning, encoding, scaling
-├── feature_engineering/ # Automatic feature creation engine
-├── feature_selection/   # Voting-based intelligent feature selection
-├── serialization/       # .kml pipeline serialization & versioning
-├── reporting/           # Execution reports, timeline replay, HTML exports
-├── intelligence/        # Explainability, profiling, imbalance detection
-├── models/              # Model selection & training
-├── evaluation/          # Metrics & reporting
-├── serving/             # FastAPI production server
-├── deployment/          # ONNX, Docker, packaging
-├── monitoring/          # Drift detection & performance tracking
-├── experiments/         # Experiment tracking & logging
-├── plugins/             # Extensible plugin SDK
-├── governance/          # Model cards & audit logging
-└── cli/                 # 14-command CLI ecosystem
+├── pipeline/            # DAG transformation engine & DX pipeline
+├── preprocessing/       # Auto cleaning, encoding, and scaling
+├── feature_engineering/ # Automatic feature discovery & creation engine
+├── feature_selection/   # Voting-based multi-selector feature engine
+├── serialization/       # Native .kml pipeline packaging & SHA-256 check
+├── reporting/           # Execution reports, timeline replay, HTML dashboards
+├── intelligence/        # Data profiler, leakage detector, SHAP explainability
+├── validation/          # Schema, target, and quality validation rules
+├── exceptions/          # Structured error framework (KML-XXX)
+├── warnings/            # Structured warning policies (KML-W-XXX)
+├── suggestions/         # Context-aware typo matcher & recommendations
+├── models/              # Classifier & regressor wrappers
+├── evaluation/          # Evaluation metrics, ROC-AUC, residual analysis
+├── serving/             # FastAPI production server engine
+├── deployment/          # ONNX conversion, Docker export, guardrails
+├── monitoring/          # Production data & concept drift monitor
+├── experiments/         # Experiment tracking & run logger
+├── governance/          # Model Cards (model_card.json) & audit log
+├── plugins/             # Plugin SDK for custom transformation stages
+└── cli/                 # 14-command Rich CLI ecosystem
 ```
 
 ---
 
-## Documentation
+## 📖 Documentation & Community
 
-Full documentation is available at [https://kiteml.github.io/kiteml](https://kiteml.github.io/kiteml).
+Comprehensive documentation is available at [https://kiteml.github.io/kiteml](https://kiteml.github.io/kiteml):
 
-- [Getting Started](https://kiteml.github.io/kiteml/getting_started/)
-- [Usage Guide](https://kiteml.github.io/kiteml/usage/)
+- [Getting Started Guide](https://kiteml.github.io/kiteml/getting_started/)
+- [User Guides (Epics 1–5)](https://kiteml.github.io/kiteml/user_guides/)
 - [CLI Reference](https://kiteml.github.io/kiteml/cli/)
 - [API Reference](https://kiteml.github.io/kiteml/api/)
+- [Architecture Specifications](https://kiteml.github.io/kiteml/architecture/)
 
 ---
 
-## Contributing
+## 🛠️ Contributing
 
-We welcome contributions! See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
+We welcome community contributions! Please read our [Contributing Guide](community/CONTRIBUTING.md) to get started:
 
 ```bash
-# Development setup
+# Clone repository
 git clone https://github.com/Priyatham27/kiteML.git
-cd kiteml
-pip install -e ".[dev]"
+cd kiteML
+
+# Create virtual environment and install in editable mode
+python -m venv .venv
+source .venv/bin/activate  # On Windows: .venv\Scripts\activate
+pip install -e ".[dev,all]"
+
+# Run unit tests
 pytest tests/
 ```
 
 ---
 
-## License
+## 📄 License
 
 KiteML is released under the [MIT License](LICENSE).
 

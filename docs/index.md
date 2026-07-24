@@ -1,31 +1,37 @@
 # 🪁 KiteML
 
-**The Intelligent Machine Learning Ecosystem.**
+**Train production-grade ML models with a single line of code — intelligent AutoML for everyone.**
 
-KiteML is a full-stack, end-to-end framework that takes raw data and turns it into a deployed, monitored production model.
+KiteML is a full-stack, end-to-end framework that takes raw data and turns it into a deployed, monitored production model across 5 completed architecture epics.
+
+---
 
 ## Why KiteML?
 
-- **Intelligent by Default**: Built-in data profiling, leakage detection, and intelligent handling of imbalanced datasets.
-- **Production-Ready**: Export models directly to REST APIs, Docker containers, or ONNX format.
-- **Developer First**: World-class CLI, typed APIs, and an extensible plugin system.
-- **Ecosystem Scale**: Built-in MLOps tracking, lineage, versioning, and community integrations (MLflow, W&B, Airflow).
+- **Intelligent by Default**: Built-in data profiling, automated data leakage detection, and imbalance analysis.
+- **Intelligent ML Pipeline**: DAG transformation engine, automated feature engineering, voting feature selection, and `.kml` binary package serialization with SHA-256 integrity checksums.
+- **Production-Ready**: Serve models via FastAPI REST APIs (`kiteml serve`), ONNX graphs, or Docker containers with live drift monitoring.
+- **Developer First**: World-class 14-command CLI, structured exceptions (`KML-XXX`), warning policies (`KML-W-XXX`), and context-aware suggestions engine.
+
+---
 
 ## Quick Start
 
 ```bash
-pip install kiteml
+pip install kiteml-ai
 
 kiteml init my_project
 cd my_project
 
-# Auto-train and generate a dashboard
-kiteml train data.csv --target churn --dashboard
+# Auto-train and generate model
+kiteml train data.csv --target churn --save model.pkl
 
 # Serve immediately via REST API
-kiteml serve model.kiteml
+kiteml serve model.pkl --port 8000
 ```
+
+---
 
 ## Community
 
-KiteML is open source and community-driven. Read our [Contribution Guide](community/CONTRIBUTING.md) to get involved!
+KiteML is open source and community-driven. Read our [Contribution Guide](community/contributing.md) to get involved!

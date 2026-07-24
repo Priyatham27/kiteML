@@ -1,9 +1,11 @@
 site_name: KiteML
-site_description: Intelligent Machine Learning Ecosystem
+site_description: Production-Grade Intelligent AutoML Ecosystem
 site_author: KiteML Community
+site_url: https://kiteml.github.io/kiteml
 
 theme:
   name: material
+  language: en
   palette:
     - media: "(prefers-color-scheme: light)"
       scheme: default
@@ -20,31 +22,86 @@ theme:
         icon: material/weather-sunny
         name: Switch to light mode
   features:
+    - navigation.instant
+    - navigation.tracking
     - navigation.tabs
+    - navigation.tabs.sticky
     - navigation.sections
+    - navigation.expand
+    - navigation.path
+    - navigation.top
+    - navigation.footer
     - search.suggest
     - search.highlight
+    - search.share
     - content.code.copy
+    - content.code.annotate
+    - content.tabs.link
 
 nav:
   - Home: index.md
-  - Getting Started: getting_started.md
-  - Architecture: architecture.md
-  - CLI Reference: cli/index.md
-  - Deployment: deployment.md
-  - Intelligence: intelligence.md
-  - Tutorials: tutorials/index.md
-  - Plugins: plugins/index.md
+  - Getting Started:
+    - Overview: getting_started/index.md
+    - Installation: getting_started/installation.md
+    - Quick Start (Python): getting_started/quickstart_python.md
+    - Quick Start (CLI): getting_started/quickstart_cli.md
+    - Core Concepts: getting_started/concepts.md
+  - User Guides:
+    - Epic 1 — Intelligence:
+      - Profiling & Leakage: user_guides/intelligence/profiling_leakage.md
+      - Imbalance & Outliers: user_guides/intelligence/imbalance_outliers.md
+      - Explainability & SHAP: user_guides/intelligence/explainability.md
+    - Epic 2 — Data Validation:
+      - Quality & Schema Contracts: user_guides/validation/schemas.md
+    - Epic 3 — Developer Experience:
+      - DX Framework: developer_experience.md
+      - Diagnostics Guide: diagnostics_guide.md
+      - Error Catalog: error_catalog.md
+      - Warning Catalog: warning_catalog.md
+      - Suggestions Guide: suggestions_guide.md
+    - Epic 4 — Intelligent ML Pipeline:
+      - Automated Preprocessing: user_guides/pipeline/preprocessing.md
+      - Feature Engineering: user_guides/pipeline/feature_engineering.md
+      - Feature Selection Engine: user_guides/pipeline/feature_selection.md
+      - DAG & .kml Serialization: user_guides/pipeline/dag_orchestration.md
+    - Epic 5 — Training & Deployment:
+      - FastAPI REST Serving: user_guides/deployment/fastapi_serving.md
+      - ONNX Graph Export: user_guides/deployment/onnx_export.md
+      - Docker Container Packaging: user_guides/deployment/docker_packaging.md
+      - Production Drift Monitoring: user_guides/deployment/drift_monitoring.md
+  - Architecture:
+    - Ecosystem Overview: architecture/overview.md
+    - .kml Package Spec: architecture/kml_format.md
+  - API Reference:
+    - Core API: api/core.md
+    - Orchestration: api/orchestration.md
+    - Intelligence: api/intelligence.md
+    - Preprocessing: api/preprocessing.md
+    - Deployment & Serving: api/deployment.md
+  - Tutorials:
+    - Customer Churn Classification: tutorials/churn_classification.md
+  - Usage Guide: usage.md
   - Community:
-    - Contributing: community/CONTRIBUTING.md
-    - Code of Conduct: community/CODE_OF_CONDUCT.md
-    - Security: community/SECURITY.md
+    - Contributing: community/contributing.md
+    - Code of Conduct: community/code_of_conduct.md
+    - Security: community/security.md
 
 markdown_extensions:
   - pymdownx.highlight:
       anchor_linenums: true
-  - pymdownx.superfences
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
   - pymdownx.details
-  - pymdownx.tabbed
+  - pymdownx.tabbed:
+      alternate_style: true
   - admonition
+  - attr_list
+  - md_in_html
   - tables
