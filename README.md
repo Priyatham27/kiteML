@@ -1,6 +1,8 @@
 <p align="center">
-  <img src="https://raw.githubusercontent.com/Priyatham27/kiteML/main/docs/assets/logo.png" alt="KiteML Banner" width="400" error="this.style.display='none'">
-  <h1 align="center">🪁 KiteML</h1>
+  <img src="https://raw.githubusercontent.com/Priyatham27/kiteML/main/docs/assets/kiteml-banner.png" alt="KiteML Banner" width="100%">
+</p>
+
+<p align="center">
   <p align="center">
     <strong>Train, evaluate, and deploy production-grade ML models with a single line of code.</strong>
   </p>
