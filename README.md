@@ -99,15 +99,55 @@ kiteml doctor
 
 ---
 
+## 🚀 Epic 4 Complete — Intelligent Machine Learning Pipeline
+
+KiteML now includes a production-ready Intelligent Machine Learning Pipeline.
+
+### Features
+
+| Component | Description |
+|---|---|
+| **Intelligent Preprocessing Engine** | Automatically profiles datasets, infers column types, and generates optimal imputation, encoding, and scaling strategies |
+| **Automatic Feature Engineering** | Discovers and creates meaningful features from datetime, numeric, categorical, and text columns |
+| **Intelligent Feature Selection** | Multi-selector voting system to identify and remove low-value features while preserving model-critical ones |
+| **Transformation Pipeline** | DAG-based execution engine that applies preprocessing, engineering, and selection decisions in the correct order |
+| **Pipeline Serialization** | Save and load production-ready pipelines as native `.kml` packages with SHA-256 integrity verification |
+| **Pipeline Reporting** | Transparent execution reports with interactive replay timeline, HTML dashboards, and JSON exports |
+| **Pipeline Orchestration** | Unified `KiteMLPipeline` API that coordinates every subsystem through a single workflow call |
+
+These systems automatically analyze datasets, generate preprocessing plans, execute transformations, produce detailed reports, and create reproducible pipelines for deployment.
+
+```python
+from kiteml import KiteMLPipeline
+
+# Full AutoML preprocessing pipeline in one call
+pipeline = KiteMLPipeline()
+result = pipeline.build(df, target="price")
+
+# Inspect results
+print(result.report.summary())
+
+# Save for deployment
+pipeline.save("house_price.kml")
+```
+
+---
+
 ## Architecture
 
 ```
 kiteml/
 ├── core.py              # Main train() function
+├── orchestration/       # KiteMLPipeline — unified AutoML orchestrator
+├── pipeline/            # DAG-based transformation pipeline engine
 ├── preprocessing/       # Auto cleaning, encoding, scaling
+├── feature_engineering/ # Automatic feature creation engine
+├── feature_selection/   # Voting-based intelligent feature selection
+├── serialization/       # .kml pipeline serialization & versioning
+├── reporting/           # Execution reports, timeline replay, HTML exports
+├── intelligence/        # Explainability, profiling, imbalance detection
 ├── models/              # Model selection & training
 ├── evaluation/          # Metrics & reporting
-├── intelligence/        # Explainability, profiling, imbalance detection
 ├── serving/             # FastAPI production server
 ├── deployment/          # ONNX, Docker, packaging
 ├── monitoring/          # Drift detection & performance tracking

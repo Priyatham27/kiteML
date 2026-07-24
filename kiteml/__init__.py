@@ -7,6 +7,7 @@ __author__ = "KiteML Team"
 
 from kiteml.config import DEFAULT_CV_FOLDS, DEFAULT_RANDOM_STATE, DEFAULT_TEST_SIZE
 from kiteml.core import train
+from kiteml.orchestration import KiteMLPipeline, PipelineBuildResult
 from kiteml.output.result import (
     ClassificationMetrics,
     RegressionMetrics,
@@ -22,6 +23,8 @@ __all__ = [
     "ClassificationMetrics",
     "RegressionMetrics",
     "TrainingTimes",
+    "KiteMLPipeline",
+    "PipelineBuildResult",
     "DEFAULT_TEST_SIZE",
     "DEFAULT_RANDOM_STATE",
     "DEFAULT_CV_FOLDS",
