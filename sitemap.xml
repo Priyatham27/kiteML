@@ -17,6 +17,10 @@
          <lastmod>2026-07-24</lastmod>
     </url>
     <url>
+         <loc>https://priyatham27.github.io/kiteML/faq/</loc>
+         <lastmod>2026-07-24</lastmod>
+    </url>
+    <url>
          <loc>https://priyatham27.github.io/kiteML/suggestions_guide/</loc>
          <lastmod>2026-07-24</lastmod>
     </url>
@@ -37,6 +41,10 @@
          <lastmod>2026-07-24</lastmod>
     </url>
     <url>
+         <loc>https://priyatham27.github.io/kiteML/api/evaluation/</loc>
+         <lastmod>2026-07-24</lastmod>
+    </url>
+    <url>
          <loc>https://priyatham27.github.io/kiteML/api/intelligence/</loc>
          <lastmod>2026-07-24</lastmod>
     </url>
@@ -45,7 +53,47 @@
          <lastmod>2026-07-24</lastmod>
     </url>
     <url>
+         <loc>https://priyatham27.github.io/kiteML/api/pipeline/</loc>
+         <lastmod>2026-07-24</lastmod>
+    </url>
+    <url>
+         <loc>https://priyatham27.github.io/kiteML/api/prediction/</loc>
+         <lastmod>2026-07-24</lastmod>
+    </url>
+    <url>
          <loc>https://priyatham27.github.io/kiteML/api/preprocessing/</loc>
+         <lastmod>2026-07-24</lastmod>
+    </url>
+    <url>
+         <loc>https://priyatham27.github.io/kiteML/api/training/</loc>
+         <lastmod>2026-07-24</lastmod>
+    </url>
+    <url>
+         <loc>https://priyatham27.github.io/kiteML/api/validation/</loc>
+         <lastmod>2026-07-24</lastmod>
+    </url>
+    <url>
+         <loc>https://priyatham27.github.io/kiteML/architecture/diagrams/</loc>
+         <lastmod>2026-07-24</lastmod>
+    </url>
+    <url>
+         <loc>https://priyatham27.github.io/kiteML/architecture/epic1/</loc>
+         <lastmod>2026-07-24</lastmod>
+    </url>
+    <url>
+         <loc>https://priyatham27.github.io/kiteML/architecture/epic2/</loc>
+         <lastmod>2026-07-24</lastmod>
+    </url>
+    <url>
+         <loc>https://priyatham27.github.io/kiteML/architecture/epic3/</loc>
+         <lastmod>2026-07-24</lastmod>
+    </url>
+    <url>
+         <loc>https://priyatham27.github.io/kiteML/architecture/epic4/</loc>
+         <lastmod>2026-07-24</lastmod>
+    </url>
+    <url>
+         <loc>https://priyatham27.github.io/kiteML/architecture/epic5/</loc>
          <lastmod>2026-07-24</lastmod>
     </url>
     <url>
@@ -66,6 +114,34 @@
     </url>
     <url>
          <loc>https://priyatham27.github.io/kiteML/community/security/</loc>
+         <lastmod>2026-07-24</lastmod>
+    </url>
+    <url>
+         <loc>https://priyatham27.github.io/kiteML/examples/customer_churn/</loc>
+         <lastmod>2026-07-24</lastmod>
+    </url>
+    <url>
+         <loc>https://priyatham27.github.io/kiteML/examples/house_prices/</loc>
+         <lastmod>2026-07-24</lastmod>
+    </url>
+    <url>
+         <loc>https://priyatham27.github.io/kiteML/examples/iris/</loc>
+         <lastmod>2026-07-24</lastmod>
+    </url>
+    <url>
+         <loc>https://priyatham27.github.io/kiteML/examples/titanic/</loc>
+         <lastmod>2026-07-24</lastmod>
+    </url>
+    <url>
+         <loc>https://priyatham27.github.io/kiteML/getting-started/first-model/</loc>
+         <lastmod>2026-07-24</lastmod>
+    </url>
+    <url>
+         <loc>https://priyatham27.github.io/kiteML/getting-started/installation/</loc>
+         <lastmod>2026-07-24</lastmod>
+    </url>
+    <url>
+         <loc>https://priyatham27.github.io/kiteML/getting-started/quickstart/</loc>
          <lastmod>2026-07-24</lastmod>
     </url>
     <url>
@@ -90,6 +166,46 @@
     </url>
     <url>
          <loc>https://priyatham27.github.io/kiteML/tutorials/churn_classification/</loc>
+         <lastmod>2026-07-24</lastmod>
+    </url>
+    <url>
+         <loc>https://priyatham27.github.io/kiteML/user-guide/dataset-analysis/</loc>
+         <lastmod>2026-07-24</lastmod>
+    </url>
+    <url>
+         <loc>https://priyatham27.github.io/kiteML/user-guide/deployment/</loc>
+         <lastmod>2026-07-24</lastmod>
+    </url>
+    <url>
+         <loc>https://priyatham27.github.io/kiteML/user-guide/evaluation/</loc>
+         <lastmod>2026-07-24</lastmod>
+    </url>
+    <url>
+         <loc>https://priyatham27.github.io/kiteML/user-guide/feature-engineering/</loc>
+         <lastmod>2026-07-24</lastmod>
+    </url>
+    <url>
+         <loc>https://priyatham27.github.io/kiteML/user-guide/model-selection/</loc>
+         <lastmod>2026-07-24</lastmod>
+    </url>
+    <url>
+         <loc>https://priyatham27.github.io/kiteML/user-guide/optimization/</loc>
+         <lastmod>2026-07-24</lastmod>
+    </url>
+    <url>
+         <loc>https://priyatham27.github.io/kiteML/user-guide/prediction/</loc>
+         <lastmod>2026-07-24</lastmod>
+    </url>
+    <url>
+         <loc>https://priyatham27.github.io/kiteML/user-guide/preprocessing/</loc>
+         <lastmod>2026-07-24</lastmod>
+    </url>
+    <url>
+         <loc>https://priyatham27.github.io/kiteML/user-guide/training/</loc>
+         <lastmod>2026-07-24</lastmod>
+    </url>
+    <url>
+         <loc>https://priyatham27.github.io/kiteML/user-guide/validation/</loc>
          <lastmod>2026-07-24</lastmod>
     </url>
     <url>
